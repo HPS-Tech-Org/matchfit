@@ -1,0 +1,1090 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MatchFit &mdash; scoping demo</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* ============================================================
+   1. TOKENS  — the only place a hex may appear (plus the dark block)
+   ============================================================ */
+:root{
+  /* --- brand --- */
+  --brand-1:#151C25;      /* structural / chrome: rail, phone edge, primary action */
+  --brand-2:#22303F;      /* chrome lift */
+  --brand-3:#1D9A66;      /* positive meaning (FILL only - 3.58:1) */
+  --brand-4:#8E1F1C;      /* emergency */
+  --danger:#C0392B;
+  --warn:#B5761A;         /* FILL only - 3.77:1 */
+
+  /* --- type colour, SEPARATE from chrome (rule 3) --- */
+  --ink:#111823;
+  --ink-2:#4F5966;
+  --muted-1:#8A929E;
+  --muted-2:#B4BBC4;
+
+  /* --- surfaces --- */
+  --canvas:#E7EBEF;         /* page behind the device frame */
+  --canvas-screen:#F4F7F9;  /* inside the device */
+  --surface:#FFFFFF;
+  --surface-2:#EEF2F5;
+  --line:rgba(17,24,35,.09);
+  --line-hard:rgba(17,24,35,.16);
+  --tabbar:rgba(255,255,255,.97);
+  --phone-edge:#C4CDD6;
+  --rail:#FFFFFF;
+
+  /* --- sport accents: FILLS --- */
+  --sp-rugby:#17643E; --sp-soccer:#22499E; --sp-hockey:#0C7B80; --sp-netball:#C2631F;
+
+  /* --- FILL vs TEXT (rule 1). Verified: see README contrast table --- */
+  --ok-text:#14764D;        /* 5.63:1 */
+  --warn-text:#8A5A12;      /* 5.91:1 */
+  --netball-text:#A8541A;   /* 5.32:1 */
+  --danger-text:#C0392B;    /* 5.44:1, already clears */
+
+  /* --- semantic tints --- */
+  --tint-ok:#E7F5EC; --tint-warn:#FBF2DF; --tint-bad:#F7E6E5; --tint-info:#E9EEF4;
+  --tint-rugby:#E6F0EA; --tint-soccer:#E7EDF8; --tint-hockey:#E2F1F1; --tint-netball:#FAEDE2;
+
+  /* --- partner colours: integration surfaces read as foreign (§10) --- */
+  --partner-line:#1B3C8C;   /* Oneplan */
+  --partner-2:#D6001C;      /* King Price */
+
+  /* --- fixed brand assets: pinned to literal hexes, never themed (rule 2) --- */
+  --grad:linear-gradient(-45deg,#2A3B4E 0%,#22303F 35%,#151C25 72%,#0B1219 100%);
+  /* the card face is a brand asset. Built from --sp-* it silently turned mint in
+     dark mode, which is exactly the failure rule 2 describes. Pinned instead. */
+  --card-rugby:linear-gradient(135deg,#2E8B60 -25%,#17643E 45%,#0B1219 100%);
+  --card-soccer:linear-gradient(135deg,#3A66C4 -25%,#22499E 45%,#0B1219 100%);
+  --card-hockey:linear-gradient(135deg,#199A9F -25%,#0C7B80 45%,#0B1219 100%);
+  --card-netball:linear-gradient(135deg,#DD803C -25%,#C2631F 45%,#0B1219 100%);
+  --card-deep:#0B1219;
+  --chip:linear-gradient(135deg,#E8CF7E,#C9A24B 60%,#A9843A);
+  --qr-quiet:#FFFFFF;      /* a QR quiet zone must stay white or a scanner fails */
+
+  /* --- text ON a brand fill. Also fixed: a brand fill does not invert. --- */
+  --on-brand:#FFFFFF;     /* on brand-1 / brand-4 / partner fills */
+  --on-accent:#10151A;    /* on the light accents dark mode uses for fills */
+
+  /* --- coach field portal: a scoped dark chrome, tokenised so no rule hardcodes --- */
+  --coach-surface:#16241D; --coach-surface-2:#1B2F26; --coach-canvas:#0E1713;
+  --coach-ink:#EAF2ED; --coach-ink-2:#A8C3B6; --coach-muted:#7FA08F;
+
+  --r-card:18px; --r-btn:14px;
+  --font:'Archivo',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,monospace;
+}
+
+/* ============================================================
+   2. DARK — re-points tokens only. brand-1/2 and --grad stay put.
+   ============================================================ */
+[data-theme="dark"]{
+  --ink:#E8EAEC; --ink-2:#A7ADB2; --muted-1:#959CA3; --muted-2:#6E757C;
+
+  --canvas:#0C0F12; --canvas-screen:#12171C; --surface:#1A2027; --surface-2:#222932;
+  --line:rgba(255,255,255,.09); --line-hard:rgba(255,255,255,.16);
+  --tabbar:rgba(26,32,39,.97); --phone-edge:#2E363E; --rail:#161B21;
+
+  --brand-3:#5BC28C; --brand-4:#E8918E; --danger:#E58C89; --warn:#DDA455;
+
+  --sp-rugby:#5FBF8E; --sp-soccer:#7FA3E8; --sp-hockey:#57C2C7; --sp-netball:#E09257;
+
+  --ok-text:#5BC28C; --warn-text:#DDA455; --netball-text:#E09257; --danger-text:#E58C89;
+
+  /* dark tints HAND-PICKED to lean into hue, not derived (rule 5).
+     They sit within 1.09:1 of each other, so state must also carry a label. */
+  --tint-ok:#12281E; --tint-warn:#2A2214; --tint-bad:#2A1717; --tint-info:#1A222B;
+  --tint-rugby:#0F2419; --tint-soccer:#16203A; --tint-hockey:#0E2427; --tint-netball:#2B1D12;
+
+  --partner-line:#6F9FE8; --partner-2:#E8918E;
+}
+
+/* ============================================================
+   3. SHELL
+   ============================================================ */
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--canvas);color:var(--ink);font-family:var(--font);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;padding:0;text-align:left}
+:focus-visible{outline:2px solid var(--partner-line);outline-offset:2px;border-radius:4px}
+.num{font-variant-numeric:tabular-nums}
+
+.app{display:grid;grid-template-columns:250px 1fr 320px;height:100vh;overflow:hidden}
+@media(max-width:1180px){.app{grid-template-columns:210px 1fr}.notes-col{display:none}}
+
+/* left rail */
+.rail{background:var(--rail);border-right:1px solid var(--line);overflow-y:auto;padding:0 0 30px}
+.rail .brand{padding:20px 18px 14px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--rail);z-index:5}
+.rail .brand b{font-size:16px;font-weight:900;letter-spacing:-.03em;display:block}
+.rail .brand small{font-family:var(--mono);font-size:8.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted-1);display:block;margin-top:2px}
+.rail h4{font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted-1);margin:18px 18px 6px;font-weight:600}
+.rail a{display:flex;align-items:center;gap:9px;padding:7px 18px;font-size:12.5px;color:var(--ink-2);text-decoration:none;border-left:3px solid transparent}
+.rail a:hover{background:var(--surface-2);color:var(--ink)}
+.rail a.on{background:var(--surface-2);color:var(--ink);border-left-color:var(--brand-1);font-weight:700}
+[data-theme="dark"] .rail a.on{border-left-color:var(--ok-text)}
+.rail a .sid{font-family:var(--mono);font-size:9px;color:var(--muted-1);width:22px;flex:none}
+.rail a.on .sid{color:var(--ink-2)}
+.rail a .dot{width:6px;height:6px;border-radius:50%;background:var(--partner-line);flex:none;margin-left:auto}
+
+/* centre stage */
+.stage{overflow-y:auto;padding:20px 24px 60px;display:flex;flex-direction:column;align-items:center}
+.toolbar{display:flex;align-items:center;gap:8px;width:100%;max-width:920px;margin-bottom:16px;flex-wrap:wrap}
+.toolbar .t{font-size:15px;font-weight:800;letter-spacing:-.02em}
+.toolbar .t span{font-family:var(--mono);font-size:10px;color:var(--muted-1);font-weight:500;margin-right:7px}
+.toolbar .sp{flex:1}
+.tbtn{font-size:11.5px;font-weight:600;color:var(--ink-2);border:1px solid var(--line-hard);padding:7px 13px;border-radius:9px;background:var(--surface)}
+.tbtn:hover{color:var(--ink)}
+.tbtn.on{background:var(--brand-1);color:var(--on-brand);border-color:var(--brand-1)}
+[data-theme="dark"] .tbtn.on{background:var(--ok-text);color:var(--on-accent);border-color:var(--ok-text)}
+
+/* device frames */
+.phone{width:390px;background:var(--surface);border-radius:44px;padding:11px;
+  box-shadow:0 2px 6px rgba(0,0,0,.10),0 24px 60px rgba(0,0,0,.20);border:1px solid var(--phone-edge)}
+.screen{background:var(--canvas-screen);border-radius:34px;overflow:hidden;height:780px;display:flex;flex-direction:column;position:relative}
+.desk{width:100%;max-width:900px;background:var(--surface);border-radius:14px;overflow:hidden;
+  box-shadow:0 2px 6px rgba(0,0,0,.10),0 24px 60px rgba(0,0,0,.20);border:1px solid var(--phone-edge)}
+.desk .chrome{display:flex;align-items:center;gap:7px;padding:11px 14px;background:var(--surface-2);border-bottom:1px solid var(--line)}
+.desk .chrome i{width:10px;height:10px;border-radius:50%;background:var(--muted-2)}
+.desk .chrome .url{margin-left:10px;flex:1;background:var(--surface);border:1px solid var(--line);border-radius:7px;padding:5px 11px;font-family:var(--mono);font-size:9.5px;color:var(--muted-1)}
+.desk .dbody{padding:22px 24px 26px;background:var(--canvas-screen);min-height:520px}
+
+/* right notes */
+.notes-col{background:var(--rail);border-left:1px solid var(--line);overflow-y:auto;padding:0 0 40px}
+.notes-col .nh{padding:20px 20px 13px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--rail);z-index:5}
+.notes-col .nh b{font-size:13px;font-weight:800;letter-spacing:-.015em;display:block}
+.notes-col .nh small{font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted-1);display:block;margin-top:3px}
+.nlist{padding:16px 20px 0}
+.nitem{font-size:12.5px;line-height:1.62;color:var(--ink-2);padding:0 0 13px;margin:0 0 13px;border-bottom:1px solid var(--line)}
+.nitem:last-child{border-bottom:none}
+.nitem b{color:var(--ink);font-weight:600}
+.nitem.new,.nitem.q{padding:11px 13px;border-radius:11px;border-bottom:none;margin-bottom:11px}
+.nitem.new{background:var(--tint-ok);color:var(--ok-text)}
+.nitem.new b{color:var(--ok-text)}
+.nitem.q{background:var(--tint-warn);color:var(--warn-text)}
+.nitem.q b{color:var(--warn-text)}
+.ntag{font-family:var(--mono);font-size:8px;letter-spacing:.13em;text-transform:uppercase;font-weight:600;display:block;margin-bottom:4px}
+
+/* ============================================================
+   4. UI KIT (inside the device)
+   ============================================================ */
+.sb{display:flex;justify-content:space-between;align-items:center;font-size:11.5px;font-weight:700;padding:16px 24px 6px;flex:none;color:var(--ink)}
+.body{flex:1;overflow-y:auto;overflow-x:hidden;scrollbar-width:none}
+.body::-webkit-scrollbar{display:none}
+.hd{padding:14px 18px 0}
+.hd h2{margin:0;font-size:21px;font-weight:900;letter-spacing:-.032em;color:var(--ink)}
+.hd p{margin:2px 0 0;font-size:11px;color:var(--ink-2);line-height:1.45}
+.abar{display:flex;align-items:center;gap:11px;padding:12px 18px 0}
+.ava{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--on-brand);font-weight:800;font-size:13px;flex:none;background:var(--grad)}
+.who{flex:1;min-width:0}
+.who small{display:block;font-family:var(--mono);font-size:7.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted-1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.who b{font-size:15.5px;font-weight:800;color:var(--ink);letter-spacing:-.018em;display:block;margin-top:1px}
+.ico{width:36px;height:36px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex:none}
+.circ{width:38px;height:38px;border-radius:50%;background:var(--surface);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;flex:none;color:var(--ink)}
+
+.hero{margin:14px 15px 0;border-radius:22px;padding:17px;color:var(--on-brand);position:relative;overflow:hidden;background:var(--grad);box-shadow:0 12px 30px -12px rgba(0,0,0,.4)}
+.hero .wm{position:absolute;right:-30px;top:-14px;width:190px;opacity:.13;pointer-events:none}
+.hero>*{position:relative;z-index:2}
+.hero .lbl{font-family:var(--mono);font-size:8px;letter-spacing:.15em;text-transform:uppercase;opacity:.75}
+.hero .amt{font-size:25px;font-weight:900;letter-spacing:-.035em;margin:3px 0 0;font-variant-numeric:tabular-nums;white-space:nowrap}
+.hero .amt em{font-style:normal;font-size:11px;font-weight:600;opacity:.7;letter-spacing:0;margin-left:5px}
+.hero .cap{font-size:10px;opacity:.82;margin-top:3px}
+.hero .meter{height:5px;border-radius:99px;background:rgba(255,255,255,.22);overflow:hidden;margin-top:13px}
+.hero .meter i{display:block;height:100%;border-radius:99px;background:var(--on-brand);opacity:.95}
+.hero .mrow{display:flex;justify-content:space-between;font-family:var(--mono);font-size:7.5px;letter-spacing:.09em;opacity:.75;margin-top:6px;text-transform:uppercase}
+
+.sect{display:flex;align-items:center;justify-content:space-between;padding:17px 18px 8px}
+.sect b{font-size:12px;font-weight:800;color:var(--ink);letter-spacing:-.012em}
+.sect small{font-family:var(--mono);font-size:7.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted-1)}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-card);margin:0 15px 9px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.lrow{display:flex;align-items:center;gap:11px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-card);padding:11px 12px;margin:0 15px 8px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.lrow b{font-size:11.5px;font-weight:800;color:var(--ink);display:block}
+.lrow small{font-size:8.5px;color:var(--muted-1);display:block;line-height:1.35;margin-top:1px}
+.lrow.dash{border-style:dashed;background:transparent;box-shadow:none}
+.pill{font-size:7.5px;font-weight:800;letter-spacing:.07em;padding:3px 8px;border-radius:99px;white-space:nowrap;display:inline-flex;align-items:center;gap:4px}
+.pill.ok{background:var(--tint-ok);color:var(--ok-text)}
+.pill.bad{background:var(--tint-bad);color:var(--danger-text)}
+.pill.warn{background:var(--tint-warn);color:var(--warn-text)}
+.pill.info{background:var(--tint-info);color:var(--ink-2)}
+.pill.r{margin-left:auto}
+
+.kv{margin:0 15px 9px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-card);overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.kv div{display:flex;padding:10px 13px;border-bottom:1px solid var(--line);font-size:11px;gap:10px;align-items:center}
+.kv div:last-child{border-bottom:none}
+.kv .k{color:var(--muted-1);font-weight:600;flex:1}
+.kv .v{color:var(--ink);font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
+
+.note{margin:11px 15px 0;border-radius:12px;padding:10px 12px;font-size:9.5px;font-weight:600;display:flex;gap:8px;align-items:flex-start;line-height:1.5}
+.note.info{background:var(--tint-info);color:var(--ink-2)}
+.note.ok{background:var(--tint-ok);color:var(--ok-text)}
+.note.warn{background:var(--tint-warn);color:var(--warn-text)}
+.note.bad{background:var(--tint-bad);color:var(--danger-text)}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:0 15px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-card);padding:12px;box-shadow:0 1px 2px rgba(0,0,0,.04);position:relative}
+.tile b{font-size:11px;font-weight:800;color:var(--ink);display:block;line-height:1.3;letter-spacing:-.01em}
+.tile small{font-size:8.5px;color:var(--muted-1);display:block;margin-top:2px;line-height:1.35}
+.tile .disc{display:inline-block;margin-top:8px;font-family:var(--mono);font-size:14px;font-weight:600;color:var(--ok-text);letter-spacing:-.02em}
+.tile .brand{font-family:var(--mono);font-size:7px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted-1);display:block}
+.tile .cnr{position:absolute;top:9px;right:9px;font-size:6.5px;font-weight:800;letter-spacing:.08em;padding:2px 6px;border-radius:99px}
+
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;border-radius:var(--r-btn);padding:14px;font-size:12.5px;font-weight:800;letter-spacing:-.01em;margin:0 18px}
+.btn.pri{background:var(--brand-1);color:var(--on-brand)}
+[data-theme="dark"] .btn.pri{background:var(--ok-text);color:var(--on-accent)}
+.btn.em{background:var(--brand-4);color:var(--on-brand)}
+[data-theme="dark"] .btn.em{color:var(--on-accent)}
+.btn.gho{color:var(--muted-1);font-weight:600;font-size:11px;padding:9px}
+
+.steps{display:flex;gap:5px;margin:0 18px 15px}
+.steps i{flex:1;height:3.5px;border-radius:99px;background:var(--surface-2)}
+.steps i.on{background:var(--brand-1)}
+[data-theme="dark"] .steps i.on{background:var(--ok-text)}
+.opt{display:flex;align-items:center;gap:11px;border:1.5px solid var(--line);border-radius:var(--r-card);padding:12px 13px;margin:0 18px 9px;background:var(--surface);box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.opt.sel{border-color:var(--brand-1)}
+[data-theme="dark"] .opt.sel{border-color:var(--ok-text)}
+.opt b{font-size:12px;color:var(--ink);display:block;font-weight:800;letter-spacing:-.012em}
+.opt small{font-size:8.5px;color:var(--muted-1);display:block;margin-top:2px;line-height:1.4}
+.chk{display:flex;align-items:flex-start;gap:10px;padding:11px 13px;border-radius:var(--r-card);background:var(--surface);border:1px solid var(--line);margin:0 18px 8px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.chk i{width:20px;height:20px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;color:var(--on-brand);background:var(--brand-3);margin-top:1px;font-style:normal;font-size:11px;font-weight:800}
+.chk b{font-size:11px;color:var(--ink);display:block;font-weight:800}
+.chk small{font-size:8.5px;color:var(--muted-1);display:block;line-height:1.4;margin-top:1px}
+
+/* emergency */
+.embar{flex:none;background:var(--brand-4);color:var(--on-brand);padding:10px 15px;display:flex;align-items:center;gap:9px;font-size:10.5px;font-weight:800}
+[data-theme="dark"] .embar{color:var(--on-accent)}
+.embar .n{margin-left:auto;font-family:var(--mono);font-size:11px;letter-spacing:.05em}
+.epath{display:block;margin:0 15px 10px;background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--ec);border-radius:var(--r-card);padding:13px 14px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.epath .top{display:flex;align-items:center;gap:10px}
+.epath b{font-size:12px;font-weight:800;color:var(--ink);display:block;letter-spacing:-.015em;line-height:1.25}
+.epath small{font-size:8.5px;color:var(--muted-1);display:block;line-height:1.45;margin-top:7px}
+
+/* member card */
+.mcard{margin:14px 15px;border-radius:20px;padding:17px;color:var(--on-brand);position:relative;overflow:hidden;box-shadow:0 18px 40px -14px rgba(0,0,0,.5);background:var(--mc)}
+.mcard .wm{position:absolute;left:-26px;bottom:-42px;width:236px;opacity:.15}
+.mcard>*{position:relative;z-index:2}
+.mcard .chip{width:32px;height:24px;border-radius:5px;background:var(--chip);position:relative;box-shadow:inset 0 0 0 1px rgba(0,0,0,.18)}
+.mcard .chip::after{content:"";position:absolute;inset:4px 6px;border:1px solid rgba(0,0,0,.22);border-radius:2px}
+.mcard .no{font-family:var(--mono);font-size:13px;letter-spacing:.13em;margin-top:14px}
+.mcard .nm{font-weight:800;font-size:12.5px;letter-spacing:.02em}
+.mcard .meta{font-family:var(--mono);font-size:7.5px;opacity:.75;margin-top:2px}
+.mcard .qr{background:var(--qr-quiet);border-radius:10px;padding:7px;display:inline-block;line-height:0}
+.stp{display:inline-flex;align-items:center;gap:5px;font-size:8.5px;font-weight:800;padding:4px 10px;border-radius:99px;letter-spacing:.08em;background:rgba(255,255,255,.18);color:var(--on-brand);box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)}
+
+/* tabbar */
+.tabbar{flex:none;display:flex;background:var(--tabbar);border-top:1px solid var(--line);padding:7px 3px 4px}
+.tabbar span{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:8px;font-weight:700;padding:5px 0 4px;color:var(--muted-1);letter-spacing:.01em}
+.tabbar span.on{color:var(--brand-1)}
+[data-theme="dark"] .tabbar span.on{color:var(--ok-text)}
+.tabbar span.em.on{color:var(--brand-4)}
+.hbar{flex:none;display:flex;justify-content:center;padding:3px 0 9px;background:var(--tabbar)}
+.hbar i{width:116px;height:5px;border-radius:99px;background:var(--ink);opacity:.75}
+
+/* dark-chrome screens (coach) */
+.screen.dk{--surface:var(--coach-surface);--canvas-screen:var(--coach-canvas);--line:rgba(255,255,255,.09);
+  --ink:var(--coach-ink);--ink-2:var(--coach-ink-2);--muted-1:var(--coach-muted);
+  --tabbar:rgba(14,23,19,.97);--surface-2:var(--coach-surface-2)}
+
+/* ============================================================
+   5. INTEGRATION MARKER (§10)
+   ============================================================ */
+.ix-band{border:1.5px dashed var(--ixc,var(--partner-line));border-radius:calc(var(--r-card) + 3px);
+  padding:3px;position:relative;margin:14px 12px 0}
+.ix-band::before{content:attr(data-ix);position:absolute;top:-8px;right:12px;
+  background:var(--ixc,var(--partner-line));color:var(--on-brand);font-size:7.5px;font-weight:800;
+  letter-spacing:.12em;padding:2px 7px;border-radius:20px}
+[data-theme="dark"] .ix-band::before{color:var(--on-accent)}
+.ix-band>*{margin-left:0;margin-right:0}
+
+/* oneplan hosted chrome */
+.ophost{background:var(--surface-2);min-height:100%}
+.ophead{background:var(--partner-line);color:var(--on-brand);padding:13px 16px}
+[data-theme="dark"] .ophead{color:var(--on-accent)}
+.ophead .url{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.16);border-radius:8px;padding:6px 10px;font-family:var(--mono);font-size:8.5px}
+.ophead .t{font-weight:800;font-size:13px;margin-top:10px;letter-spacing:-.015em}
+.ophead .s{font-size:9px;opacity:.85;margin-top:1px}
+.opbox{margin:12px 15px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:13px 14px}
+.opbox h5{margin:0 0 6px;font-size:11.5px;font-weight:800;color:var(--ink)}
+.opbox p{margin:0;font-size:9.5px;color:var(--ink-2);line-height:1.55}
+.opck{display:flex;gap:9px;align-items:flex-start;margin-top:10px;font-size:9px;color:var(--ink-2);line-height:1.5}
+.opck i{width:16px;height:16px;border-radius:4px;background:var(--partner-line);color:var(--on-brand);display:flex;align-items:center;justify-content:center;flex:none;font-style:normal;margin-top:1px;font-size:10px;font-weight:800}
+[data-theme="dark"] .opck i{color:var(--on-accent)}
+
+/* desk widgets */
+.dstat{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:22px}
+.dstat div{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:15px 16px}
+.dstat b{font-family:var(--mono);font-size:22px;font-weight:600;display:block;letter-spacing:-.025em;font-variant-numeric:tabular-nums;color:var(--ink)}
+.dstat small{font-family:var(--mono);font-size:9.5px;color:var(--muted-1);letter-spacing:.07em;text-transform:uppercase}
+.dstat em{font-style:normal;font-size:10.5px;color:var(--ok-text);display:block;margin-top:4px}
+table.g{width:100%;border-collapse:collapse;font-size:12px;background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+table.g th{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-1);text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);background:var(--surface-2)}
+table.g td{padding:9px 12px;border-bottom:1px solid var(--line);color:var(--ink)}
+table.g tr:last-child td{border-bottom:none}
+h3.dh{font-size:12.5px;font-weight:800;margin:22px 0 10px;color:var(--ink);display:flex;align-items:baseline;gap:9px}
+h3.dh span{font-family:var(--mono);font-size:8.5px;color:var(--muted-1);letter-spacing:.11em;text-transform:uppercase;font-weight:500}
+.sbar{height:24px;border-radius:8px;display:flex;overflow:hidden;margin:9px 0 8px}
+.sbar i{display:block}
+.leg{display:flex;gap:15px;flex-wrap:wrap;font-size:11px;color:var(--ink-2)}
+.leg i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:6px}
+
+/* ============================================================
+   6. FLOW MAP
+   ============================================================ */
+.flowwrap{width:100%;max-width:900px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px 24px 26px}
+.flowwrap h3{margin:0 0 4px;font-size:16px;font-weight:800;letter-spacing:-.02em}
+.flowwrap .fsub{font-size:12px;color:var(--ink-2);margin:0 0 20px;max-width:64ch}
+.lane{margin-bottom:20px}
+.lane .ln{font-family:var(--mono);font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted-1);margin-bottom:9px;font-weight:600}
+.nodes{display:flex;gap:8px;flex-wrap:wrap;align-items:stretch}
+.node{flex:1;min-width:128px;max-width:190px;background:var(--surface-2);border:1px solid var(--line);border-radius:11px;padding:10px 11px;position:relative;text-decoration:none;color:inherit;display:block}
+.node b{font-size:11px;font-weight:700;display:block;line-height:1.3;color:var(--ink)}
+.node small{font-size:9px;color:var(--muted-1);display:block;margin-top:3px;line-height:1.35}
+.node .lk{font-family:var(--mono);font-size:8px;color:var(--partner-line);letter-spacing:.08em;display:block;margin-top:5px;font-weight:600}
+.node.new{background:var(--tint-ok);border-color:var(--ok-text)}
+.node.gap{background:var(--tint-bad);border-color:var(--danger-text)}
+.node.partner{background:var(--tint-soccer);border-color:var(--partner-line)}
+.node .badge{position:absolute;top:-7px;left:9px;font-family:var(--mono);font-size:7px;font-weight:800;letter-spacing:.11em;padding:2px 6px;border-radius:20px;color:var(--on-brand)}
+.node.new .badge{background:var(--ok-text)}
+.node.gap .badge{background:var(--danger-text)}
+.node.partner .badge{background:var(--partner-line)}
+[data-theme="dark"] .node .badge{color:var(--on-accent)}
+.flegend{display:flex;gap:16px;flex-wrap:wrap;font-size:11px;color:var(--ink-2);margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}
+.flegend span{display:flex;align-items:center;gap:6px}
+.flegend i{width:11px;height:11px;border-radius:3px;border:1px solid var(--line)}
+</style>
+</head>
+<body>
+<div class="app">
+  <nav class="rail" id="rail"></nav>
+  <div class="stage">
+    <div class="toolbar">
+      <div class="t" id="stitle"></div>
+      <span class="sp"></span>
+      <button class="tbtn" id="tFlow">Flow map</button>
+      <button class="tbtn" id="tTheme">Dark</button>
+    </div>
+    <div id="stageBody"></div>
+  </div>
+  <aside class="notes-col" id="notes"></aside>
+</div>
+
+<script>
+/* ============================================================
+   THEME TOGGLE (§11)
+   ============================================================ */
+(function(){
+  const btn=document.getElementById('tTheme'), root=document.documentElement;
+  const set=m=>{
+    if(m==='dark'){root.setAttribute('data-theme','dark');btn.textContent='Light';btn.classList.add('on');}
+    else{root.removeAttribute('data-theme');btn.textContent='Dark';btn.classList.remove('on');}
+    try{localStorage.setItem('mf-theme',m)}catch(e){}
+  };
+  let m='light'; try{m=localStorage.getItem('mf-theme')||'light'}catch(e){}
+  set(m);
+  btn.addEventListener('click',()=>set(root.hasAttribute('data-theme')?'light':'dark'));
+})();
+
+/* ============================================================
+   FORMATTERS (§9) — South African conventions: R 1 799,00
+   ============================================================ */
+const money = n => 'R ' + n.toLocaleString('en-ZA',{minimumFractionDigits:2,maximumFractionDigits:2})
+  .replace(/,/g,' ').replace(/\.(\d\d)$/,',$1');
+const rnd = n => 'R ' + Math.round(n).toLocaleString('en-ZA').replace(/,/g,' ');
+const pctf = n => n + '%';
+
+/* ============================================================
+   ICONS + FIELD OUTLINES
+   ============================================================ */
+const I={
+user:'<circle cx="12" cy="8" r="3.8"/><path d="M4.5 20.5c0-4.1 3.4-7.5 7.5-7.5s7.5 3.4 7.5 7.5"/>',
+shield:'<path d="M12 3.2 19 6v5.1c0 4.8-3.3 7.7-7 9.7-3.7-2-7-4.9-7-9.7V6z"/><path d="m9.2 11.8 2 2 3.8-3.9"/>',
+siren:'<path d="M6 18.5v-5a6 6 0 0 1 12 0v5"/><path d="M4 18.5h16v2.5H4z"/><path d="M12 3v2M5 6.5 6.5 8M19 6.5 17.5 8"/>',
+bag:'<path d="M5.5 8h13l-1 12.5H6.5z"/><path d="M9 8V5.8a3 3 0 0 1 6 0V8"/>',
+more:'<circle cx="6" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="18" cy="12" r="1.6"/>',
+card:'<rect x="2.8" y="5" width="18.4" height="14" rx="3"/><path d="M2.8 9.8h18.4"/>',
+hospital:'<path d="M4 20.5V8.5l8-5 8 5v12"/><path d="M10.2 11h3.6v2.2h2.2v3.6h-2.2V19h-3.6v-2.2H8v-3.6h2.2z"/>',
+ambulance:'<path d="M2.5 16.5V9h11v7.5"/><path d="M13.5 11h4l4 3.2v2.3h-8z"/><circle cx="6.5" cy="18" r="1.8"/><circle cx="17" cy="18" r="1.8"/>',
+brain:'<path d="M9.5 4.5a3 3 0 0 0-3 3 2.6 2.6 0 0 0-1 4.6 3 3 0 0 0 1.6 5.2 2.8 2.8 0 0 0 2.4 2.2V4.5z"/><path d="M14.5 4.5a3 3 0 0 1 3 3 2.6 2.6 0 0 1 1 4.6 3 3 0 0 1-1.6 5.2 2.8 2.8 0 0 1-2.4 2.2V4.5z"/>',
+phone:'<path d="M7 3.5h2.8l1.5 4.2-2.1 1.6a12.8 12.8 0 0 0 5.5 5.5l1.6-2.1 4.2 1.5V17a2.6 2.6 0 0 1-2.7 2.6A15.4 15.4 0 0 1 4.4 6.2 2.6 2.6 0 0 1 7 3.5z"/>',
+chev:'<path d="m9.5 6 6 6-6 6"/>', plus:'<path d="M12 5v14M5 12h14"/>',
+bell:'<path d="M12 4a5.5 5.5 0 0 1 5.5 5.5c0 4 1.4 5.4 2 6H4.5c.6-.6 2-2 2-6A5.5 5.5 0 0 1 12 4z"/><path d="M10 19a2 2 0 0 0 4 0"/>',
+doc:'<path d="M7 3.5h7l4 4V20a.9.9 0 0 1-.9.9H7a.9.9 0 0 1-.9-.9V4.4A.9.9 0 0 1 7 3.5z"/><path d="M13.6 3.8v4h4"/><path d="M9.5 12.5h5M9.5 15.8h5"/>',
+scan:'<path d="M4 8V5.5A1.5 1.5 0 0 1 5.5 4H8M16 4h2.5A1.5 1.5 0 0 1 20 5.5V8M20 16v2.5a1.5 1.5 0 0 1-1.5 1.5H16M8 20H5.5A1.5 1.5 0 0 1 4 18.5V16"/><path d="M4 12h16"/>',
+lock:'<rect x="4.5" y="10.5" width="15" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/>',
+info:'<circle cx="12" cy="12" r="9"/><path d="M12 8.5v5M12 16.8v.2"/>',
+clock:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3.2 2"/>',
+crown:'<path d="M4 8.5 8 12l4-6 4 6 4-3.5-1.5 10h-13z"/>',
+boot:'<path d="M4 15.5h5l1.5-3h4l1.5 3h5"/><path d="M6 15.5V19h12v-3.5"/>',
+flask:'<path d="M9 3.5h6v5l4 9.5a1.6 1.6 0 0 1-1.5 2.5H6.5A1.6 1.6 0 0 1 5 18z"/><path d="M9 8.5h6"/>',
+guard:'<path d="M8 4v9a4 4 0 0 0 8 0V4"/><path d="M6 4h4M14 4h4"/>',
+shirt:'<path d="M8.5 4 5 6v5h2.5v9.5h9V11H19V6l-3.5-2z"/><path d="M8.5 4a3.5 3.5 0 0 0 7 0"/>',
+physio:'<path d="M6.5 20.5V14a5.5 5.5 0 0 1 11 0v6.5"/><path d="M9 8.5V6a3 3 0 0 1 6 0v2.5"/><path d="M4 20.5h16"/>',
+gift:'<rect x="4" y="9.5" width="16" height="4" rx="1"/><path d="M5.5 13.5V19a1.5 1.5 0 0 0 1.5 1.5h10a1.5 1.5 0 0 0 1.5-1.5v-5.5M12 9.5v11"/>',
+users:'<circle cx="9" cy="8" r="3.4"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M16 5.2a3.4 3.4 0 0 1 0 5.6M18 20c0-2.3-.9-4.4-2.3-5.9"/>',
+home:'<path d="M3.5 10.8 12 3.5l8.5 7.3"/><path d="M5.5 9.2V20a1 1 0 0 0 1 1H10v-6.2h4V21h3.5a1 1 0 0 0 1-1V9.2"/>'
+};
+const ic=(n,s=19,w=1.85,c='currentColor')=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none">${I[n]}</svg>`;
+
+const FIELD={
+ rugby:['0 0 400 233','<rect x="1.5" y="1.5" width="397" height="230"/><line x1="33" y1="1.5" x2="33" y2="231.5"/><line x1="367" y1="1.5" x2="367" y2="231.5"/><line x1="200" y1="1.5" x2="200" y2="231.5"/><line x1="107" y1="1.5" x2="107" y2="231.5"/><line x1="293" y1="1.5" x2="293" y2="231.5"/>'],
+ soccer:['0 0 400 259','<rect x="1.5" y="1.5" width="397" height="256"/><line x1="200" y1="1.5" x2="200" y2="257.5"/><circle cx="200" cy="129.5" r="35"/><rect x="1.5" y="52.8" width="61.5" height="153.5"/><rect x="337" y="52.8" width="61.5" height="153.5"/>'],
+ hockey:['0 0 400 241','<rect x="1.5" y="1.5" width="397" height="238"/><line x1="200" y1="1.5" x2="200" y2="239.5"/><line x1="100" y1="1.5" x2="100" y2="239.5"/><line x1="300" y1="1.5" x2="300" y2="239.5"/><path d="M1.5 48.5 A64 64 0 0 1 64 112.5 L64 128.5 A64 64 0 0 1 1.5 192.5"/><path d="M398.5 48.5 A64 64 0 0 0 336 112.5 L336 128.5 A64 64 0 0 0 398.5 192.5"/>'],
+ netball:['0 0 400 200','<rect x="1.5" y="1.5" width="397" height="197"/><line x1="133.3" y1="1.5" x2="133.3" y2="198.5"/><line x1="266.7" y1="1.5" x2="266.7" y2="198.5"/><circle cx="200" cy="100" r="12"/><path d="M1.5 35.7 A64.3 64.3 0 0 1 1.5 164.3"/><path d="M398.5 35.7 A64.3 64.3 0 0 0 398.5 164.3"/>']
+};
+const field=(c,o={})=>`<svg viewBox="${FIELD[c][0]}" ${o.w?`width="${o.w}" height="${o.h}"`:'style="width:100%;height:auto"'} fill="none" stroke="${o.stroke||'currentColor'}" stroke-width="${o.sw||2.4}" stroke-linecap="round" style="display:block">${FIELD[c][1]}</svg>`;
+const SPT={rugby:'--sp-rugby',soccer:'--sp-soccer',hockey:'--sp-hockey',netball:'--sp-netball'};
+const SPTINT={rugby:'--tint-rugby',soccer:'--tint-soccer',hockey:'--tint-hockey',netball:'--tint-netball'};
+const SPCARD={rugby:'--card-rugby',soccer:'--card-soccer',hockey:'--card-hockey',netball:'--card-netball'};
+const spc=k=>`var(${SPT[k]})`, spt=k=>`var(${SPTINT[k]})`, spcard=k=>`var(${SPCARD[k]})`;
+
+/* ============================================================
+   UI KIT (§7) — screens are composed, never hand-written
+   ============================================================ */
+const sb    = t => `<div class="sb"><span>${t||'07:42'}</span><span>5G &#9646;&#9646;&#9646;</span></div>`;
+const hd    = (h,p) => `<div class="hd"><h2>${h}</h2>${p?`<p>${p}</p>`:''}</div>`;
+const abar  = (ini,eyebrow,name,badge) => `<div class="abar"><span class="ava">${ini}</span>
+  <span class="who"><small>${eyebrow}</small><b>${name}</b></span>
+  <span class="circ">${ic('bell',18)}${badge?`<span style="position:absolute"></span>`:''}</span></div>`;
+const hero  = (lbl,amt,unit,cap,pctv,l,r,wmCode) => `<div class="hero">
+  ${wmCode?`<div class="wm">${field(wmCode,{stroke:'var(--on-brand)',sw:4})}</div>`:''}
+  <span class="stp" style="position:absolute;top:16px;right:16px;z-index:3">&#9679; ACTIVE</span>
+  <div style="padding-right:80px"><span class="lbl">${lbl}</span>
+  <div class="amt num">${amt}<em>${unit}</em></div></div>
+  <div class="cap">${cap}</div>
+  <div class="meter"><i style="width:${pctv}%"></i></div>
+  <div class="mrow"><span>${l}</span><span>${r}</span></div></div>`;
+const sect  = (b,s) => `<div class="sect"><b>${b}</b><small>${s||''}</small></div>`;
+const lrow  = (icoHtml,bg,fg,title,sub,right,extra) => `<div class="lrow ${extra||''}">
+  <span class="ico" style="background:${bg};color:${fg}">${icoHtml}</span>
+  <span style="flex:1;min-width:0"><b>${title}</b>${sub?`<small>${sub}</small>`:''}</span>${right||''}</div>`;
+const pill  = (t,s) => `<span class="pill ${s} r">${t}</span>`;
+const kv    = rows => `<div class="kv">${rows.map(([k,v,c])=>`<div><span class="k">${k}</span><span class="v"${c?` style="color:${c}"`:''}>${v}</span></div>`).join('')}</div>`;
+const note  = (s,txt) => `<div class="note ${s}">${ic('info',13,2.1)}<span>${txt}</span></div>`;
+const btn   = (t,s) => `<div class="btn ${s||'pri'}">${t}</div>`;
+const steps = (n,a) => `<div class="steps">${Array.from({length:n},(_,i)=>`<i class="${i<a?'on':''}"></i>`).join('')}</div>`;
+const opt   = (icoHtml,bg,fg,b,s,sel) => `<div class="opt ${sel?'sel':''}">
+  <span class="ico" style="background:${bg};color:${fg}">${icoHtml}</span>
+  <span style="flex:1"><b>${b}</b>${s?`<small>${s}</small>`:''}</span></div>`;
+const chk   = (b,s) => `<div class="chk"><i>&#10003;</i><span><b>${b}</b>${s?`<small>${s}</small>`:''}</span></div>`;
+/* tile: threshold logic lives in the helper, not the caller (§7) */
+const tile  = (icoHtml,bg,fg,brand,name,pct,cnr) => {
+  const cls = pct>=15?'ok':pct>=12?'info':'warn';
+  return `<div class="tile">${cnr?`<span class="cnr pill ${cnr[1]}" style="margin:0">${cnr[0]}</span>`:''}
+   <span class="ico" style="background:${bg};color:${fg};margin-bottom:8px">${icoHtml}</span>
+   <span class="brand">${brand}</span><b>${name}</b>
+   <span class="disc num">${pctf(pct)} off</span>
+   <small>member price &middot; <span class="pill ${cls}" style="padding:1px 5px">${cls==='ok'?'best':cls==='info'?'good':'std'}</span></small></div>`;
+};
+const tabbar = (items,active) => `<div class="tabbar">${items.map(([k,i,l],n)=>
+  `<span class="${n===active?'on':''} ${k==='em'?'em':''}">${ic(i,20,n===active?2.15:1.85)}${l}</span>`).join('')}</div><div class="hbar"><i></i></div>`;
+const qr = c => `<span class="qr"><svg width="50" height="50" viewBox="0 0 21 21"><rect width="21" height="21" fill="var(--qr-quiet)"/><path fill="${c}" d="M1 1h5v5H1zM15 1h5v5h-5zM1 15h5v5H1zM2 2h3v3H2zM16 2h3v3h-3zM2 16h3v3H2zM8 1h2v2H8zM12 3h2v2h-2zM8 5h3v2H8zM14 8h3v2h-3zM1 8h2v3H1zM4 9h3v2H4zM8 9h2v3H8zM11 11h3v2h-3zM18 12h2v3h-2zM8 14h2v3H8zM12 15h3v2h-3zM15 18h3v2h-3zM11 18h2v2h-2z"/></svg></span>`;
+const mcard = (code,name,no,team,avail) => `<div class="mcard" style="--mc:${spcard(code)}">
+  <div class="wm">${field(code,{stroke:'var(--on-brand)',sw:4})}</div>
+  <div style="display:flex;justify-content:space-between;align-items:flex-start">
+    <span style="font-weight:900;font-size:14px;letter-spacing:-.03em">MatchFit</span>
+    <span style="font-size:7.5px;font-weight:800;letter-spacing:.09em;padding:4px 9px;border-radius:99px;background:rgba(0,0,0,.28)">${team.toUpperCase()}</span></div>
+  <div style="display:flex;align-items:center;margin-top:14px"><span class="chip"></span></div>
+  <div class="no">${no}</div>
+  <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:12px">
+    <div><div class="nm">${name}</div><div class="meta num">${avail} AVAILABLE &middot; OFFLINE 72H</div>
+    <span class="stp" style="margin-top:9px">&#9679; COVERED</span></div>${qr('var(--card-deep)')}</div></div>`;
+const ix = (label,inner,colour) => `<div class="ix-band" data-ix="${label}"${colour?` style="--ixc:${colour}"`:''}>${inner}</div>`;
+const epath = (icoHtml,c,t,b,s,tag,tagStyle) => `<div class="epath" style="--ec:${c}">
+  <div class="top"><span class="ico" style="background:${t};color:${c}">${icoHtml}</span>
+  <span style="flex:1"><b>${b}</b></span><span class="pill ${tagStyle}" style="margin:0">${tag}</span></div>
+  <small>${s}</small></div>`;
+
+/* ============================================================
+   SAMPLE DATA — plausible SA names, schools, merchants, amounts
+   ============================================================ */
+const MEM={ini:'DM',name:'Dineo Mokoena',no:'MF-2027-0846',mobile:'082 555 0142',
+  email:'dineo.m@webmail.co.za',addr:'14 Loop Street, Paarl',premium:3598};
+const DEPS=[
+ {n:'Thabo Mokoena',short:'Thabo',age:16,code:'rugby',team:'U16A Rugby',no:'MF &middot; 2027 &middot; 0847',cover:250000,used:18800},
+ {n:'Lerato Mokoena',short:'Lerato',age:15,code:'netball',team:'U15 Netball',no:'MF &middot; 2027 &middot; 0848',cover:250000,used:0}];
+const TABS_M=[['profile','user','Profile'],['cover','shield','OnePlan'],['em','siren','Emergency'],['shop','bag','Shop'],['more','more','More']];
+
+/* ============================================================
+   SCREENS (§8.1)
+   ============================================================ */
+const SCREENS=[
+
+/* ---------- MEMBER APP ---------- */
+{id:'M1',app:'Member app',name:'Launch & install',
+ notes:[
+  'Cold open. The loader cycles the four field outlines &mdash; rugby, soccer, hockey, netball &mdash; then lands on the OnePlan tab. It exists to say "this is not a rugby-only product" before a single word is read.',
+  ['new','Four codes are first-class from day one. Netball is the largest school sport by female participation in South Africa and the original brief ignored it entirely.'],
+  'Underwriter is named in small type at the foot: required disclosure, and it does trust work at the same time.',
+  ['q','Phase 1 as an installable PWA or straight to the app stores? A PWA keeps Apple review off the critical path and updates instantly, but iOS push needs add-to-home-screen first &mdash; and lapse reminders are a safety feature. Store presence via a Capacitor wrapper is 2&ndash;3 weeks and roughly R60k&ndash;R90k. Decide against the launch date, not on preference.']],
+ html:()=>`${sb()}
+  <div class="body" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;background:var(--brand-1)">
+   <div style="width:170px;color:var(--sp-rugby)">${field('rugby',{sw:5})}</div>
+   <div style="text-align:center">
+     <div style="font-weight:900;font-size:26px;letter-spacing:-.04em;color:var(--on-brand)">MatchFit</div>
+     <div style="font-family:var(--mono);font-size:8px;letter-spacing:.24em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-top:6px">Sport injury cover</div>
+     <div style="font-family:var(--mono);font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--sp-rugby);margin-top:14px">Rugby</div>
+   </div>
+   <div style="position:absolute;bottom:26px;left:0;right:0;text-align:center;font-family:var(--mono);font-size:7.5px;letter-spacing:.18em;color:rgba(255,255,255,.4);text-transform:uppercase">Powered by HPS Tech</div>
+  </div>`},
+
+{id:'M2',app:'Member app',name:'Profile',
+ notes:[
+  'User information only, as scoped. The principal member holds the policies; cover applies to the dependants, not to them. That sentence is on the screen because it is the single most misunderstood thing about the product.',
+  ['new','Emergency medical consent is captured per dependant at onboarding. It is what lets a coach act on the day instead of phoning around for permission.'],
+  'Payment methods live here because the Shop needs them. Nothing in the insurance flow ever touches a member card.',
+  ['q','What is the minimum age for a dependant to hold their own login? A 16-year-old is straightforward, a 10-year-old is not. Under POPIA a child’s data needs the competent person’s consent, so the principal member must be able to grant and revoke each login. Pick an age floor now &mdash; retrofitting consent across an existing user base is a migration, not a setting.'],
+  ['q','Does the principal member see the dependant’s in-app activity? Transparency helps safeguarding; visibility of a teenager’s health-adjacent activity is a different conversation. Decide before the login ships.']],
+ html:()=>`${sb()}${abar(MEM.ini,'Principal member &middot; '+MEM.no,MEM.name)}
+  ${sect('My details','Editable')}
+  ${kv([['Mobile',MEM.mobile],['Email',MEM.email],['ID number','8&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;'],['Address',MEM.addr]])}
+  ${note('info','You are the <b>principal member</b>. You hold the policies and make the claims &mdash; the cover applies to your dependants, not to you.')}
+  ${sect('Dependants','2 on file')}
+  ${DEPS.map(d=>lrow(field(d.code,{w:20,h:14,sw:14}),spt(d.code),spc(d.code),`${d.short} M. &middot; ${d.age}`,`${d.team} &middot; Demo High School`,pill('&#9679; COVERED','ok'))).join('')}
+  ${lrow(ic('plus',18),'var(--surface-2)','var(--ink)','Add a dependant','Onboards a new ActiveCare policy',`<span style="color:var(--muted-2)">${ic('chev',15,2.2)}</span>`,'dash')}
+  ${sect('Consents &amp; access','POPIA')}
+  ${kv([['POPIA consent','Given 12 Jan 2027','var(--ok-text)'],['Emergency medical','Both dependants','var(--ok-text)'],['Dependant logins','2 active'],['Coach lookup','Season only']])}
+  ${sect('Payment methods','For the Shop')}
+  ${lrow(ic('card',17),'var(--surface-2)','var(--ink)','Visa &bull;&bull;&bull;&bull; 4182','Default for Shop purchases',pill('SAVED','info'))}
+  <div style="height:18px"></div>
+  </div>${tabbar(TABS_M,0)}`},
+
+{id:'M3',app:'Member app',name:'OnePlan &mdash; cover',ix:1,
+ notes:[
+  'The policy home. Cover card, benefit limits, and the entry point to onboarding another player.',
+  ['new','One card per dependant, sport-coloured, with a signed offline token valid 72 hours. A coach at an away fixture with no signal can still verify cover.'],
+  'Benefit limits are read live from Oneplan, not hardcoded. The R500 claims management fee is shown here so it is never a surprise at claim time.',
+  ['q','The tab is labelled "OnePlan" because that is what Chris asked for. It hard-codes the underwriting manager into permanent navigation, and the brief itself contemplates King Price taking over underwriting. "My Cover" with "administered by Oneplan" as supporting text costs nothing and survives a change of underwriter. Worth one sentence in the reply.'],
+  ['q','Does the physical Oneplan card stay, or is virtual-only acceptable? The physical card works with no phone, no data and no battery, which matters at a rural away fixture. It also costs R160 and takes 30 days from first debit &mdash; which is a cover gap at season start if a player signs up in round one.']],
+ html:()=>{const tot=DEPS.reduce((a,d)=>a+d.cover,0),used=DEPS.reduce((a,d)=>a+d.used,0);
+  return `${sb()}${hd('OnePlan','Your ActiveCare policies, cover card and onboarding.')}
+  ${hero('2 policies &middot; winter season 2027',rnd(tot),'total cover','Thabo &middot; Rugby &nbsp;&middot;&nbsp; Lerato &middot; Netball',Math.round((tot-used)/tot*100),rnd(tot-used)+' remaining','Verified 12 min ago','rugby')}
+  ${sect('Risk Management &middot; Player','ActiveCare')}
+  ${DEPS.map(d=>lrow(field(d.code,{w:20,h:14,sw:14}),spt(d.code),spc(d.code),d.short+' M.','ActiveCare Season &middot; '+d.team,pill('&#9679; ACTIVE','ok'))).join('')}
+  ${lrow(ic('plus',18),'var(--surface-2)','var(--ink)','Onboard a new player','ActiveCare &middot; seamless sign-up',`<span style="color:var(--muted-2)">${ic('chev',15,2.2)}</span>`,'dash')}
+  ${ix('ONEPLAN API',mcard('rugby','THABO A. MOKOENA',DEPS[0].no,'U16A Rugby',rnd(DEPS[0].cover-DEPS[0].used)))}
+  ${sect('What is covered','Per event')}
+  ${kv([['Accident treatment',rnd(50000)],['MRI / CT scan, upfront',rnd(25000)],['Rehabilitation &amp; physio',rnd(5000)],['Assistive devices',rnd(3000)],['Claims management fee',rnd(500)]])}
+  ${note('info','Product terms and advice are provided by <b>Oneplan</b> as the licensed underwriting manager. MatchFit is the servicing platform.')}
+  <div style="height:18px"></div></div>${tabbar(TABS_M,1)}`}},
+
+{id:'M4',app:'Member app',name:'Onboard &mdash; plan',
+ notes:[
+  'Step 1 to 3 of onboarding: who, which sport and school, then the plan. All native, all inside MatchFit, because none of it is product presentation yet &mdash; it is data capture.',
+  ['new','Sport selection drives everything downstream: the accent colour, the cover trigger, the fixture check at claim time, and which coach can look the player up.'],
+  'Two plans only. ActiveCare Season at ' + money(1799) + ' once-off for one code over an 8-month season, or ActiveCare Multi-Sport at ' + money(249) + ' a month for all codes across 12 months.',
+  ['q','The 8-month season plan leaves a 4-month gap. Is a player injured in the off-season at a holiday tournament covered, or not? If not, say so on this screen &mdash; a repudiation discovered in December is worse than a lost sale in February.']],
+ html:()=>`${sb()}
+  <div style="display:flex;align-items:center;gap:10px;padding:15px 18px 2px"><span style="color:var(--muted-1);font-size:11px;font-weight:700">&larr; Cancel</span><b style="font-size:12.5px">New player</b></div>
+  ${hd('Choose a plan','Amahle Mokoena &middot; Hockey &middot; Demo High School')}
+  <div style="height:15px"></div>${steps(5,3)}
+  <div class="opt sel" style="flex-direction:column;align-items:stretch;gap:0">
+    <div style="display:flex;align-items:center;gap:11px">
+      <span class="ico" style="background:var(--tint-hockey);color:var(--sp-hockey)">${ic('shield',19)}</span>
+      <span style="flex:1"><b>ActiveCare Season</b><small>One sport &middot; 8-month season</small></span>
+      <span style="text-align:right"><b class="num" style="font-size:15px;letter-spacing:-.02em">${money(1799)}</b><small>once-off, per player</small></span></div>
+    <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--line);font-size:8.5px;color:var(--muted-1);line-height:1.5">${rnd(250000)} per event and per season &middot; ${rnd(25000)} scans upfront &middot; ${rnd(5000)} rehab &middot; Blue Card included</div></div>
+  <div class="opt" style="flex-direction:column;align-items:stretch;gap:0">
+    <div style="display:flex;align-items:center;gap:11px">
+      <span class="ico" style="background:var(--tint-hockey);color:var(--sp-hockey)">${ic('shield',19)}</span>
+      <span style="flex:1"><b>ActiveCare Multi-Sport</b><small>All codes &middot; 12 months</small></span>
+      <span style="text-align:right"><b class="num" style="font-size:15px;letter-spacing:-.02em">${money(249)}</b><small>per month, per player</small></span></div>
+    <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--line);font-size:8.5px;color:var(--muted-1);line-height:1.5">Covers overlapping seasons &middot; no off-season gap</div></div>
+  ${note('warn','A player who only plays one winter code is cheaper on Season. Two codes or a year-round athlete is cheaper on Multi-Sport from month eight.')}
+  <div style="height:18px"></div></div>${tabbar(TABS_M,1)}`},
+
+{id:'M5',app:'Member app',name:'Onboard &mdash; handoff',ix:1,
+ notes:[
+  '<b>The most important screen in the artefact.</b> Step 4 hands off to an Oneplan-hosted journey for product presentation, disclosure, consent and the record of advice. It is skinned to feel native so the member experiences one continuous flow.',
+  ['new','This is the pattern that keeps HPS outside FAIS. Oneplan presents the product and captures advice; MatchFit passes data and reads status back. The member sees a seamless sign-up. The regulator sees the licensed party doing the licensed act.'],
+  'Contract detail: HPS posts applicant and dependant data, Oneplan returns a policy number, cover state and card token. If the handoff is down, onboarding queues and the member is told plainly rather than shown a spinner.',
+  ['q','<b>The decision that changes the price of the whole build.</b> Chris asked for "the primary onboarding for all clients" and for it to be "seamless". Hosted handoff, as shown here, costs nothing in compliance. Fully native in-app onboarding is more seamless still, but it makes MatchFit the party presenting the product &mdash; which needs the FSP activated, with a rep register, fit-and-proper, CPD, a compliance officer, PI cover and FAIS Ombud exposure. Settle this before a build price is quoted, not after.'],
+  ['q','Does Oneplan already have a hosted onboarding journey we can deep-link into and skin? If "API into the backend" means we build the front end, the answer to the question above is forced.']],
+ html:()=>`${sb()}
+  <div class="body ophost">
+   <div class="ophead">
+     <div class="url">${ic('lock',11,2.2)} secure.oneplan.co.za/activecare</div>
+     <div class="t">Oneplan Underwriting Managers</div>
+     <div class="s">Licensed UMA &middot; underwritten by Bryte</div></div>
+   <div style="padding:13px 15px 0"><div style="font-family:var(--mono);font-size:7.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted-1)">Step 4 of 5 &middot; handed off for advice &amp; disclosure</div></div>
+   <div class="opbox"><h5>ActiveCare Season for Amahle Mokoena</h5>
+     <p>${money(1799)} once-off &middot; ${rnd(250000)} cover. Cover starts on the first successful payment and applies to official matches and accredited practice sessions.</p></div>
+   <div class="opbox"><h5>Disclosures</h5>
+     <div class="opck"><i>&#10003;</i><span>I have read the product summary, exclusions and the claims process.</span></div>
+     <div class="opck"><i>&#10003;</i><span>I understand this is medical <b>insurance</b>, not a medical scheme, and benefits are limited to the amounts shown.</span></div>
+     <div class="opck"><i>&#10003;</i><span>I consent to Oneplan processing my and my dependant&rsquo;s information for this policy.</span></div>
+     <div class="opck"><i>&#10003;</i><span>A record of advice will be emailed to me by Oneplan.</span></div></div>
+   <div style="padding:2px 3px 8px">${btn('Accept &amp; activate policy','pri')}</div>
+   <div style="padding:0 22px 22px"><p style="font-size:8.5px;color:var(--muted-1);line-height:1.6;text-align:center;margin:0">Hosted by Oneplan. Product presentation, advice and consent are captured by the licensed UMA &mdash; <b>not by MatchFit</b>.</p></div>
+  </div>${tabbar(TABS_M,1)}`},
+
+{id:'M6',app:'Member app',name:'Emergency &mdash; pathways',
+ notes:[
+  'Four pathways sharing a tab and sharing nothing else: a facility lookup, a live ambulance dispatch, a multi-party fund approval, and a six-week care pathway. Treating them as one feature is how this gets underestimated.',
+  ['new','Pathways 1 and 4 are phase 1 &mdash; both are workflows we control end to end. Pathways 2 and 3 are phase 2 because they need a dispatch partner and written clinical governance.'],
+  '<b>Non-negotiable design rule:</b> the emergency number is visible and tappable on every screen in this tab, at every moment, including offline, mid-request and on a failed API call. The app is a shortcut to a phone call, never a replacement for one. This is also the first thing a lawyer will ask about.',
+  ['q','<b>A contradiction in the brief that has to be resolved.</b> Chris wrote that Emergency is "for insured persons only", but the Catastrophic HNS Fund pays out whether or not the player is insured &mdash; that is its entire marketing halo. So who triggers pathway 3 for an uninsured player? Presumably the coach portal or the call centre, which is one more reason the coach portal belongs in phase 1.'],
+  ['q','Is emergency dispatch an API or a phone call? ER24 Spineline exists today for HNS. Whether pathway 2 can be automated at all depends on the answer, and nobody has asked yet.']],
+ html:()=>`${sb('16:48')}${hd('Emergency','Pick what happened. We handle the rest.')}
+  ${note('bad','<b>If someone is not breathing or is unconscious, call 112 now.</b> This app is a shortcut, never a replacement for a phone call.')}
+  <div style="height:13px"></div>
+  ${epath(ic('hospital',19),'var(--ok-text)','var(--tint-ok)','x','I need to go to hospital','Not urgent, no ambulance. We alert the call centre, you pick the facility, and funds are cleared before you arrive.','PHASE 1','ok')}
+  ${epath(ic('ambulance',19),'var(--warn-text)','var(--tint-warn)','x','Critical &mdash; send transport','Emergency transport to the nearest hospital with an open emergency ward. Dispatch receives your location.','PHASE 2','warn')}
+  ${epath(ic('siren',19),'var(--brand-4)','var(--tint-bad)','x','Head, neck or spine injury','Catastrophic HNS protocol. Spineline is activated and the discretionary fund process begins.','PHASE 2','bad')}
+  ${epath(ic('brain',19),'var(--sp-soccer)','var(--tint-soccer)','x','Suspected concussion','Blue Card pathway. Admission, confirmation, then the 6-week protocol and clearance from an approved doctor.','PHASE 1','info')}
+  ${note('info','These pathways are for <b>insured players</b>. An uninsured player with an HNS injury is still covered by the Fund &mdash; a coach or the call centre triggers that.')}
+  <div style="height:16px"></div></div>
+  <div class="embar">${ic('phone',15,2.2)} Emergency line <span class="n">010 001 0141</span></div>
+  ${tabbar(TABS_M,2)}`},
+
+{id:'M7',app:'Member app',name:'Emergency &mdash; clear funds',ix:1,
+ notes:[
+  'Pathway 1, the common case. Pick the facility, pick an amount within the benefit limit, and the card is loaded before arrival. The four checks run before the member is told anything is payable.',
+  ['new','This is the product’s actual differentiator. Every incumbent school accident policy reimburses after the fact; this clears funds to a card in about a minute so a parent is never asked for a deposit they do not have.'],
+  'Contract detail: card load is an Oneplan API call against the policy. If it fails the member sees the failure and the call-centre number, never a silent retry.',
+  ['q','Where does the facility directory come from? Pathways 1 and 2 both need hospitals tagged for open casualty, ICU and trauma capability. Oneplan may hold a provider list; a capability-tagged directory is a different thing and somebody has to own keeping it current. Wrong data here sends a child to the wrong hospital.'],
+  ['q','Above ' + rnd(250000) + ' the guardian signs the admission form and carries the shortfall. Do we negotiate payer-of-record status and a no-recourse term with a private group, or do we state the limit plainly and let the Fund handle the catastrophic tail? Not deciding is the same as choosing the second, without telling anyone.']],
+ html:()=>`${sb('16:52')}
+  <div style="display:flex;align-items:center;gap:10px;padding:15px 18px 2px"><span style="color:var(--muted-1);font-size:11px;font-weight:700">&larr; Emergency</span><b style="font-size:12.5px">Hospital, no transport</b></div>
+  ${hd('Ready to go','Paarl Mediclinic &middot; 4,2 km &middot; 24h casualty')}
+  <div style="height:14px"></div>${steps(4,4)}
+  ${ix('ONEPLAN CARD API',
+    chk('Cover active for Thabo M.','Policy in force &middot; season token verified')+
+    chk('Call centre alerted','Oneplan notified &middot; Paarl Mediclinic')+
+    chk('Within benefit limit',rnd(7500)+' against '+rnd(50000)+' per event')+
+    chk('Funds cleared to card','Swipe on arrival &middot; PIN required'))}
+  <div class="kv" style="margin-top:14px">${[['Authorisation','AUTH-88214'],['Loaded',money(7500)],['Remaining this season',rnd(250000-18800-7500)]].map(([k,v])=>`<div><span class="k">${k}</span><span class="v num">${v}</span></div>`).join('')}</div>
+  ${note('warn','Upload the invoice after treatment to finalise. We will remind you in 3 days, on push, SMS and email, and log every reminder sent.')}
+  <div style="height:16px"></div></div>
+  <div class="embar">${ic('phone',15,2.2)} Emergency line <span class="n">010 001 0141</span></div>
+  ${tabbar(TABS_M,2)}`},
+
+{id:'M8',app:'Member app',name:'Emergency &mdash; Blue Card',
+ notes:[
+  'Pathway 4, and the most specifiable thing in the product: a scheduled six-week care pathway, not an emergency. Admission, confirmed diagnosis, a protocol timer, then clearance booked from a pre-approved panel.',
+  ['new','<b>The protocol writes through to the coach portal and the school console.</b> Once a Blue Card is active the coach cannot mark the player available for contact play. That is a real safeguarding mechanism working across three different user types, and it is the strongest feature to demo to a headmaster.'],
+  'Only panel doctors can clear a Blue Card. The clearance visit is funded from the ' + rnd(5000) + ' rehabilitation benefit, so there is no reason for a family to skip it.',
+  ['new','Concussion is where school sport is most exposed and least served. Every incumbent product excludes it. Build this one properly first.'],
+  ['q','How often does the approved-panel list change, and who maintains it? A stale panel means a family drives to a doctor who cannot clear their child. This is a small operational commitment that decides whether the feature works.']],
+ html:()=>`${sb('17:05')}
+  <div style="display:flex;align-items:center;gap:10px;padding:15px 18px 2px"><span style="color:var(--muted-1);font-size:11px;font-weight:700">&larr; Emergency</span><b style="font-size:12.5px">Blue Card issued</b></div>
+  ${hd('Blue Card issued','Thabo may not return to play for 6 weeks.')}
+  <div style="height:14px"></div>
+  <div class="card" style="padding:14px 15px">
+    <div style="display:flex;align-items:center;gap:9px;margin-bottom:10px;color:var(--sp-soccer)">${ic('clock',15,2.1)}<b style="font-size:11.5px;color:var(--ink)">6-week return-to-play protocol</b><span class="pill info" style="margin-left:auto">WEEK 1 OF 6</span></div>
+    <div style="height:6px;border-radius:99px;background:var(--surface-2);overflow:hidden"><i style="display:block;height:100%;width:17%;border-radius:99px;background:var(--sp-soccer)"></i></div>
+    <div style="display:flex;gap:4px;margin-top:10px">${[1,2,3,4,5,6].map(w=>`<i style="flex:1;height:20px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:7px;font-style:normal;font-weight:600;background:${w===1?'var(--sp-soccer)':'var(--surface-2)'};color:${w===1?'var(--on-brand)':'var(--muted-1)'}">W${w}</i>`).join('')}</div>
+    <div style="font-size:8.5px;color:var(--muted-1);margin-top:10px;line-height:1.5">No contact training or matches. The app reminds you weekly and blocks the coach portal from marking Thabo available.</div>
+  </div>
+  ${sect('Book the clearance visit','Week 6 &middot; approved panel')}
+  ${[['Dr A. Petersen','Neurologist &middot; Paarl &middot; Tue &amp; Thu'],['Dr S. Naidoo','Sports physician &middot; Stellenbosch &middot; Mon, Wed, Fri'],['Dr J. Botha','Neurologist &middot; Bellville &middot; Wed only']]
+    .map(([n,s])=>lrow(ic('user',17),'var(--tint-soccer)','var(--sp-soccer)',n,s,pill('BOOK','info'))).join('')}
+  ${note('info','Only these pre-approved doctors can clear a Blue Card. The coach portal shows the same status, so nobody can quietly return a player to play.')}
+  <div style="height:16px"></div></div>
+  <div class="embar">${ic('phone',15,2.2)} Emergency line <span class="n">010 001 0141</span></div>
+  ${tabbar(TABS_M,2)}`},
+
+{id:'M9',app:'Member app',name:'Shop',
+ notes:[
+  'Categories, pre-approved listings, member pricing shown as a percentage rather than a rand figure so it reads the same whatever the item costs.',
+  ['new','Savings are tracked against premium paid, not against spend. "' + rnd(720) + ' earned back of ' + rnd(3598) + ' premium" is true and defensible. It replaces the brief’s claim that discounts offset the premium.'],
+  '<b>The claim that cannot be made.</b> At a 15% member discount a parent must spend ' + rnd(12000) + ' through the app to recoup a ' + money(1799) + ' premium &mdash; roughly four times a realistic annual sporting budget. Said in a school hall it is both false and a mis-selling exposure.',
+  ['q','<b>The decision that sizes the build.</b> Vouchers or full card checkout? Vouchers mean a single-use code redeemed on the partner’s own store: no PCI scope, no cart, no fulfilment, no returns, no merchant-of-record VAT question. Card checkout is roughly three to four times the build and makes MatchFit the retailer, liable for goods it never handles. Chris asked for card payment. Recommend vouchers for phase 1 and let volume justify checkout.'],
+  ['q','Puma, Nike and Adidas run strict channel and pricing control and rarely permit third-party discounting of this kind. USN, Living Brands and Max Mouthguards are the realistic launch partners. Do not let a plan depend on Nike in month one.'],
+  ['q','If MatchFit is merchant of record, VAT applies to the full sale value rather than the margin, and the 15% platform share drops to about 13%. Taking the margin as a commission invoiced to the partner keeps the full 15% and is the cheaper build. Confirm which before contracts are drafted.']],
+ html:()=>`${sb('19:20')}${hd('Shop','Member pricing from approved supplier partners.')}
+  <div class="card" style="padding:14px 15px;margin-top:13px">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;font-size:9.5px;color:var(--muted-1);font-weight:600"><span>Earned back so far</span><b class="num" style="color:var(--ok-text);font-family:var(--mono);font-size:19px;letter-spacing:-.03em">${rnd(720)}</b></div>
+    <div style="height:6px;border-radius:99px;background:var(--surface-2);margin-top:9px;overflow:hidden"><i style="display:block;height:100%;width:20%;border-radius:99px;background:var(--brand-3)"></i></div>
+    <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:7.5px;letter-spacing:.09em;color:var(--muted-1);margin-top:7px;text-transform:uppercase"><span>Of ${rnd(MEM.premium)} premium paid</span><span>Member pricing</span></div></div>
+  <div style="display:flex;gap:7px;padding:13px 15px 0;overflow-x:auto">${['Boots','Apparel','Protective','Supplements','Recovery'].map((c,i)=>`<span style="flex:none;font-size:10px;font-weight:700;padding:7px 13px;border-radius:99px;border:1px solid ${i===0?'var(--brand-1)':'var(--line)'};background:${i===0?'var(--brand-1)':'var(--surface)'};color:${i===0?'var(--on-brand)':'var(--ink-2)'}">${c}</span>`).join('')}</div>
+  <div class="grid2" style="margin-top:13px">
+    ${tile(ic('boot',17),'var(--tint-rugby)','var(--sp-rugby)','Puma','King Match FG boots',15,['APPROVED','ok'])}
+    ${tile(ic('boot',17),'var(--tint-netball)','var(--netball-text)','Adidas','Kakari rugby boots',12,['APPROVED','ok'])}
+    ${tile(ic('guard',17),'var(--tint-hockey)','var(--sp-hockey)','Max Mouthguards','Custom-fit mouthguard',20,['APPROVED','ok'])}
+    ${tile(ic('flask',17),'var(--tint-ok)','var(--ok-text)','USN','Whey recovery blend 1kg',15,['BATCH &#10003;','info'])}
+  </div>
+  ${note('ok','Every supplement carries a per-batch certificate from a WADA-accredited lab. Tap a supplement to scan and view it.')}
+  ${sect('How you pay','Phase 1')}
+  ${lrow(ic('gift',17),'var(--tint-ok)','var(--ok-text)','Voucher code',"Redeem in-store or on the partner's site",pill('LIVE','ok'))}
+  ${lrow(ic('card',17),'var(--surface-2)','var(--muted-1)','Pay with saved card','Visa &bull;&bull;&bull;&bull; 4182 &middot; needs PCI scope',pill('PHASE 2','warn'))}
+  <div style="height:18px"></div></div>${tabbar(TABS_M,3)}`},
+
+{id:'M10',app:'Member app',name:'Shop &mdash; track & trace',
+ notes:[
+  'Scan the tub, get the batch, get the certificate. Per-batch records with lab, test date, result and expiry, cached so it works with no signal in a pharmacy aisle.',
+  ['new','<b>The most differentiated feature in the entire product.</b> Professional players get batch-tested supplements with certificates from their union. School players buy from the local pharmacy with zero traceability, and cross-contamination is a live doping problem at schoolboy level. Nobody else solves this.'],
+  'Append-only log, so a certificate cannot be quietly swapped after the fact. The same admin console that stores batches also runs the listing pre-approval Chris asked for.',
+  ['new','Only accept supplement partners who can supply per-batch certificates. A partner who cannot is a liability wearing a discount.'],
+  ['q','Do we verify certificates ourselves or trust the supplier’s upload? Trusting the upload is nearly free and moves the risk onto us the first time a certificate turns out to be wrong. Independent verification costs real money per batch. Decide against the reputational exposure, because this feature’s whole value is that it can be trusted.']],
+ html:()=>`${sb('19:24')}
+  <div style="display:flex;align-items:center;gap:10px;padding:15px 18px 2px"><span style="color:var(--muted-1);font-size:11px;font-weight:700">&larr; Shop</span><b style="font-size:12.5px">Track &amp; trace</b></div>
+  <div style="text-align:center;padding:18px 18px 0">
+    <div style="width:96px;height:96px;margin:0 auto 13px;border-radius:24px;background:var(--tint-soccer);color:var(--sp-soccer);display:flex;align-items:center;justify-content:center">${ic('scan',44,1.6)}</div>
+    <div style="font-size:17px;font-weight:900;letter-spacing:-.03em;color:var(--ink)">USN &middot; Whey recovery blend</div>
+    <div style="font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--muted-1);text-transform:uppercase;margin-top:5px">Batch 27-0491</div></div>
+  <div style="height:15px"></div>
+  ${kv([['Lab','WADA-accredited'],['Tested','14 Feb 2027'],['Result','No banned substances','var(--ok-text)'],['Valid for','This batch only'],['Expiry','Nov 2028']])}
+  ${note('ok','School players finally get the same batch-level track-and-trace that professionals get from their union.')}
+  <div style="height:14px"></div>${btn('Get voucher at 15% off','pri')}
+  <div style="height:18px"></div></div>${tabbar(TABS_M,3)}`},
+
+{id:'M11',app:'Member app',name:'More &mdash; Fund & partners',
+ notes:[
+  'The Fund balance, the principal sponsor, the donor roll and the supplier partners. Everything a member might reasonably want to know about who backs this.',
+  ['new','<b>The sponsor split is deliberately not published here.</b> An earlier draft showed parents the full waterfall including the platform fee. Showing a fund balance, a beneficiary count and a donor roll builds the same trust without publishing HPS margin to every parent.'],
+  'The Fund is described on screen as a fund and not insurance, because it is discretionary and that distinction is where a regulator would look first.',
+  ['q','Sponsors will assume their money helped their school; the Fund pools nationally. Say which on this screen before the first sponsor asks, and if surplus is ever pooled, publish the waterfall order so nobody feels misled.'],
+  ['q','Volkswagen Group, Spur, Checkers and King Price appear here as illustrative examples and are labelled as such in the demo. They must be replaced with real or clearly generic names before this is shown to a board, because a director will reasonably ask whether VW is signed.']],
+ html:()=>`${sb('20:11')}${hd('Partners &amp; the Fund','Who backs this, and what the Fund holds.')}
+  <div class="card" style="margin-top:14px;overflow:hidden;padding:0">
+    <div style="background:var(--grad);color:var(--on-brand);padding:14px 15px">
+      <div style="font-family:var(--mono);font-size:8px;letter-spacing:.13em;text-transform:uppercase;opacity:.8">Catastrophic HNS Fund</div>
+      <div class="num" style="font-family:var(--mono);font-size:23px;letter-spacing:-.03em;margin:4px 0 1px">${rnd(3140000)}</div>
+      <div style="font-family:var(--mono);font-size:8px;letter-spacing:.1em;opacity:.7;text-transform:uppercase">Currently held</div></div>
+    <div style="padding:12px 15px">
+      <div style="font-size:9.5px;color:var(--ink-2);line-height:1.55">A discretionary fund for head, neck and spine injuries, available to any registered player. Released on the consensus of the on-field doctor and a specialist. <b>This is a fund, not insurance.</b></div>
+      <div style="display:flex;gap:18px;margin-top:12px;padding-top:11px;border-top:1px solid var(--line)">
+        ${[['7','Supported'],['31','Donors'],['R 0','Member cost']].map(([v,l],i)=>`<div><div class="num" style="font-family:var(--mono);font-size:15px;color:${i===2?'var(--ok-text)':'var(--ink)'}">${v}</div><div style="font-family:var(--mono);font-size:7px;letter-spacing:.12em;color:var(--muted-1);text-transform:uppercase">${l}</div></div>`).join('')}
+      </div></div></div>
+  ${sect('Principal sponsor','Season 2027')}
+  ${lrow('<b style="font-size:11px">VW</b>','var(--tint-soccer)','var(--partner-line)','Volkswagen Group','Funds the HNS Fund and school equipment',pill('ILLUSTRATIVE','warn'))}
+  ${sect('Sponsors &amp; donors','31 total')}
+  ${kv([['Spur Steak Ranches','FUND DONOR'],['Checkers','FUND DONOR'],['King Price Insurance','CO-BRAND'],['+28 clubs, old boys&rsquo; unions','']])}
+  ${sect('Supplier partners','Pre-approved')}
+  ${kv([['Puma &middot; Nike &middot; Adidas','APPROVED','var(--ok-text)'],['USN &middot; Living Brands','BATCH &#10003;','var(--ok-text)'],['Max Mouthguards','APPROVED','var(--ok-text)']])}
+  ${note('warn','All brand and sponsor names in this demo are <b>illustrative</b>. None is a signed partner.')}
+  <div style="height:18px"></div></div>${tabbar(TABS_M,4)}`},
+
+{id:'M12',app:'Member app',name:'Cover for you (18+)',ix:1,
+ notes:[
+  'Chris’s fourth layer: products for the policyholder rather than the player. Short-term and life, which is what King Price can actually write.',
+  ['new','Lead generation only. A members-only card, a handoff, no advice given, no quote rendered in MatchFit. That keeps this layer outside FAIS exactly like the onboarding handoff does.'],
+  'Integration surface is deliberately in King Price red so a member can see they are crossing into another company’s product.',
+  ['q','"API to King Price to make management and claims easier" is a much bigger step than lead generation. Displaying policy data may work under a mandate; <b>handling claims is intermediary work</b> and needs the FSP or a properly drawn outsourcing agreement. Split the two in the contract so phase 1 is not blocked by phase 2’s licensing.'],
+  ['q','King Price cannot write medical insurance, so this layer can never cover the player. Is that clear enough on the screen that a parent will not assume their child is covered by an adult policy bought here?']],
+ html:()=>`${sb()}
+  <div style="display:flex;align-items:center;gap:10px;padding:15px 18px 2px"><span style="color:var(--muted-1);font-size:11px;font-weight:700">&larr; OnePlan</span><b style="font-size:12.5px">Risk Management &middot; 18+</b></div>
+  ${hd('Cover for you','Products for the policyholder, 18 and over.')}
+  ${note('bad','<b>King Price is an authorised FSP.</b> Quotes, advice and claims are handled in their channel &mdash; MatchFit only makes the introduction.')}
+  ${ix('KING PRICE',
+    [['Car insurance','Decreasing premiums &middot; school-run cover'],
+     ['Household contents','Home and portable possessions'],
+     ['Cellphone cover','Family devices']]
+    .map(([a,b])=>lrow(ic('crown',17),'var(--tint-bad)','var(--partner-2)',a,b,pill('GET QUOTE','bad'))).join(''),
+   'var(--partner-2)')}
+  ${sect('Once a policy is live','Phase 2')}
+  ${lrow(ic('doc',17),'var(--surface-2)','var(--muted-1)','Manage &amp; claim in-app','Needs an intermediary agreement',pill('PHASE 2','warn'))}
+  <div style="height:18px"></div></div>${tabbar(TABS_M,1)}`},
+
+/* ---------- DEPENDANT ---------- */
+{id:'D1',app:'Dependant',name:'Dependant login',
+ notes:[
+  'The same app scoped to one child. Own cover only, no siblings, no premium figures, no emergency flow, no buying. Three tabs instead of five.',
+  ['new','A minor cannot open a claim or start an emergency pathway alone. The greyed tile notifies the principal member instead. That is the safe default and it is visible on screen rather than buried in a permissions matrix.'],
+  'Blue Card status is surfaced here so a player knows their own return-to-play position without asking a parent.',
+  ['q','Same age-floor question as Profile, from the other side: at what age does a dependant get this login at all, and who can revoke it? A 16-year-old with their own login is uncontroversial. A 10-year-old is a POPIA question with a different answer.'],
+  ['q','If a dependant cannot start an emergency pathway, the coach portal becomes load-bearing for any injury at an away fixture where no parent is present. That is the argument for putting the coach portal in phase 1, and it is not currently in scope.']],
+ html:()=>{const d=DEPS[0];
+  return `${sb('15:02')}
+  <div class="abar"><span class="ava" style="background:linear-gradient(135deg,${spc(d.code)},var(--brand-1))">TM</span>
+   <span class="who"><small>Dependant &middot; linked to D. Mokoena</small><b>Hi ${d.short}</b></span>
+   <span class="circ">${ic('bell',18)}</span></div>
+  <div class="hero" style="background:${spcard(d.code)}">
+   <div class="wm">${field(d.code,{stroke:'var(--on-brand)',sw:4})}</div>
+   <span class="stp" style="position:absolute;top:16px;right:16px;z-index:3">&#9679; COVERED</span>
+   <div style="padding-right:80px"><span class="lbl">My cover &middot; ${d.team}</span>
+   <div class="amt num">${rnd(d.cover-d.used)}<em>available</em></div></div>
+   <div class="cap">Winter 2027 &middot; valid to 30 September</div>
+   <div class="meter"><i style="width:93%"></i></div>
+   <div class="mrow"><span>Cover in force</span><span>Verified 8 min ago</span></div></div>
+  ${sect('My stuff','Read only')}
+  ${lrow(ic('card',17),spt(d.code),spc(d.code),'My card','Show a coach or clinic',`<span style="color:var(--muted-2)">${ic('chev',15,2.2)}</span>`)}
+  ${lrow(ic('brain',17),spt(d.code),spc(d.code),'Blue Card','My clearance status',pill('&#9679; CLEARED','ok'))}
+  ${lrow(ic('bag',17),spt(d.code),spc(d.code),'Shop','See prices, cannot buy',`<span style="color:var(--muted-2)">${ic('chev',15,2.2)}</span>`)}
+  ${lrow(ic('phone',17),'var(--surface-2)','var(--muted-1)','Tell my parent I am hurt','They open the emergency flow','','dash')}
+  ${note('warn','You can see <b>your own cover only</b>. Emergency, claims, payment and policy changes stay with your principal member.')}
+  <div style="height:18px"></div></div>
+  ${tabbar([['h','home','Home'],['c','card','Card'],['s','bag','Shop']],0)}`}},
+
+/* ---------- COACH ---------- */
+{id:'C1',app:'Coach portal',name:'Team sheet',
+ notes:[
+  '<b>Not in Chris’s five sections, and it needs to be.</b> Emergency pathway 4 starts on a field, pathway 1 usually starts with a coach, and the whole fee-bundled distribution plan runs through schools.',
+  ['new','Dark chrome, one-handed, works offline on a cached token. Designed for a wet Saturday touchline on EDGE, not a boardroom.'],
+  'Two squads shown, rugby and netball, because a rugby-only portal tells a netball director this is not their product.',
+  ['new','A Blue Card protocol from the member app writes through to here. Thabo shows BLUE CARD and cannot be marked available. Nomvula Sithole is uninsured, where only the HNS Fund applies.'],
+  ['q','Who grants and revokes coach access, and how is it scoped? Shown here as school-scoped and season-scoped with automatic expiry, which is the safe default. It needs a school-side owner &mdash; probably the sports office, which is another argument for the school console.']],
+ frame:'phone',dark:1,
+ html:()=>`${sb('16:48')}
+  <div style="padding:15px 18px 6px;color:var(--ink)">
+    <span style="font-family:var(--mono);font-size:8.5px;letter-spacing:.18em;color:var(--sp-rugby);display:flex;align-items:center;gap:7px">${ic('scan',13,2)} COACH FIELD PORTAL &middot; OFFLINE OK</span>
+    <div style="font-weight:900;font-size:19px;margin-top:6px;letter-spacing:-.025em">Team sheet</div>
+    <div style="font-size:10px;color:var(--muted-1);margin-top:1px">Coach J. du Plessis &middot; granted for Winter 2027</div></div>
+  <div style="display:flex;gap:6px;padding:11px 15px 0">
+    ${[['U16A Rugby',1],['U15 Netball',0]].map(([t,on])=>`<span style="flex:1;font-family:var(--mono);font-size:8.5px;letter-spacing:.09em;text-transform:uppercase;padding:8px;border-radius:10px;border:1px solid var(--line);text-align:center;background:${on?'var(--sp-rugby)':'var(--surface)'};color:${on?'var(--coach-canvas)':'var(--muted-1)'}">${t}</span>`).join('')}</div>
+  <div style="height:9px"></div>
+  ${[['Thabo Mokoena','0847','BLUE CARD','warn'],['Pieter van Wyk','0231','COVERED','ok'],['Liam Fourie','0512','COVERED','ok'],['Sipho Ndlovu','0698','LAPSED','bad'],['Nomvula Sithole','0501','UNINSURED','warn']]
+   .map(([n,no,st,cls])=>`<div class="lrow" style="justify-content:space-between">
+     <span><b>${n}</b><small class="num">MF-2027-${no}</small></span>
+     <span class="pill ${cls}">&#9679; ${st}</span></div>`).join('')}
+  ${note('info','You see cover status only, never medical or family detail. Every lookup is logged and the guardian is notified by SMS.')}
+  <div style="height:18px"></div></div>
+  ${tabbar([['s','scan','Scan'],['t','doc','Team'],['h','phone','Help']],0)}`},
+
+{id:'C2',app:'Coach portal',name:'Player scanned',
+ notes:[
+  'Four fields and nothing else: name, member number, cover state, status age. A coach does not need and must not see a diagnosis or a family contact list.',
+  ['new','Status age is shown explicitly. "Cached 9h 50m" is honest about an offline token and lets a coach decide whether to phone before treating.'],
+  'The lapsed state carries the evidence trail &mdash; reminded on three channels, all logged. That log is the defence when a family says nobody told them.',
+  ['new','A provisional alert raised here lands in the parent app and the school activity log. The guardian is notified before the coach finishes the tap.'],
+  ['q','Can a coach raise a provisional claim, or only an alert? Shown here as an alert to guardian plus call centre, which is the conservative choice. Letting a coach commit funds is faster on the day and much harder to control. Decide against the fraud exposure, not the convenience.']],
+ dark:1,
+ html:()=>`${sb('16:49')}
+  <div style="padding:15px 18px 6px;color:var(--ink)">
+    <span style="font-family:var(--mono);font-size:8.5px;letter-spacing:.18em;color:var(--sp-rugby);display:flex;align-items:center;gap:7px">${ic('scan',13,2)} COACH FIELD PORTAL &middot; OFFLINE OK</span>
+    <div style="font-weight:900;font-size:19px;margin-top:6px;letter-spacing:-.025em">Player scanned</div></div>
+  <div class="card" style="padding:15px">
+    <div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:15px;font-weight:900;color:var(--ink)">Thabo Mokoena</b>
+    <span class="pill warn">&#9679; BLUE CARD</span></div>
+    <div class="num" style="font-family:var(--mono);font-size:8.5px;color:var(--muted-1);margin-top:6px">MF-2027-0847 &middot; STATUS AGE 9H 50M (CACHED)</div>
+    <div style="margin-top:14px;background:var(--tint-warn);border:1px solid var(--warn-text);color:var(--warn-text);border-radius:13px;padding:12px;font-size:10px;line-height:1.55">
+      <b>Blue Card protocol active &mdash; week 1 of 6.</b> Thabo may not be selected for contact play until cleared by an approved doctor.</div>
+  </div>
+  <div style="padding:4px 3px 0">${btn(ic('phone',15,2.2)+' Emergency line','em')}</div>
+  ${note('info','Guardian notified by SMS now. This lookup is logged, append-only.')}
+  <div style="height:18px"></div></div>
+  ${tabbar([['s','scan','Scan'],['t','doc','Team'],['h','phone','Help']],0)}`},
+
+/* ---------- SCHOOL ---------- */
+{id:'S1',app:'School console',name:'Sports office',frame:'desk',
+ notes:[
+  'Desktop, because a sports office runs it on a laptop between lessons. Roster import, BokSmart status, coach grants and an append-only activity log.',
+  ['new','Opt-in penetration is shown honestly at 24%. That is normal for parent-pay and it is the entire argument for bundling into school fees, where penetration runs above 90%.'],
+  ['new','<b>Cover by code shows netball and hockey are 64 of 148 enrolled players.</b> The rugby-only assumption understates this book by nearly half, and this one chart is the fastest way to make that land in a room.'],
+  'BokSmart status is a console-level gate, not claim-time fine print. Cover only triggers for a match with BokSmart in place, so a lapsed accreditation is a repudiation waiting to happen &mdash; surfacing it here removes the product’s largest claims risk.',
+  ['q','Fee bundling needs a resolution through the annual budget meeting on 30 days’ notice under the Schools Act, and a majority of parents present. The nominated-provider route needs no vote at all. Run nominated-provider for one season, then take the claims data to the budget meeting &mdash; a vote on an abstract levy is a coin toss, a vote on a levy that visibly paid for eleven injured children is not.']],
+ html:()=>`
+  <div class="dstat">
+   <div><b class="num">620</b><small>Active players</small></div>
+   <div><b class="num" style="color:var(--ok-text)">148</b><small>Covered</small><em>24% opt-in</em></div>
+   <div><b class="num" style="color:var(--danger-text)">5</b><small>Lapsed</small><em style="color:var(--danger-text)">Chase list ready</em></div>
+   <div><b class="num">1</b><small>Blue Card active</small><em>1 blocked from play</em></div>
+  </div>
+  <h3 class="dh">Cover by code <span>who is actually enrolled</span></h3>
+  <div class="sbar">${[['Rugby',71,'--sp-rugby'],['Netball',38,'--sp-netball'],['Hockey',26,'--sp-hockey'],['Soccer',13,'--sp-soccer']].map(([l,v,t])=>`<i style="flex:${v};background:var(${t})"></i>`).join('')}</div>
+  <div class="leg">${[['Rugby',71,'--sp-rugby'],['Netball',38,'--sp-netball'],['Hockey',26,'--sp-hockey'],['Soccer',13,'--sp-soccer']].map(([l,v,t])=>`<span><i style="background:var(${t})"></i>${l} &middot; <span class="num">${v}</span></span>`).join('')}</div>
+  <h3 class="dh">Roster <span>CSV import &middot; both squads</span></h3>
+  <table class="g"><thead><tr><th>Player</th><th>Member no.</th><th>Team</th><th>Funding</th><th>Status</th></tr></thead><tbody>
+   ${[['Thabo Mokoena','0847','U16A Rugby','Parent-paid','BLUE CARD','warn'],
+      ['Pieter van Wyk','0231','U16A Rugby','Parent-paid','COVERED','ok'],
+      ['Sipho Ndlovu','0698','U16A Rugby','Debit failed 28 Jul','LAPSED','bad'],
+      ['Lerato Mokoena','0848','U15 Netball','Parent-paid','COVERED','ok'],
+      ['Nomvula Sithole','0501','U15 Netball','Not enrolled','UNINSURED','warn']]
+     .map(([n,no,t,f,s,c])=>`<tr><td>${n}</td><td class="num" style="font-family:var(--mono);font-size:11px">MF-2027-${no}</td><td>${t}</td><td style="color:var(--muted-1)">${f}</td><td><span class="pill ${c}">${s}</span></td></tr>`).join('')}
+  </tbody></table>
+  <h3 class="dh">BokSmart &amp; coach grants <span>auto-revoke at season end</span></h3>
+  <table class="g"><thead><tr><th>Item</th><th>Detail</th><th>Status</th></tr></thead><tbody>
+   <tr><td>BokSmart accreditation</td><td>Expires 14 Mar 2027</td><td><span class="pill ok">&#10003; CURRENT</span></td></tr>
+   <tr><td>Coach J. du Plessis</td><td>U16A &middot; status lookup + alert</td><td><span class="pill ok">GRANTED</span></td></tr>
+   <tr><td>Coach A. Ntombela</td><td>U15 Netball &middot; status lookup + alert</td><td><span class="pill ok">GRANTED</span></td></tr>
+  </tbody></table>
+  <h3 class="dh">Activity log <span>append-only evidence</span></h3>
+  <div style="background:var(--brand-1);border-radius:12px;padding:14px 16px;font-family:var(--mono);font-size:10px;color:rgba(255,255,255,.72);line-height:2">
+   <div>17:05 blue card &middot; Thabo M. &middot; concussion confirmed &middot; clearance booked wk 6</div>
+   <div>16:52 emergency &middot; pathway 1 &middot; Thabo M. &middot; Paarl Mediclinic &middot; ${rnd(7500)} cleared</div>
+   <div>16:49 lookup &middot; Coach du Plessis &rarr; MF-2027-0847 &middot; guardian notified</div>
+   <div>08:12 onboard &middot; Amahle Mokoena &middot; ActiveCare Season &middot; policy active</div>
+  </div>`},
+
+/* ---------- PARTNER ---------- */
+{id:'X1',app:'Partner portal',name:'Supplier partner',frame:'desk',
+ notes:[
+  'What a supplier sees: vouchers issued, approved listings, batch verification, members reached. Aggregate only, enforced at the data layer and mirrored in the contract.',
+  ['new','The listing approvals table is Chris’s "pre-approve the listings" requirement, with batch verification alongside it so supplements cannot go live uncertified.'],
+  '<b>The platform fee appears nowhere in this portal.</b> A supplier sees redemptions and discount delivered, never HPS margin.',
+  ['q','Settlement mechanism: single-use codes settled on issuance, or partner self-reported redemptions? Self-reporting is cheaper to build and you will be underpaid without being able to prove it. Issue codes and reconcile against redemption.'],
+  ['q','The rewards margin is disintermediable. Once volume is proven a partner can go direct to schools or squeeze the 30%. Defend it with three-year supply terms, category exclusivity as the trade, and a most-favoured-nation clause &mdash; or accept that the main revenue line has a two-year life.']],
+ html:()=>`
+  <div class="dstat">
+   <div><b class="num">1 243</b><small>Vouchers issued</small><em>+3 this session</em></div>
+   <div><b class="num">12</b><small>Approved listings</small><em>6 brands live</em></div>
+   <div><b class="num">6</b><small>Batches certified</small><em>All WADA-accredited</em></div>
+   <div><b class="num">148</b><small>Members reached</small><em>1 school &middot; 4 codes</em></div>
+  </div>
+  <h3 class="dh">Listing approvals <span>pre-approval requirement</span></h3>
+  <table class="g"><thead><tr><th>Brand</th><th>Item</th><th>Member discount</th><th>Batch</th><th>Status</th></tr></thead><tbody>
+   ${[['Puma','King Match FG boots','15%','&mdash;','APPROVED','ok'],
+      ['Adidas','Kakari rugby boots','12%','&mdash;','APPROVED','ok'],
+      ['Max Mouthguards','Custom-fit mouthguard','20%','&mdash;','APPROVED','ok'],
+      ['USN','Whey recovery blend 1kg','15%','27-0491','BATCH VERIFIED','info'],
+      ['Living Brands','Junior multivitamin','12%','27-0388','BATCH VERIFIED','info']]
+     .map(([b,n,d,bt,s,c])=>`<tr><td>${b}</td><td>${n}</td><td class="num">${d}</td><td class="num" style="font-family:var(--mono);font-size:11px">${bt}</td><td><span class="pill ${c}">${s}</span></td></tr>`).join('')}
+  </tbody></table>
+  <h3 class="dh">Redemptions per month <span>winter season 2027</span></h3>
+  <div style="display:flex;align-items:flex-end;gap:9px;height:110px;border-bottom:1px solid var(--line);padding:0 4px">
+   ${[18,26,31,24,35,29].map(v=>`<div style="flex:1;height:${Math.round(v/35*100)}%;border-radius:6px 6px 0 0;background:var(--brand-2);position:relative"><span class="num" style="position:absolute;top:-18px;left:0;right:0;text-align:center;font-family:var(--mono);font-size:8.5px;color:var(--muted-1)">${v}</span></div>`).join('')}
+  </div>
+  <div style="display:flex;gap:9px;padding:7px 4px 0">${['Feb','Mar','Apr','May','Jun','Jul'].map(m=>`<span style="flex:1;text-align:center;font-family:var(--mono);font-size:8.5px;color:var(--muted-1)">${m}</span>`).join('')}</div>
+  <p style="font-size:11.5px;color:var(--muted-1);margin-top:18px">Brand names are illustrative. Individual member data is structurally unavailable to this portal.</p>`},
+
+{id:'X2',app:'Partner portal',name:'Principal sponsor',frame:'desk',
+ notes:[
+  'What a principal sponsor sees: Fund balance, cases assisted, school equipment funded, and SED eligibility. No redemptions, because a sponsor is not a retailer.',
+  ['new','<b>"Premium subsidy &mdash; NOT FUNDED" is stated on the screen.</b> One row that makes the whole revised model legible: sponsors fund the Fund and school equipment, parents pay premiums.'],
+  ['new','Framing sponsorship as B-BBEE socio-economic development spend moves the sale from a marketing budget, which is small and cut first, to a compliance budget that must be spent annually. That is the single biggest change to the sponsorship pitch.'],
+  'No individual member is visible. Sponsor contracts mirror the data-layer restriction so a request for member-level data is a contractual breach, not a negotiation.',
+  ['q','R20 000 per sponsor per season splits R7 500 to the Fund, R10 000 to school equipment and R2 500 to the platform. HPS does the selling, onboarding, hosting and reporting for 12.5%. Raising the package to R25 000 with R7 500 to the platform leaves the R17 500 impact story untouched and triples that revenue line. Decide before the first sponsor pack goes out.']],
+ html:()=>`
+  <div style="border:1px solid var(--warn-text);background:var(--tint-warn);border-radius:12px;padding:14px 18px;margin-bottom:22px;font-size:12.5px;color:var(--warn-text)">
+   <b>Illustrative sponsor.</b> Volkswagen Group is a worked example of a principal sponsorship. <b>Nothing is signed</b> &mdash; replace before this is shown to a board.</div>
+  <div class="dstat">
+   <div><b class="num">${rnd(3140000)}</b><small>Fund balance</small><em>Standing float maintained</em></div>
+   <div><b class="num">7</b><small>Players supported</small><em>Catastrophic HNS cases</em></div>
+   <div><b class="num">${rnd(10000)}</b><small>School equipment</small><em>Spine boards, courses</em></div>
+   <div><b class="num">148</b><small>Members reached</small><em>1 school &middot; 4 codes</em></div>
+  </div>
+  <h3 class="dh">What the sponsorship funds <span>per school, per season</span></h3>
+  <table class="g"><tbody>
+   <tr><td>Contribution to the Catastrophic HNS Fund</td><td class="num" style="text-align:right">${rnd(7500)}</td></tr>
+   <tr><td>School medical equipment &mdash; spine boards, coach courses</td><td class="num" style="text-align:right">${rnd(10000)}</td></tr>
+   <tr><td>Recognised as socio-economic development spend</td><td style="text-align:right"><span class="pill ok">&#10003; ELIGIBLE</span></td></tr>
+   <tr><td>Category exclusivity honoured (sponsor exclusion policy v1.2)</td><td style="text-align:right"><span class="pill ok">&#10003; ENFORCED</span></td></tr>
+   <tr><td>Premium subsidy</td><td style="text-align:right"><span class="pill bad">&#10007; NOT FUNDED</span></td></tr>
+  </tbody></table>
+  <h3 class="dh">Fund releases per month <span>cases assisted</span></h3>
+  <div style="display:flex;align-items:flex-end;gap:9px;height:100px;border-bottom:1px solid var(--line);padding:0 4px">
+   ${[3,5,4,6,5,4].map(v=>`<div style="flex:1;height:${Math.round(v/6*100)}%;border-radius:6px 6px 0 0;background:var(--partner-line);position:relative"><span class="num" style="position:absolute;top:-18px;left:0;right:0;text-align:center;font-family:var(--mono);font-size:8.5px;color:var(--muted-1)">${v}</span></div>`).join('')}
+  </div>
+  <div style="display:flex;gap:9px;padding:7px 4px 0">${['Feb','Mar','Apr','May','Jun','Jul'].map(m=>`<span style="flex:1;text-align:center;font-family:var(--mono);font-size:8.5px;color:var(--muted-1)">${m}</span>`).join('')}</div>
+  <p style="font-size:11.5px;color:var(--muted-1);margin-top:18px">No individual member is visible to a sponsor. The platform fee appears in neither partner view.</p>`}
+];
+
+/* ============================================================
+   FLOW (§8.3)
+   ============================================================ */
+const FLOW=[
+ {ln:'Path A &middot; How a member arrives',nodes:[
+   ['School names MatchFit','Nominated provider, no fee vote'],
+   ['Parent downloads app',null,'M1','new'],
+   ['Profile + dependants','Consents captured','M2','new'],
+   ['Choose sport &amp; plan',null,'M4','new'],
+   ['Oneplan hosted sign-up','Advice &amp; disclosure','M5','partner'],
+   ['Policy active','Card issued','M3','new'],
+ ]},
+ {ln:'Path B &middot; The injury loop',nodes:[
+   ['Injury on the field','Official match or practice'],
+   ['Emergency tab','Four pathways','M6','new'],
+   ['Pick facility','Capability-tagged directory',null,'gap'],
+   ['Clear funds to card','Oneplan card API','M7','partner'],
+   ['Treatment','No deposit asked of the parent'],
+   ['Upload invoice','Reminders on 3 channels','M7','new'],
+ ]},
+ {ln:'Path C &middot; Concussion, the Blue Card',nodes:[
+   ['Suspected concussion','Coach or parent'],
+   ['Admission &amp; check-in','Funded from rehab benefit','M8','new'],
+   ['6-week protocol','Weekly reminders','M8','new'],
+   ['Coach portal blocked','Cannot select player','C2','new'],
+   ['Clearance visit','Pre-approved panel only','M8','new'],
+   ['Return to play','Recorded against the policy'],
+ ]},
+ {ln:'Path D &middot; Catastrophic HNS',nodes:[
+   ['HNS injury suspected','Insured or not'],
+   ['ER24 Spineline','Road transport today',null,'partner'],
+   ['On-field doctor','Stabilisation recorded',null,'gap'],
+   ['Specialist consensus','Two-party sign-off',null,'gap'],
+   ['Tiered fund approval','Trustee release',null,'gap'],
+   ['Transfer to capable unit','Air or road',null,'gap'],
+ ]},
+ {ln:'Path E &middot; The rewards loop',nodes:[
+   ['Member browses Shop','Approved listings only','M9','new'],
+   ['Scan supplement batch','WADA certificate','M10','new'],
+   ['Voucher issued','Single-use code','M9','new'],
+   ['Redeemed at partner','Partner’s own till'],
+   ['Commission invoiced','Never netted from premium','X1','new'],
+ ]},
+ {ln:'Path F &middot; Adult cover, 4th layer',nodes:[
+   ['Member taps Cover for you',null,'M12','new'],
+   ['Handoff to King Price','Their FSP, their advice','M12','partner'],
+   ['Policy activated','In King Price systems',null,'partner'],
+   ['In-app management','Needs intermediary agreement',null,'gap'],
+ ]},
+];
+
+/* ============================================================
+   RENDER / ROUTER
+   ============================================================ */
+const byApp = SCREENS.reduce((m,s)=>{(m[s.app]=m[s.app]||[]).push(s);return m},{});
+
+function renderRail(activeId){
+  document.getElementById('rail').innerHTML =
+   `<div class="brand"><b>MatchFit</b><small>Scoping demo &middot; v1</small></div>` +
+   Object.entries(byApp).map(([app,list])=>
+     `<h4>${app}</h4>` + list.map(s=>
+       `<a href="#${s.id}" class="${s.id===activeId?'on':''}"><span class="sid">${s.id}</span><span>${s.name}</span>${s.ix?'<span class="dot" title="integration point"></span>':''}</a>`).join('')
+   ).join('') +
+   `<h4>Process</h4><a href="#FLOW" class="${activeId==='FLOW'?'on':''}"><span class="sid">&#9673;</span><span>Flow map</span></a>`;
+}
+
+function renderNotes(s){
+  const el=document.getElementById('notes');
+  if(!s){el.innerHTML=`<div class="nh"><b>Flow map</b><small>Process &middot; 6 lanes</small></div>
+    <div class="nlist">
+      <div class="nitem">Every path a member, coach or partner can take. Nodes link to the screen behind them where one exists.</div>
+      <div class="nitem q"><span class="ntag">Open question</span>Four of the six red gap nodes sit in <b>Path D</b>. The catastrophic pathway is the least designed and the most consequential part of the product. It should not ship in phase 1 with a placeholder workflow.</div>
+      <div class="nitem q"><span class="ntag">Open question</span><b>Path B has a gap at the facility directory.</b> Nobody owns a hospital list tagged for casualty, ICU and trauma capability. Wrong data there sends a child to the wrong hospital, so it gates pathways 1 and 2 both.</div>
+      <div class="nitem"><b>Path E is the commercial engine.</b> On the revised model rewards is roughly 60% of revenue by year three, and the platform fee never covers running costs on its own.</div>
+    </div>`;return}
+  el.innerHTML=`<div class="nh"><b>${s.name}</b><small>${s.id} &middot; ${s.app}${s.ix?' &middot; integration':''}</small></div>
+   <div class="nlist">${(s.notes||[]).map(n=>{
+     if(Array.isArray(n)){
+       const k=n[0]==='new'?'new':'q';
+       return `<div class="nitem ${k}"><span class="ntag">${k==='new'?'New in this build':'Open question'}</span>${n[1]}</div>`;
+     }
+     return `<div class="nitem">${n}</div>`;
+   }).join('')}</div>`;
+}
+
+function renderFlow(){
+  return `<div class="flowwrap">
+   <h3>Process map</h3>
+   <p class="fsub">Six paths. Green is new in this build, red is a known gap or risk, blue belongs to another system. Click any node with a screen ID to open it.</p>
+   ${FLOW.map(l=>`<div class="lane"><div class="ln">${l.ln}</div><div class="nodes">
+     ${l.nodes.map(([label,sub,sid,style])=>{
+       const cls=style?` ${style}`:'', badge=style?`<span class="badge">${style==='new'?'NEW':style==='gap'?'GAP':'PARTNER'}</span>`:'';
+       const inner=`${badge}<b>${label}</b>${sub?`<small>${sub}</small>`:''}${sid?`<span class="lk">&rarr; ${sid}</span>`:''}`;
+       return sid?`<a class="node${cls}" href="#${sid}">${inner}</a>`:`<div class="node${cls}">${inner}</div>`;
+     }).join('')}
+   </div></div>`).join('')}
+   <div class="flegend">
+     <span><i style="background:var(--surface-2)"></i>Exists today</span>
+     <span><i style="background:var(--tint-ok);border-color:var(--ok-text)"></i>New in this build</span>
+     <span><i style="background:var(--tint-bad);border-color:var(--danger-text)"></i>Known gap or risk</span>
+     <span><i style="background:var(--tint-soccer);border-color:var(--partner-line)"></i>Another system</span>
+   </div>
+  </div>`;
+}
+
+function route(){
+  const id=(location.hash||'#M1').slice(1);
+  const stage=document.getElementById('stageBody'), title=document.getElementById('stitle');
+  if(id==='FLOW'){
+    title.innerHTML=`<span>&#9673;</span>Flow map`;
+    stage.innerHTML=renderFlow(); renderRail('FLOW'); renderNotes(null);
+    document.getElementById('tFlow').classList.add('on');
+    window.scrollTo(0,0); return;
+  }
+  document.getElementById('tFlow').classList.remove('on');
+  const s=SCREENS.find(x=>x.id===id)||SCREENS[0];
+  title.innerHTML=`<span>${s.id}</span>${s.name}`;
+  stage.innerHTML = s.frame==='desk'
+    ? `<div class="desk"><div class="chrome"><i></i><i></i><i></i><div class="url">app.matchfit.co.za/${s.id.toLowerCase()}</div></div><div class="dbody">${s.html()}</div></div>`
+    : `<div class="phone"><div class="screen${s.dark?' dk':''}">${s.html()}</div></div>`;
+  renderRail(s.id); renderNotes(s);
+}
+addEventListener('hashchange',route);
+document.getElementById('tFlow').addEventListener('click',()=>{location.hash='#FLOW'});
+route();
+</script>
+</body>
+</html>

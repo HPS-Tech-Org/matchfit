@@ -1,0 +1,11 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
+
+# never commit local screenshots from the render check
+*.png
+*.jpg
+!docs/**/*.png
