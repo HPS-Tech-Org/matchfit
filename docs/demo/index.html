@@ -663,7 +663,7 @@ const SCREENS=[
   ['q','The 8-month season plan leaves a four-month gap. Is a player injured at an off-season tournament covered? If not it should be said on this screen &mdash; a repudiation discovered in December is worse than a lost sale in February.'],
  ],
  html:()=>`${sb()}
-  <div style="display:flex;align-items:center;gap:10px;padding:15px 18px 2px"><span style="color:var(--muted-1);font-size:11px;font-weight:700">&larr; Cancel</span><b style="font-size:12.5px">New player</b></div>
+  <div style="display:flex;align-items:center;gap:10px;padding:15px 18px 2px"><span style="color:var(--muted-1);font-size:11px;font-weight:700">&larr; Back</span><b style="font-size:12.5px">New player</b></div>
   ${hd('Choose a plan','Amahle Mokoena &middot; Hockey &middot; Demo High School group')}
   <div style="height:15px"></div>${steps(6,4)}
   <div class="opt sel" style="flex-direction:column;align-items:stretch;gap:0">
@@ -683,7 +683,7 @@ const SCREENS=[
 
 {id:'M6',phase:1,app:'Member app',name:'Onboard &mdash; handoff',ix:1,
  notes:[
-  'Step 4 hands off to Oneplan for product presentation, disclosure and the record of advice, skinned so the policyholder experiences one continuous flow.',
+  'Step 5 hands off to Oneplan for product presentation, disclosure and the record of advice, skinned so the policyholder experiences one continuous flow.',
   ['new','This keeps the licensed act with the licensed party: Oneplan presents and advises, the app captures data and reads status back. The member sees one seamless sign-up.'],
   ['q','<b>Phase 1 &middot; the question that unblocks the whole build.</b> What does the Oneplan onboarding endpoint expect? Field-level payload, authentication, validation rules, sandbox access, and what a successful response returns. <b>Nothing can be scheduled or priced until this is documented.</b>'],
   ['q','<b>Phase 1 &middot; hosted or rendered?</b> Does Oneplan have an onboarding journey we can deep-link into and skin, or does the app render the whole flow? It changes who is presenting the product, and therefore where the compliance obligation sits.'],

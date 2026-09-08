@@ -599,7 +599,7 @@ function obFlow(){
    <span class="oic" style="background:#E4E9EE;color:var(--brand)">${ic('user',19)}</span>
    <span><b>${n}</b><small>${i===0?'Already on your profile as a dependant':'Add a new dependant'}</small></span></button>`).join('')}`;
  if(o.step===2)return `<div class="backrow"><button onclick="S.ob.step=1;render()">${ic('chevL',15,2.4)} Back</button></div>
-  <div class="hd"><h2>Their details</h2><p>Captured before any price is shown.</p></div>
+  <div class="hd"><h2>Their details</h2><p>${o.name==='Amahle Mokoena'?'Pre-filled from your profile. Check before continuing.':'Captured before any price is shown.'}</p></div>
   <div style="height:14px"></div>${bar}
   <div class="kv" style="margin:0 15px 10px">
    <div><span class="k">First name</span><span class="v">${o.name.split(' ')[0]}</span></div>
@@ -612,14 +612,14 @@ function obFlow(){
  if(o.step===3)return `<div class="backrow"><button onclick="S.ob.step=2;render()">${ic('chevL',15,2.4)} Back</button></div>
   <div class="hd"><h2>Sport and group</h2><p>Cover applies between the four white lines of that code.</p></div>
   <div style="height:14px"></div>${bar}
-  ${CODES.map(c=>{const s=sp(c);return `<button class="opt" style="${o.sport===c?`border-color:${s.hex};box-shadow:0 0 0 1.5px ${s.hex}`:''}" onclick="S.ob.sport='${c}';render()">
+  ${CODES.map(c=>{const s=sp(c);return `<button class="opt" style="${o.sport===c?`border-color:${s.hex};box-shadow:0 0 0 1.5px ${s.hex}`:''}" onclick="S.ob.sport='${c}';render();setTimeout(()=>document.querySelector('.body').scrollTo({top:1e4,behavior:'smooth'}),60)">
    <span class="oic" style="background:${s.t};color:${s.c}">${fieldSvg(c,'t',{w:22,h:15,sw:13})}</span>
    <span><b>${s.n}</b><small>Official matches and accredited practice</small></span></button>`}).join('')}
   ${o.sport?`<div class="sect" style="padding-top:12px"><b>Group code</b><small>Optional</small></div>
   <div class="kv" style="margin:0 15px 9px">
-   <div><span class="k">Code from your school or club</span><span class="v mono" style="letter-spacing:.25em">&bull;&bull;&bull;&bull;&bull;</span></div>
+   <div><span class="k">Your code</span><span class="v mono" style="letter-spacing:.25em">&bull;&bull;&bull;&bull;&bull;</span></div>
   </div>
-  <div class="notice" style="background:#EDF0F3;color:#3B4653">${ic('info',13,2.1)}<span>Your school or club gives you a code when it joins. It links this policy to their group. No code? Cover is identical as an individual policy, and it can join a group later.</span></div>
+  <div class="notice" style="background:#EDF0F3;color:#3B4653">${ic('info',13,2.1)}<span>Issued by your school or club when it joins. No code? Cover is identical as an individual policy; it can join a group later.</span></div>
   <div style="padding:12px 18px 0;display:grid;gap:8px">
    <button class="btnP" style="background:var(--brand)" onclick="S.ob.group='Demo High School';S.ob.step=4;render();toast('Group code accepted &middot; Demo High School, Winter 2027.')">I have a group code</button>
    <button class="btnG" onclick="S.ob.group=null;S.ob.step=4;render()">Continue without a code</button>
