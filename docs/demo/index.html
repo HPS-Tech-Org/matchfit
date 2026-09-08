@@ -80,7 +80,7 @@
 
   --r-card:18px; --r-btn:14px;
   --font:'Archivo',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
-  --mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,monospace;
+  --mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Consolas,'Segoe UI Mono',Menlo,monospace;
 }
 
 /* ============================================================
@@ -292,7 +292,7 @@ a.tbtn.try:hover{background:var(--tint-ok)}
 /* emergency */
 .embar{flex:none;background:var(--brand-4);color:var(--on-brand);padding:10px 15px;display:flex;align-items:center;gap:9px;font-size:10.5px;font-weight:800}
 [data-theme="dark"] .embar{color:var(--on-accent)}
-.embar .n{margin-left:auto;font-family:var(--mono);font-size:11px;letter-spacing:.05em}
+.embar .n{margin-left:auto;font-family:inherit;font-size:12.5px;font-weight:800;letter-spacing:.06em;font-variant-numeric:tabular-nums}
 .epath{display:block;margin:0 15px 10px;background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--ec);border-radius:var(--r-card);padding:13px 14px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
 .epath .top{display:flex;align-items:center;gap:10px}
 .epath b{font-size:12px;font-weight:800;color:var(--ink);display:block;letter-spacing:-.015em;line-height:1.25}
@@ -785,7 +785,7 @@ const SCREENS=[
     <div style="display:flex;justify-content:space-between;align-items:baseline;font-size:9.5px;color:var(--muted-1);font-weight:600"><span>Earned back so far</span><b class="num" style="color:var(--ok-text);font-family:var(--mono);font-size:19px;letter-spacing:-.03em">${rnd(720)}</b></div>
     <div style="height:6px;border-radius:99px;background:var(--surface-2);margin-top:9px;overflow:hidden"><i style="display:block;height:100%;width:20%;border-radius:99px;background:var(--brand-3)"></i></div>
     <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:7.5px;letter-spacing:.09em;color:var(--muted-1);margin-top:7px;text-transform:uppercase"><span>Of ${rnd(MEM.premium)} premium paid</span><span>Member pricing</span></div></div>
-  <div style="display:flex;gap:7px;padding:13px 15px 0;overflow-x:auto">${['Boots','Apparel','Protective','Supplements','Recovery'].map((c,i)=>`<span style="flex:none;font-size:10px;font-weight:700;padding:7px 13px;border-radius:99px;border:1px solid ${i===0?'var(--brand-1)':'var(--line)'};background:${i===0?'var(--brand-1)':'var(--surface)'};color:${i===0?'var(--on-brand)':'var(--ink-2)'}">${c}</span>`).join('')}</div>
+  <div style="display:flex;flex-wrap:wrap;gap:7px;padding:13px 15px 0">${['Boots','Apparel','Protective','Supplements','Recovery'].map((c,i)=>`<span style="flex:none;font-size:10px;font-weight:700;padding:7px 13px;border-radius:99px;border:1px solid ${i===0?'var(--brand-1)':'var(--line)'};background:${i===0?'var(--brand-1)':'var(--surface)'};color:${i===0?'var(--on-brand)':'var(--ink-2)'}">${c}</span>`).join('')}</div>
   <div class="grid2" style="margin-top:13px">
     ${tile(ic('boot',17),'var(--tint-rugby)','var(--sp-rugby)','Sportswear partner A','Firm-ground match boots',15,['APPROVED','ok'])}
     ${tile(ic('boot',17),'var(--tint-netball)','var(--netball-text)','Sportswear partner B','Forward&rsquo;s rugby boots',12,['APPROVED','ok'])}
