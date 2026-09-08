@@ -40,7 +40,7 @@ svg.ic{display:block;flex:none}
 .spacer{flex:1}
 .tbtn{font-size:11.5px;color:var(--ink3);border:1px solid var(--line);padding:8px 13px;border-radius:9px;transition:.15s}
 .tbtn:hover{color:var(--ink);border-color:var(--ink3)}
-.stage{display:flex;gap:28px;align-items:flex-start;justify-content:center;flex-wrap:wrap}
+.stage{display:flex;flex-direction:column;align-items:center;gap:26px}
 .phonewrap{position:relative;flex:none}
 .glow{position:absolute;inset:-60px -80px;border-radius:50%;filter:blur(70px);opacity:.15;pointer-events:none}
 .foot{width:100%;text-align:center;font-size:10.5px;color:var(--ink3);line-height:1.6;max-width:820px;margin:8px auto 0;padding-top:14px;border-top:1px solid var(--line)}
@@ -60,7 +60,7 @@ svg.ic{display:block;flex:none}
 .sb{display:flex;justify-content:space-between;align-items:center;font-size:11.5px;font-weight:700;padding:15px 24px 5px;flex:none}
 .body{flex:1;overflow-y:auto;overflow-x:hidden;scrollbar-width:none}
 .body::-webkit-scrollbar{display:none}
-.scr[data-scrolls]::after{content:"";position:absolute;left:0;right:0;bottom:74px;height:30px;pointer-events:none;z-index:25;background:linear-gradient(to top,var(--sc),transparent)}
+
 .view{animation:rise .28s cubic-bezier(.2,.7,.3,1)}
 @keyframes rise{from{transform:translateY(9px)}to{transform:none}}
 @keyframes pop{from{transform:scale(.96) translateY(12px)}to{transform:none}}
@@ -212,7 +212,7 @@ svg.ic{display:block;flex:none}
 .opcheck i{width:16px;height:16px;border-radius:4px;border:1.5px solid var(--op);background:var(--op);color:#fff;display:flex;align-items:center;justify-content:center;flex:none;font-style:normal;margin-top:1px}
 
 /* desktop personas */
-.desk{flex:1;min-width:660px;max-width:940px;background:var(--panel);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 30px 70px -30px rgba(0,0,0,.6)}
+.desk{width:100%;max-width:940px;background:var(--panel);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 30px 70px -30px rgba(0,0,0,.6)}
 .desk-head{padding:22px 28px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:16px;flex-wrap:wrap}
 .desk-head h2{margin:0;font-size:19px;font-weight:800;letter-spacing:-.018em}
 .desk-head .sub2{font-size:12px;color:var(--ink2);margin-top:2px}
@@ -509,7 +509,7 @@ function tProfile(){
  <div class="sect"><b>Payment methods</b><small>For the Shop</small></div>
  <div class="row"><span class="ri" style="background:#E4E9EE;color:var(--brand)">${ic('card',17)}</span>
    <span><b>Visa &bull;&bull;&bull;&bull; 4182</b><small>Default for Shop purchases</small></span><span class="pil n">SAVED</span></div>
- <button class="row" style="opacity:.62" onclick="toast('Performance tracker is deliberately out of scope for phase 1 &mdash; Chris deferred it and it should stay deferred.')">
+ <button class="row" style="opacity:.62" onclick="toast('Performance tracker is deliberately out of scope for phase 1 &mdash; the client deferred it and it should stay deferred.')">
    <span class="ri" style="background:#EEF1F4;color:#6B7480">${ic('users',17)}</span>
    <span><b>Performance tracker</b><small>Training, matches, fitness</small></span><span class="pil p2">LATER</span></button>
  <div style="height:16px"></div>`;
@@ -1014,7 +1014,7 @@ function renderSchool(){
    <div><h2>Demo High School &mdash; sports office</h2><div class="sub2">Parent-pay season &middot; Winter 2027</div></div>
    <span class="spacer"></span><span class="badge ok">BOKSMART &#10003; CURRENT</span></div>
   <div class="desk-body">
-   <div class="banner"><b>Not in Chris's list, and it needs to be.</b> Emergency pathway 4 starts on a field, pathway 1 usually starts with a coach, and the fee-bundling distribution plan runs through schools. An app only a parent can open leaves an injured child at an away fixture with nothing.</div>
+   <div class="banner"><b>Not in the initial scope, and it needs to be.</b> Emergency pathway 4 starts on a field, pathway 1 usually starts with a coach, and the fee-bundling distribution plan runs through schools. An app only a parent can open leaves an injured child at an away fixture with nothing.</div>
    <div class="statrow">
     <div class="stat"><b>${SCHOOL.players}</b><small>Active players</small></div>
     <div class="stat"><b style="color:#4ecf96">${SCHOOL.covered}</b><small>Covered</small><span class="delta">${pen}% opt-in</span></div>
@@ -1049,7 +1049,7 @@ function renderPartner(){
     <div class="stat"><b>12</b><small>Approved listings</small><span class="delta">6 brands live</span></div>
     <div class="stat"><b>6</b><small>Batches certified</small><span class="delta">All WADA-accredited</span></div>
     <div class="stat"><b>148</b><small>Members reached</small><span class="delta">1 school &middot; 4 codes</span></div></div>
-   <h3>Listing approvals <span class="mono">Chris's pre-approval requirement</span></h3>
+   <h3>Listing approvals <span class="mono">the client's pre-approval requirement</span></h3>
    <table class="grid"><thead><tr><th>Brand</th><th>Item</th><th>Discount</th><th>Batch</th><th>Status</th></tr></thead><tbody>
     ${SHOP.slice(0,7).map(i=>`<tr><td>${i.brand}</td><td>${i.n}</td><td class="mono">${i.pct}%</td>
      <td class="mono" style="font-size:11px">${i.batch||'&mdash;'}</td>
@@ -1103,7 +1103,7 @@ function render(){
  $('stage').innerHTML=v;
  document.querySelectorAll('.phone .scr').forEach(scr=>{
    const b=scr.querySelector('.body');
-   if(b&&b.scrollHeight-b.clientHeight>6)scr.setAttribute('data-scrolls','');
+
  });
 }
 renderShell();
