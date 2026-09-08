@@ -69,8 +69,8 @@ every screen also carries a phase badge in the rail.
 
 | Phase | Scope | Screens |
 |---|---|---|
-| **1 · MVP** | Web app only. Onboard policyholders over 18 and hand the application to Oneplan. Proven live at a Golden Oldies tournament: activation stand, QR code, policy sold on the spot. | M1–M6 |
-| **2 · Schools, groups & dependants** | Whole-school onboarding via fee inclusion or school referral. Dependant logins. Emergency and concussion pathways. Native iOS and Android. | M7–M9, D1, C1–C2, S1 |
+| **1 · MVP** | Web app only. Onboard policyholders over 18 - profile first, then personal details and an optional group code - and hand the application to Oneplan. Proven live at a Golden Oldies tournament: activation stand, QR code, policy sold on the spot. | M1–M6 |
+| **2 · Schools, groups & dependants** | Whole-school onboarding via fee inclusion or school referral; each school or club tenant gets a unique group code. Dependant logins. Emergency and concussion pathways. Native iOS and Android. | M7–M9, D1, C1–C2, S1 |
 | **3 · Shop & cross-sell** | Member pricing, batch track-and-trace, referrals for additional insurance to policyholders over 18. | M10–M13, X1–X2 |
 | **4 · Sports integration** | A tracker with rewards, and progressive feature expansion. Last, deliberately. | — |
 

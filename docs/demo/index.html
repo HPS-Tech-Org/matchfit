@@ -1055,13 +1055,13 @@ const SCREENS=[
    ============================================================ */
 const FLOW=[
  {ln:'Path A &middot; How a member arrives',nodes:[
-   ['School names MatchFit','Nominated provider, no fee vote'],
-   ['Parent downloads app',null,'M1','new'],
-   ['Profile + dependants','Consents captured','M2','new'],
-   ['Details + group code','Or freestanding','M4','new'],
-   ['Choose plan',null,'M5','new'],
+   ['Arrive by QR or referral','Stand, school or club','M1','new'],
+   ['Create profile first','No policy without one','M2','new'],
+   ['Personal details','Name, DOB, ID number','M4','new'],
+   ['Group code, optional','No code = individual policy','M4','new'],
+   ['Choose plan','Season or Multi-Sport','M5','new'],
    ['Oneplan hosted sign-up','Advice &amp; disclosure','M6','partner'],
-   ['Policy active','Card issued','M3','new'],
+   ['Policy active','Card issued, group linked if coded','M3','new'],
  ]},
  {ln:'Path B &middot; The injury loop',nodes:[
    ['Injury on the field','Official match or practice'],
@@ -1107,16 +1107,18 @@ const FLOW=[
    ============================================================ */
 const ROADMAP=[
  {n:1,when:'Next',title:'MVP - onboarding, web only',
-  body:'A web app, not a native one. Its whole job is to onboard policyholders and hand the application to Oneplan to complete. Tested live at a Golden Oldies tournament: an activation stand, a QR code, and a policy sold on the spot. Individuals over 18 taking cover for themselves - no dependants, no claims in the app, no shop.',
+  body:'A web app, not a native one. Its whole job is to onboard policyholders and hand the application to Oneplan to complete. Tested live at a Golden Oldies tournament: an activation stand, a QR code, and a policy sold on the spot. Individuals over 18 taking cover for themselves - no dependants, no claims in the app, no shop. Onboarding creates the profile first, then captures personal details and an optional group code; with no code the policy stands alone.',
   qs:['<b>What does the Oneplan onboarding endpoint expect?</b> Field-level payload, authentication, validation rules, sandbox access, and what a successful response returns. Nothing can be scheduled or priced until this is documented.',
+      '<b>What is the minimum Oneplan needs to bind a policy</b> - name, ID number, date of birth, contact? Every extra field at an activation stand costs sign-ups, and under POPIA we should not collect what the policy does not need.',
       '<b>Does Oneplan need supporting documents at onboarding</b> - ID, proof of address, a medical declaration - and how should they arrive?',
       '<b>How is the premium initiated and managed?</b> Oneplan-initiated DebiCheck mandates, card strikes, or debit orders. This decides whether the app captures a mandate or simply hands over.',
       '<b>What communication comes from Oneplan once a policy is active?</b> The app must not duplicate it and must not leave a gap.',
       '<b>How are claims handled during Phase 1</b>, and does the app need to set out the process?']},
  {n:2,when:'After MVP feedback',title:'Schools, groups and dependants',
-  body:'Whole-school onboarding, managed by the school through fee inclusion or by parents responding to a school referral. Dependants get their own scoped login to view cover and show a card. Native iOS and Android builds ship in this phase, and the emergency and concussion pathways come into the app.',
+  body:'Whole-school onboarding, managed by the school through fee inclusion or by parents responding to a school referral. Each school or club tenant is issued a unique group code; members enter it at onboarding, and freestanding Phase 1 policies can be attached to a group later. Dependants get their own scoped login to view cover and show a card. Native iOS and Android builds ship in this phase, and the emergency and concussion pathways come into the app.',
   qs:['<b>Do premiums need to be collected in the app</b>, or does Oneplan keep collection throughout? It decides whether the app needs a payment provider and merchant account at all.',
       '<b>Do we set up school- and club-specific tenants</b> for closed group membership? Rugby league and other sporting clubs would use the same mechanism.',
+      '<b>Who issues and manages group codes?</b> Can one be rotated if it leaks onto a WhatsApp group, and what happens to a policy whose code was mistyped? The answer decides whether codes are shared freely or validated against a roster.',
       '<b>Does Oneplan have APIs to submit and process claims</b>, or is claiming a call-centre process? It decides whether this phase is a workflow build or a thin front end.',
       '<b>Is a digital card viable, or do we stay physical initially?</b> Physical works with no phone, no data and no battery; digital is instant and free to reissue.']},
  {n:3,when:'Once the base is proven',title:'Shop, rewards and cross-sell',
