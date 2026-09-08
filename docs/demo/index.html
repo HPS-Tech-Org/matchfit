@@ -580,6 +580,7 @@ const SCREENS=[
 {id:'M2',phase:1,app:'Member app',name:'Profile',
  notes:[
   'The policyholder record. In Phase 1 this is the whole of it &mdash; an individual over 18 taking cover for themselves.',
+  ['new','<b>Profile first, then policies.</b> A brand-new user creates this profile before anything else. Only once it exists can they take out a policy for themselves or add a dependant &mdash; so every policy has a verified, contactable policyholder behind it from the first minute.'],
   ['new','<b>Phase 1 is 18-plus, self-cover only.</b> The dependants block shown here is Phase 2, when schools and parents holding policies for their children come on.'],
   ['q','<b>Phase 2 &middot; payments.</b> Do premiums need to be collected in the app, or does Oneplan keep collection throughout? It decides whether the app ever needs a payment provider and a merchant account, which is one of the larger cost lines in Phase 2.'],
   ['q','<b>Phase 2 &middot; dependant logins.</b> What is the minimum age for a dependant to hold their own login, and who grants and revokes it? Under POPIA a child&rsquo;s data needs the competent person&rsquo;s consent, so the policyholder has to be able to switch it off. Worth fixing an age floor before the first school signs.'],
@@ -633,7 +634,27 @@ const SCREENS=[
   ${note('info','Product terms and advice are provided by <b>Oneplan</b> as the licensed underwriting manager. MatchFit is the servicing platform.')}
   <div style="height:18px"></div></div>${tabbar(TABS_M,1)}`}},
 
-{id:'M4',phase:1,app:'Member app',name:'Onboard &mdash; plan',
+{id:'M4',phase:1,app:'Member app',name:'Onboard &mdash; details',
+ notes:[
+  'Step 2 of onboarding: who the policy is for, their basic details, and an optional group code. Captured before any plan or price is shown, so a half-finished application still has a contactable person behind it.',
+  ['new','<b>Profile first, then policies.</b> A brand-new user creates their own profile before they can take out a policy for themselves or add a dependant. Every policy then has a verified policyholder to bill and to phone.'],
+  ['new','<b>The school list is gone; a group code replaces it.</b> Each school, club or federation that becomes a group is issued a unique code when its tenant is created. A member types the code at onboarding and the policy is linked to that group &mdash; for the coach portal, the school console, reporting, and fee-bundling where it applies.'],
+  ['new','<b>No code, no problem.</b> A policy taken out without a code is a freestanding individual policy with identical cover. It can be attached to a group later if the school or club signs up afterwards.'],
+  ['q','<b>Phase 1 &middot; minimum data.</b> What is the least Oneplan needs to bind a policy &mdash; name, ID number, date of birth, contact? Every extra field at an activation stand costs sign-ups, and under POPIA we should not collect what the policy does not need.'],
+  ['q','<b>Phase 2 &middot; code lifecycle.</b> Who issues group codes, can one be rotated if it leaks onto a WhatsApp group, and what happens to a policy whose code was mistyped? The answer decides whether codes are shared freely or validated against a roster.'],
+ ],
+ html:()=>`${sb()}
+  <div style="display:flex;align-items:center;gap:10px;padding:15px 18px 2px"><span style="color:var(--muted-1);font-size:11px;font-weight:700">&larr; Back</span><b style="font-size:12.5px">New player</b></div>
+  ${hd('Their details','Amahle Mokoena &middot; dependant of Dineo')}
+  <div style="height:14px"></div>${steps(6,2)}
+  ${kv([['First name','Amahle'],['Surname','Mokoena'],['Date of birth','14 Mar 2014'],['ID / passport','1403 &bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;']])}
+  ${sect('Group code','Optional')}
+  ${kv([['Code from your school or club','&bull;&bull;&bull;&bull;&bull;'],['Group found','Demo High School &middot; Winter 2027','var(--ok-text)']])}
+  ${note('info','No code? Continue as an individual policy. Cover is identical, and the policy can join a group later.')}
+  <div style="height:14px"></div>${btn('Continue to plan','pri')}
+  <div style="height:18px"></div></div>${tabbar(TABS_M,1)}`},
+
+{id:'M5',phase:1,app:'Member app',name:'Onboard &mdash; plan',
  notes:[
   'Plan selection: the 8-month season policy or the 12-month multi-sport policy. Details in, plan picked, submit.',
   ['new','<b>The core of the Phase 1 MVP.</b> A policyholder scans the QR at the activation stand, enters their details, picks a plan and submits. Nothing else is needed to sell a policy.'],
@@ -643,8 +664,8 @@ const SCREENS=[
  ],
  html:()=>`${sb()}
   <div style="display:flex;align-items:center;gap:10px;padding:15px 18px 2px"><span style="color:var(--muted-1);font-size:11px;font-weight:700">&larr; Cancel</span><b style="font-size:12.5px">New player</b></div>
-  ${hd('Choose a plan','Amahle Mokoena &middot; Hockey &middot; Demo High School')}
-  <div style="height:15px"></div>${steps(5,3)}
+  ${hd('Choose a plan','Amahle Mokoena &middot; Hockey &middot; Demo High School group')}
+  <div style="height:15px"></div>${steps(6,4)}
   <div class="opt sel" style="flex-direction:column;align-items:stretch;gap:0">
     <div style="display:flex;align-items:center;gap:11px">
       <span class="ico" style="background:var(--tint-hockey);color:var(--sp-hockey)">${ic('shield',19)}</span>
@@ -660,7 +681,7 @@ const SCREENS=[
   ${note('warn','A player who only plays one winter code is cheaper on Season. Two codes or a year-round athlete is cheaper on Multi-Sport from month eight.')}
   <div style="height:18px"></div></div>${tabbar(TABS_M,1)}`},
 
-{id:'M5',phase:1,app:'Member app',name:'Onboard &mdash; handoff',ix:1,
+{id:'M6',phase:1,app:'Member app',name:'Onboard &mdash; handoff',ix:1,
  notes:[
   'Step 4 hands off to Oneplan for product presentation, disclosure and the record of advice, skinned so the policyholder experiences one continuous flow.',
   ['new','This keeps the licensed act with the licensed party: Oneplan presents and advises, the app captures data and reads status back. The member sees one seamless sign-up.'],
@@ -672,7 +693,7 @@ const SCREENS=[
      <div class="url">${ic('lock',11,2.2)} secure.oneplan.co.za/activecare</div>
      <div class="t">Oneplan Underwriting Managers</div>
      <div class="s">Licensed UMA &middot; underwritten by Bryte</div></div>
-   <div style="padding:13px 15px 0"><div style="font-family:var(--mono);font-size:7.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted-1)">Step 4 of 5 &middot; handed off for advice &amp; disclosure</div></div>
+   <div style="padding:13px 15px 0"><div style="font-family:var(--mono);font-size:7.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted-1)">Step 5 of 6 &middot; handed off for advice &amp; disclosure</div></div>
    <div class="opbox"><h5>ActiveCare Season for Amahle Mokoena</h5>
      <p>${money(1799)} once-off &middot; ${rnd(250000)} cover. Cover starts on the first successful payment and applies to official matches and accredited practice sessions.</p></div>
    <div class="opbox"><h5>Disclosures</h5>
@@ -684,7 +705,7 @@ const SCREENS=[
    <div style="padding:0 22px 22px"><p style="font-size:8.5px;color:var(--muted-1);line-height:1.6;text-align:center;margin:0">Hosted by Oneplan. Product presentation, advice and consent are captured by the licensed UMA &mdash; <b>not by MatchFit</b>.</p></div>
   </div>${tabbar(TABS_M,1)}`},
 
-{id:'M6',phase:2,app:'Member app',name:'Emergency &mdash; pathways',
+{id:'M7',phase:2,app:'Member app',name:'Emergency &mdash; pathways',
  notes:[
   'Four pathways sharing a tab and sharing nothing else: a facility lookup, an emergency dispatch, a fund approval and a six-week care pathway.',
   ['new','<b>Phase 2.</b> Phase 1 policyholders claim through Oneplan directly. In-app emergency flows arrive once schools and dependants are on the platform.'],
@@ -704,7 +725,7 @@ const SCREENS=[
   <div class="embar">${ic('phone',15,2.2)} Emergency line <span class="n">010 001 0141</span></div>
   ${tabbar(TABS_M,2)}`},
 
-{id:'M7',phase:2,app:'Member app',name:'Emergency &mdash; clear funds',ix:1,
+{id:'M8',phase:2,app:'Member app',name:'Emergency &mdash; clear funds',ix:1,
  notes:[
   'Pathway 1, the common case. Pick the facility, pick an amount within the benefit limit, and funds clear to the card before arrival.',
   ['new','<b>Phase 2, and the product&rsquo;s sharpest differentiator.</b> Existing school accident policies reimburse after the fact. Clearing funds before treatment means a family is never asked for a deposit they do not have.'],
@@ -726,7 +747,7 @@ const SCREENS=[
   <div class="embar">${ic('phone',15,2.2)} Emergency line <span class="n">010 001 0141</span></div>
   ${tabbar(TABS_M,2)}`},
 
-{id:'M8',phase:2,app:'Member app',name:'Emergency &mdash; Blue Card',
+{id:'M9',phase:2,app:'Member app',name:'Emergency &mdash; Blue Card',
  notes:[
   'Pathway 4, and the most specifiable thing in the product: a scheduled six-week care pathway, not an emergency. Admission, confirmed diagnosis, protocol timer, clearance from a pre-approved panel.',
   ['new','<b>Phase 2.</b> The protocol writes through to the coach portal and the school / group console, so a player under a Blue Card cannot be marked available for contact play. One safeguarding mechanism working across three user types.'],
@@ -751,7 +772,7 @@ const SCREENS=[
   <div class="embar">${ic('phone',15,2.2)} Emergency line <span class="n">010 001 0141</span></div>
   ${tabbar(TABS_M,2)}`},
 
-{id:'M9',phase:3,app:'Member app',name:'Shop',
+{id:'M10',phase:3,app:'Member app',name:'Shop',
  notes:[
   'Categories, pre-approved listings, and member pricing shown as a percentage so it reads the same whatever an item costs.',
   ['new','<b>Phase 3.</b> Savings are tracked against premium paid rather than against spend, which is the honest framing and still motivating.'],
@@ -777,7 +798,7 @@ const SCREENS=[
   ${lrow(ic('card',17),'var(--surface-2)','var(--muted-1)','Pay with saved card','Visa &bull;&bull;&bull;&bull; 4182 &middot; needs PCI scope',pill('PHASE 2','warn'))}
   <div style="height:18px"></div></div>${tabbar(TABS_M,3)}`},
 
-{id:'M10',phase:3,app:'Member app',name:'Shop &mdash; track & trace',
+{id:'M11',phase:3,app:'Member app',name:'Shop &mdash; track & trace',
  notes:[
   'Scan the tub, get the batch, get the certificate. Per-batch records with lab, test date, result and expiry, cached so it works with no signal in a pharmacy aisle.',
   ['new','<b>Phase 3, and the most differentiated feature in the product.</b> Professional players get batch-tested supplements with certificates from their union. School players buy from the local pharmacy with no traceability, and cross-contamination is a live doping problem at schoolboy level.'],
@@ -796,7 +817,7 @@ const SCREENS=[
   <div style="height:14px"></div>${btn('Get voucher at 15% off','pri')}
   <div style="height:18px"></div></div>${tabbar(TABS_M,3)}`},
 
-{id:'M11',phase:3,app:'Member app',name:'More &mdash; Fund & partners',
+{id:'M12',phase:3,app:'Member app',name:'More &mdash; Fund & partners',
  notes:[
   'The catastrophic fund balance, the principal sponsor, the donor roll and the supplier partners.',
   ['new','<b>Phase 3.</b> The fund exists as a policy feature from launch; this screen is where it becomes visible to members, alongside sponsors and suppliers.'],
@@ -823,7 +844,7 @@ const SCREENS=[
   ${note('warn','All sponsor and supplier names in this demo are <b>generic placeholders</b>.')}
   <div style="height:18px"></div></div>${tabbar(TABS_M,4)}`},
 
-{id:'M12',phase:3,app:'Member app',name:'Cover for you (18+)',ix:1,
+{id:'M13',phase:3,app:'Member app',name:'Cover for you (18+)',ix:1,
  notes:[
   'Products for the policyholder rather than the player: short-term and life insurance, offered by a licensed insurance partner.',
   ['new','<b>Phase 3.</b> Cross-selling additional insurance to policyholders over 18 is a referral, not a sale. A members-only card, a handoff, no advice given and no quote rendered in the app.'],
@@ -1037,24 +1058,25 @@ const FLOW=[
    ['School names MatchFit','Nominated provider, no fee vote'],
    ['Parent downloads app',null,'M1','new'],
    ['Profile + dependants','Consents captured','M2','new'],
-   ['Choose sport &amp; plan',null,'M4','new'],
-   ['Oneplan hosted sign-up','Advice &amp; disclosure','M5','partner'],
+   ['Details + group code','Or freestanding','M4','new'],
+   ['Choose plan',null,'M5','new'],
+   ['Oneplan hosted sign-up','Advice &amp; disclosure','M6','partner'],
    ['Policy active','Card issued','M3','new'],
  ]},
  {ln:'Path B &middot; The injury loop',nodes:[
    ['Injury on the field','Official match or practice'],
-   ['Emergency tab','Four pathways','M6','new'],
+   ['Emergency tab','Four pathways','M7','new'],
    ['Pick facility','Capability-tagged directory',null,'gap'],
-   ['Clear funds to card','Oneplan card API','M7','partner'],
+   ['Clear funds to card','Oneplan card API','M8','partner'],
    ['Treatment','No deposit asked of the parent'],
-   ['Upload invoice','Reminders on 3 channels','M7','new'],
+   ['Upload invoice','Reminders on 3 channels','M8','new'],
  ]},
  {ln:'Path C &middot; Concussion, the Blue Card',nodes:[
    ['Suspected concussion','Coach or parent'],
-   ['Admission &amp; check-in','Funded from rehab benefit','M8','new'],
-   ['6-week protocol','Weekly reminders','M8','new'],
+   ['Admission &amp; check-in','Funded from rehab benefit','M9','new'],
+   ['6-week protocol','Weekly reminders','M9','new'],
    ['Coach portal blocked','Cannot select player','C2','new'],
-   ['Clearance visit','Pre-approved panel only','M8','new'],
+   ['Clearance visit','Pre-approved panel only','M9','new'],
    ['Return to play','Recorded against the policy'],
  ]},
  {ln:'Path D &middot; Catastrophic HNS',nodes:[
@@ -1066,15 +1088,15 @@ const FLOW=[
    ['Transfer to capable unit','Air or road',null,'gap'],
  ]},
  {ln:'Path E &middot; The rewards loop',nodes:[
-   ['Member browses Shop','Approved listings only','M9','new'],
-   ['Scan supplement batch','WADA certificate','M10','new'],
-   ['Voucher issued','Single-use code','M9','new'],
+   ['Member browses Shop','Approved listings only','M10','new'],
+   ['Scan supplement batch','WADA certificate','M11','new'],
+   ['Voucher issued','Single-use code','M10','new'],
    ['Redeemed at partner','Partner’s own till'],
    ['Partner settles','Reconciled against issuance','X1','new'],
  ]},
  {ln:'Path F &middot; Adult cover, 4th layer',nodes:[
-   ['Member taps Cover for you',null,'M12','new'],
-   ['Handoff to Insurance Partner','Their FSP, their advice','M12','partner'],
+   ['Member taps Cover for you',null,'M13','new'],
+   ['Handoff to Insurance Partner','Their FSP, their advice','M13','partner'],
    ['Policy activated','In Insurance Partner systems',null,'partner'],
    ['In-app management','Needs intermediary agreement',null,'gap'],
  ]},
@@ -1128,10 +1150,10 @@ function renderRoadmap(){
    Deliberately a lookup rather than a key on each SCREENS entry: the scoping
    artefact must stay readable without the working demo existing at all. */
 const TRY={
-  M2:'parent&t=profile',   M3:'parent&t=oneplan',   M4:'parent&t=oneplan',
-  M5:'parent&t=oneplan',   M6:'parent&t=emergency', M7:'parent&t=emergency',
-  M8:'parent&t=emergency', M9:'parent&t=shop',      M10:'parent&t=shop',
-  M11:'parent&t=more',     M12:'parent&t=oneplan',
+  M2:'parent&t=profile',   M3:'parent&t=oneplan',   M4:'parent&t=oneplan',   M5:'parent&t=oneplan',
+  M6:'parent&t=oneplan',   M7:'parent&t=emergency', M8:'parent&t=emergency',
+  M9:'parent&t=emergency', M10:'parent&t=shop',      M11:'parent&t=shop',
+  M12:'parent&t=more',     M13:'parent&t=oneplan',
   D1:'dependant', C1:'coach', C2:'coach', S1:'school',
   X1:'partner',   X2:'partner&pv=principal'
 };

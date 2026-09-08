@@ -339,7 +339,7 @@ const PANEL=[
 const PLANS=[
  {k:'season',n:'ActiveCare Season',d:'One sport &middot; 8-month season',p:'R1 799',sub:'once-off, per player',cover:'R250 000'},
  {k:'annual',n:'ActiveCare Multi-Sport',d:'All codes &middot; 12 months',p:'R249',sub:'per month, per player',cover:'R250 000'}];
-const SCHOOLS=['Demo High School','Paarl Boys&rsquo; High','Grey College','Glenwood High','Other / not listed'];
+/* School selection replaced by an optional group code; see startOb()/obFlow(). */
 const CATS=[
  {k:'boots',n:'Boots',i:'boot'},{k:'apparel',n:'Apparel',i:'shirt'},
  {k:'protect',n:'Protective',i:'guard'},{k:'supp',n:'Supplements',i:'flask'},
@@ -418,7 +418,7 @@ const dep=i=>HH.deps[i===undefined?S.depIdx:i];
 const sp=c=>SPORTS[c];
 
 /* ============ SHELL ============ */
-const PERSONAS=[['parent','Parent app'],['dependant','Dependant'],['coach','Coach portal'],['school','School console'],['partner','Partner portal']];
+const PERSONAS=[['parent','Parent app'],['dependant','Dependant'],['coach','Coach portal'],['school','School / Group console'],['partner','Partner portal']];
 function renderShell(){
  $('personaSeg').innerHTML=PERSONAS.map(([k,l])=>`<button class="${S.persona===k?'on':''}" onclick="setPersona('${k}')">${l}</button>`).join('');
  render();
@@ -588,33 +588,51 @@ function kpScreen(){
 }
 
 /* ---- ONBOARDING ---- */
-function startOb(){S.tab='oneplan';S.ob={step:1,name:'',sport:null,school:0,plan:null,prog:0};render();}
+function startOb(){S.tab='oneplan';S.ob={step:1,name:'',sport:null,group:null,plan:null,prog:0};render();}
 function obFlow(){
  const o=S.ob;
- const bar=`<div class="steps">${[1,2,3,4,5].map(i=>`<i style="${i<=o.step?'background:var(--brand)':''}"></i>`).join('')}</div>`;
+ const bar=`<div class="steps">${[1,2,3,4,5,6].map(i=>`<i style="${i<=o.step?'background:var(--brand)':''}"></i>`).join('')}</div>`;
  if(o.step===1)return `<div class="backrow"><button onclick="S.ob=null;render()">${ic('chevL',15,2.4)} Cancel</button><b style="font-size:13px">New player</b></div>
   <div class="hd" style="padding-top:6px"><h2>Who are we covering?</h2><p>ActiveCare covers the player. You stay the policyholder.</p></div>
   <div style="height:14px"></div>${bar}
-  ${['Amahle Mokoena &middot; 13','Someone else'].map((n,i)=>`<button class="opt" onclick="S.ob.name='${n.split(' &middot;')[0]}';S.ob.step=2;render()">
+  ${['Amahle Mokoena &middot; 13','Someone else'].map((n,i)=>`<button class="opt" onclick="S.ob.name='${i===0?'Amahle Mokoena':'Sipho Mokoena'}';S.ob.step=2;render()">
    <span class="oic" style="background:#E4E9EE;color:var(--brand)">${ic('user',19)}</span>
    <span><b>${n}</b><small>${i===0?'Already on your profile as a dependant':'Add a new dependant'}</small></span></button>`).join('')}`;
  if(o.step===2)return `<div class="backrow"><button onclick="S.ob.step=1;render()">${ic('chevL',15,2.4)} Back</button></div>
-  <div class="hd"><h2>Which sport?</h2><p>Cover applies between the four white lines of that code.</p></div>
+  <div class="hd"><h2>Their details</h2><p>Captured before any price is shown.</p></div>
+  <div style="height:14px"></div>${bar}
+  <div class="kv" style="margin:0 15px 10px">
+   <div><span class="k">First name</span><span class="v">${o.name.split(' ')[0]}</span></div>
+   <div><span class="k">Surname</span><span class="v">${o.name.split(' ')[1]||''}</span></div>
+   <div><span class="k">Date of birth</span><span class="v">14 Mar 2014</span></div>
+   <div><span class="k">ID / passport</span><span class="v">1403 &bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;</span></div>
+  </div>
+  <div class="notice" style="background:#EDF0F3;color:#3B4653">${ic('info',13,2.1)}<span>A brand-new user creates their own profile first. Only then can they add a dependant here or take out cover for themselves.</span></div>
+  <div style="padding:14px 18px 0"><button class="btnP" style="background:var(--brand)" onclick="S.ob.step=3;render()">Continue</button></div>`;
+ if(o.step===3)return `<div class="backrow"><button onclick="S.ob.step=2;render()">${ic('chevL',15,2.4)} Back</button></div>
+  <div class="hd"><h2>Sport and group</h2><p>Cover applies between the four white lines of that code.</p></div>
   <div style="height:14px"></div>${bar}
   ${CODES.map(c=>{const s=sp(c);return `<button class="opt" style="${o.sport===c?`border-color:${s.hex};box-shadow:0 0 0 1.5px ${s.hex}`:''}" onclick="S.ob.sport='${c}';render()">
    <span class="oic" style="background:${s.t};color:${s.c}">${fieldSvg(c,'t',{w:22,h:15,sw:13})}</span>
    <span><b>${s.n}</b><small>Official matches and accredited practice</small></span></button>`}).join('')}
-  ${o.sport?`<div style="padding:4px 18px 0"><div style="font-size:10.5px;color:var(--t2);font-weight:600;margin-bottom:8px">School</div>
-  <div class="kv" style="margin:0 0 12px">${SCHOOLS.slice(0,3).map((sc,i)=>`<div style="cursor:pointer" onclick="S.ob.school=${i};S.ob.step=3;render()"><span class="k" style="width:auto;flex:1;color:var(--t1)">${sc}</span><span class="v">${ic('chev',13,2.2)}</span></div>`).join('')}</div></div>`:''}`;
- if(o.step===3)return `<div class="backrow"><button onclick="S.ob.step=2;render()">${ic('chevL',15,2.4)} Back</button></div>
-  <div class="hd"><h2>Choose a plan</h2><p>${o.name} &middot; ${sp(o.sport).n} &middot; ${SCHOOLS[o.school]}</p></div>
+  ${o.sport?`<div class="sect" style="padding-top:12px"><b>Group code</b><small>Optional</small></div>
+  <div class="kv" style="margin:0 15px 9px">
+   <div><span class="k">Code from your school or club</span><span class="v mono" style="letter-spacing:.25em">&bull;&bull;&bull;&bull;&bull;</span></div>
+  </div>
+  <div class="notice" style="background:#EDF0F3;color:#3B4653">${ic('info',13,2.1)}<span>Your school or club gives you a code when it joins. It links this policy to their group. No code? Cover is identical as an individual policy, and it can join a group later.</span></div>
+  <div style="padding:12px 18px 0;display:grid;gap:8px">
+   <button class="btnP" style="background:var(--brand)" onclick="S.ob.group='Demo High School';S.ob.step=4;render();toast('Group code accepted &middot; Demo High School, Winter 2027.')">I have a group code</button>
+   <button class="btnG" onclick="S.ob.group=null;S.ob.step=4;render()">Continue without a code</button>
+  </div>`:''}`;
+ if(o.step===4)return `<div class="backrow"><button onclick="S.ob.step=3;render()">${ic('chevL',15,2.4)} Back</button></div>
+  <div class="hd"><h2>Choose a plan</h2><p>${o.name} &middot; ${sp(o.sport).n} &middot; ${o.group?o.group+' group':'Individual policy'}</p></div>
   <div style="height:14px"></div>${bar}
-  ${PLANS.map(p=>`<button class="opt" style="flex-direction:column;align-items:stretch;gap:0" onclick="S.ob.plan='${p.k}';S.ob.step=4;render()">
+  ${PLANS.map(p=>`<button class="opt" style="flex-direction:column;align-items:stretch;gap:0" onclick="S.ob.plan='${p.k}';S.ob.step=5;render()">
    <div style="display:flex;align-items:center;gap:11px"><span class="oic" style="background:var(--rugby-t);color:var(--rugby)">${ic('shield',19)}</span>
    <span style="flex:1"><b>${p.n}</b><small>${p.d}</small></span>
    <span style="text-align:right"><b class="mono" style="font-size:14px;letter-spacing:-.02em">${p.p}</b><small>${p.sub}</small></span></div>
    <div style="margin-top:9px;padding-top:9px;border-top:1px solid var(--hair);font-size:8.5px;color:var(--t3)">Cover ${p.cover} per event and per season &middot; R25 000 scans upfront &middot; R5 000 rehab &middot; Blue Card included</div></button>`).join('')}`;
- if(o.step===4){
+ if(o.step===5){
   const p=PLANS.find(x=>x.k===o.plan);
   return `<div class="ophost">
    <div class="ophead">
@@ -622,7 +640,7 @@ function obFlow(){
      <div class="t">Oneplan Underwriting Managers</div>
      <div class="s">Licensed UMA &middot; underwritten by Bryte</div>
    </div>
-   <div style="padding:12px 15px 0"><div class="mono" style="font-size:7.5px;letter-spacing:.14em;text-transform:uppercase;color:#7C8794">Step 4 of 5 &middot; handed off for advice &amp; disclosure</div></div>
+   <div style="padding:12px 15px 0"><div class="mono" style="font-size:7.5px;letter-spacing:.14em;text-transform:uppercase;color:#7C8794">Step 5 of 6 &middot; handed off for advice &amp; disclosure</div></div>
    <div class="opbox">
      <h5>${p.n} for ${o.name}</h5>
      <p>${p.p} ${p.sub} &middot; ${p.cover} cover. Cover starts on the first successful payment and applies to official matches and accredited practice sessions.</p>
@@ -634,12 +652,12 @@ function obFlow(){
      <div class="opcheck"><i>${ic('check',10,3.4)}</i><span>I consent to Oneplan processing my and my dependant's information for this policy.</span></div>
      <div class="opcheck"><i>${ic('check',10,3.4)}</i><span>Record of advice will be emailed to me by Oneplan.</span></div>
    </div>
-   <div style="padding:0 15px 8px"><button class="btnP" style="background:var(--op)" onclick="S.ob.step=5;render();obRun()">Accept &amp; activate policy</button>
-   <button class="btnG" onclick="S.ob.step=3;render()">Back to plans</button></div>
+   <div style="padding:0 15px 8px"><button class="btnP" style="background:var(--op)" onclick="S.ob.step=6;render();obRun()">Accept &amp; activate policy</button>
+   <button class="btnG" onclick="S.ob.step=4;render()">Back to plans</button></div>
    <div style="padding:0 22px 20px"><p style="font-size:8.5px;color:#7C8794;line-height:1.6;text-align:center;margin:0">This step is hosted by Oneplan. Product presentation, advice and consent are captured by the licensed UMA &mdash; <b>not by MatchFit</b>. It is skinned to feel native so the journey stays seamless.</p></div>
   </div>`;
  }
- if(o.step===5){
+ if(o.step===6){
   const p=o.prog||0,done=p>=100;
   return `<div class="wiz" style="padding:0 0 10px"><div style="text-align:center;padding:0 18px">
    <div class="ring"><svg width="118" height="118"><circle cx="59" cy="59" r="51" fill="none" stroke="#E4E9EE" stroke-width="8.5"/><circle cx="59" cy="59" r="51" fill="none" stroke="${done?'var(--ok)':'var(--op)'}" stroke-width="8.5" stroke-linecap="round" stroke-dasharray="${2*Math.PI*51}" stroke-dashoffset="${2*Math.PI*51*(1-p/100)}" style="transition:stroke-dashoffset .25s linear"/></svg><b style="${done?'color:var(--ok)':''}">${done?'&#10003;':p+'%'}</b></div>
@@ -651,9 +669,9 @@ function obFlow(){
  }
 }
 function obRun(){S.ob.prog=0;
- const t=setInterval(()=>{if(!S.ob||S.ob.step!==5){clearInterval(t);return}S.ob.prog=Math.min(100,(S.ob.prog||0)+9);render();if(S.ob.prog>=100)clearInterval(t)},220);}
+ const t=setInterval(()=>{if(!S.ob||S.ob.step!==6){clearInterval(t);return}S.ob.prog=Math.min(100,(S.ob.prog||0)+9);render();if(S.ob.prog>=100)clearInterval(t)},220);}
 function obDone(){
- S.logs.unshift(`08:12 onboard &middot; ${S.ob.name} &middot; ${PLANS.find(p=>p.k===S.ob.plan).n} &middot; policy MF-2027-0849 active`);
+ S.logs.unshift(`08:12 onboard &middot; ${S.ob.name} &middot; ${PLANS.find(p=>p.k===S.ob.plan).n} &middot; ${S.ob.group?S.ob.group+' group':'individual'} &middot; policy MF-2027-0849 active`);
  S.ob=null;render();toast('Policy active. It appears in the school console roster immediately.');
 }
 
