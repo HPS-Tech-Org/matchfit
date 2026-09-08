@@ -70,12 +70,13 @@ Six amber questions carry real cost. In rough order of what they move:
 - **Netball and hockey depth.** The school console shows netball and hockey are 64 of 148 enrolled
   players. A rugby-shaped product understates this book by nearly half.
 
-## Illustrative content
+## Placeholder content
 
-Volkswagen Group, Spur, Checkers, King Price, Puma, Nike, Adidas, USN, Living Brands and Max
-Mouthguards appear as **illustrative** examples. **None is a signed partner.** Player names, member
-numbers, claim references, fund balances and savings figures are fictional. Cover limits are taken
-from the Oneplan SportActive brief and remain unverified against policy wording.
+Every sponsor and supplier name is a **generic placeholder** — "National Motor Group", "Insurance
+Partner", "Sportswear partner A" and so on. No real company is named and none is a signed partner.
+Player names, member numbers, claim references, fund balances and savings figures are fictional.
+Cover limits are taken from the Oneplan SportActive brief and remain unverified against policy
+wording.
 
 "MatchFit" is an unregistered working name. Trademark clearance across CIPC, SA classes 36 and 42,
 IP Australia and both app stores has **not** been run.

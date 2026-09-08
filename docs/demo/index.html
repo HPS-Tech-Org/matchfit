@@ -49,8 +49,8 @@
   --tint-rugby:#E6F0EA; --tint-soccer:#E7EDF8; --tint-hockey:#E2F1F1; --tint-netball:#FAEDE2;
 
   /* --- partner colours: integration surfaces read as foreign (§10) --- */
-  --partner-line:#1B3C8C;   /* Oneplan */
-  --partner-2:#D6001C;      /* King Price */
+  --partner-line:#1B3C8C;   /* Oneplan, the underwriting manager */
+  --partner-2:#D6001C;      /* insurance partner */
 
   /* --- fixed brand assets: pinned to literal hexes, never themed (rule 2) --- */
   --grad:linear-gradient(-45deg,#2A3B4E 0%,#22303F 35%,#151C25 72%,#0B1219 100%);
@@ -554,7 +554,7 @@ const SCREENS=[
   'The policy home. Cover card, benefit limits, and the entry point to onboarding another player.',
   ['new','One card per dependant, sport-coloured, with a signed offline token valid 72 hours. A coach at an away fixture with no signal can still verify cover.'],
   'Benefit limits are read live from Oneplan, not hardcoded. The R500 claims management fee is shown here so it is never a surprise at claim time.',
-  ['q','The tab is labelled "OnePlan" because that is what Chris asked for. It hard-codes the underwriting manager into permanent navigation, and the brief itself contemplates King Price taking over underwriting. "My Cover" with "administered by Oneplan" as supporting text costs nothing and survives a change of underwriter. Worth one sentence in the reply.'],
+  ['q','The tab is labelled "OnePlan" because that is what Chris asked for. It hard-codes the underwriting manager into permanent navigation, and the brief itself contemplates Insurance Partner taking over underwriting. "My Cover" with "administered by Oneplan" as supporting text costs nothing and survives a change of underwriter. Worth one sentence in the reply.'],
   ['q','Does the physical Oneplan card stay, or is virtual-only acceptable? The physical card works with no phone, no data and no battery, which matters at a rural away fixture. It also costs R160 and takes 30 days from first debit &mdash; which is a cover gap at season start if a player signs up in round one.']],
  html:()=>{const tot=DEPS.reduce((a,d)=>a+d.cover,0),used=DEPS.reduce((a,d)=>a+d.used,0);
   return `${sb()}${hd('OnePlan','Your ActiveCare policies, cover card and onboarding.')}
@@ -690,7 +690,7 @@ const SCREENS=[
   ['new','Savings are tracked against premium paid, not against spend. "' + rnd(720) + ' earned back of ' + rnd(3598) + ' premium" is true and defensible. It replaces the brief’s claim that discounts offset the premium.'],
   '<b>The claim that cannot be made.</b> At a 15% member discount a parent must spend ' + rnd(12000) + ' through the app to recoup a ' + money(1799) + ' premium &mdash; roughly four times a realistic annual sporting budget. Said in a school hall it is both false and a mis-selling exposure.',
   ['q','<b>The decision that sizes the build.</b> Vouchers or full card checkout? Vouchers mean a single-use code redeemed on the partner’s own store: no PCI scope, no cart, no fulfilment and no returns to handle. Card checkout is roughly three to four times the build and makes MatchFit the retailer, liable for goods it never handles. Chris asked for card payment. Recommend vouchers for phase 1 and let volume justify checkout.'],
-  ['q','Puma, Nike and Adidas run strict channel and pricing control and rarely permit third-party discounting of this kind. USN, Living Brands and Max Mouthguards are the realistic launch partners. Do not let a plan depend on Nike in month one.'],
+  ['q','The global sportswear brands run strict channel and pricing control and rarely permit third-party discounting of this kind. The supplement and protective-gear suppliers are the realistic launch partners. Do not let a plan depend on a global brand being signed in month one.'],
   ['q','Who is the seller of record &mdash; the platform or the supplier? It decides who carries returns, refunds, chargebacks and Consumer Protection Act duties, and it has to be settled before supplier contracts are drafted rather than after the first faulty pair of boots.']],
  html:()=>`${sb('19:20')}${hd('Shop','Member pricing from approved supplier partners.')}
   <div class="card" style="padding:14px 15px;margin-top:13px">
@@ -699,10 +699,10 @@ const SCREENS=[
     <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:7.5px;letter-spacing:.09em;color:var(--muted-1);margin-top:7px;text-transform:uppercase"><span>Of ${rnd(MEM.premium)} premium paid</span><span>Member pricing</span></div></div>
   <div style="display:flex;gap:7px;padding:13px 15px 0;overflow-x:auto">${['Boots','Apparel','Protective','Supplements','Recovery'].map((c,i)=>`<span style="flex:none;font-size:10px;font-weight:700;padding:7px 13px;border-radius:99px;border:1px solid ${i===0?'var(--brand-1)':'var(--line)'};background:${i===0?'var(--brand-1)':'var(--surface)'};color:${i===0?'var(--on-brand)':'var(--ink-2)'}">${c}</span>`).join('')}</div>
   <div class="grid2" style="margin-top:13px">
-    ${tile(ic('boot',17),'var(--tint-rugby)','var(--sp-rugby)','Puma','King Match FG boots',15,['APPROVED','ok'])}
-    ${tile(ic('boot',17),'var(--tint-netball)','var(--netball-text)','Adidas','Kakari rugby boots',12,['APPROVED','ok'])}
-    ${tile(ic('guard',17),'var(--tint-hockey)','var(--sp-hockey)','Max Mouthguards','Custom-fit mouthguard',20,['APPROVED','ok'])}
-    ${tile(ic('flask',17),'var(--tint-ok)','var(--ok-text)','USN','Whey recovery blend 1kg',15,['BATCH &#10003;','info'])}
+    ${tile(ic('boot',17),'var(--tint-rugby)','var(--sp-rugby)','Sportswear partner A','Firm-ground match boots',15,['APPROVED','ok'])}
+    ${tile(ic('boot',17),'var(--tint-netball)','var(--netball-text)','Sportswear partner B','Forward's rugby boots',12,['APPROVED','ok'])}
+    ${tile(ic('guard',17),'var(--tint-hockey)','var(--sp-hockey)','Protective gear partner','Custom-fit mouthguard',20,['APPROVED','ok'])}
+    ${tile(ic('flask',17),'var(--tint-ok)','var(--ok-text)','Supplement partner A','Whey recovery blend 1kg',15,['BATCH &#10003;','info'])}
   </div>
   ${note('ok','Every supplement carries a per-batch certificate from a WADA-accredited lab. Tap a supplement to scan and view it.')}
   ${sect('How you pay','Phase 1')}
@@ -721,7 +721,7 @@ const SCREENS=[
   <div style="display:flex;align-items:center;gap:10px;padding:15px 18px 2px"><span style="color:var(--muted-1);font-size:11px;font-weight:700">&larr; Shop</span><b style="font-size:12.5px">Track &amp; trace</b></div>
   <div style="text-align:center;padding:18px 18px 0">
     <div style="width:96px;height:96px;margin:0 auto 13px;border-radius:24px;background:var(--tint-soccer);color:var(--sp-soccer);display:flex;align-items:center;justify-content:center">${ic('scan',44,1.6)}</div>
-    <div style="font-size:17px;font-weight:900;letter-spacing:-.03em;color:var(--ink)">USN &middot; Whey recovery blend</div>
+    <div style="font-size:17px;font-weight:900;letter-spacing:-.03em;color:var(--ink)">Supplement partner A &middot; Whey recovery blend</div>
     <div style="font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--muted-1);text-transform:uppercase;margin-top:5px">Batch 27-0491</div></div>
   <div style="height:15px"></div>
   ${kv([['Lab','WADA-accredited'],['Tested','14 Feb 2027'],['Result','No banned substances','var(--ok-text)'],['Valid for','This batch only'],['Expiry','Nov 2028']])}
@@ -735,7 +735,7 @@ const SCREENS=[
   ['new','<b>The sponsor split is deliberately not published to members here.</b> An earlier draft showed parents a full line-by-line waterfall. A fund balance, a beneficiary count and a donor roll build the same trust and are far easier to keep accurate every month.'],
   'The Fund is described on screen as a fund and not insurance, because it is discretionary and that distinction is where a regulator would look first.',
   ['q','Sponsors will assume their money helped their school; the Fund pools nationally. Say which on this screen before the first sponsor asks, and if surplus is ever pooled, publish the waterfall order so nobody feels misled.'],
-  ['q','Volkswagen Group, Spur, Checkers and King Price appear here as illustrative examples and are labelled as such in the demo. They must be replaced with real or clearly generic names before this is shown to a board, because a director will reasonably ask whether VW is signed.']],
+  ['q','Sponsor and supplier names here are generic placeholders. Before launch, decide what a member actually sees: a sponsor&rsquo;s own logo and brand, or a neutral tier label. Logos sell the sponsorship far better and mean a design review every time a sponsor changes.']],
  html:()=>`${sb('20:11')}${hd('Partners &amp; the Fund','Who backs this, and what the Fund holds.')}
   <div class="card" style="margin-top:14px;overflow:hidden;padding:0">
     <div style="background:var(--grad);color:var(--on-brand);padding:14px 15px">
@@ -748,25 +748,25 @@ const SCREENS=[
         ${[['7','Supported'],['31','Donors'],['R 0','Member cost']].map(([v,l],i)=>`<div><div class="num" style="font-family:var(--mono);font-size:15px;color:${i===2?'var(--ok-text)':'var(--ink)'}">${v}</div><div style="font-family:var(--mono);font-size:7px;letter-spacing:.12em;color:var(--muted-1);text-transform:uppercase">${l}</div></div>`).join('')}
       </div></div></div>
   ${sect('Principal sponsor','Season 2027')}
-  ${lrow('<b style="font-size:11px">VW</b>','var(--tint-soccer)','var(--partner-line)','Volkswagen Group','Funds the HNS Fund and school equipment',pill('ILLUSTRATIVE','warn'))}
+  ${lrow('<b style="font-size:11px">VW</b>','var(--tint-soccer)','var(--partner-line)','National Motor Group','Funds the HNS Fund and school equipment',pill('ILLUSTRATIVE','warn'))}
   ${sect('Sponsors &amp; donors','31 total')}
-  ${kv([['Spur Steak Ranches','FUND DONOR'],['Checkers','FUND DONOR'],['King Price Insurance','CO-BRAND'],['+28 clubs, old boys&rsquo; unions','']])}
+  ${kv([['Family Restaurant Group','FUND DONOR'],['National Grocery Retailer','FUND DONOR'],['Insurance Partner','CO-BRAND'],['+28 clubs, old boys&rsquo; unions','']])}
   ${sect('Supplier partners','Pre-approved')}
-  ${kv([['Puma &middot; Nike &middot; Adidas','APPROVED','var(--ok-text)'],['USN &middot; Living Brands','BATCH &#10003;','var(--ok-text)'],['Max Mouthguards','APPROVED','var(--ok-text)']])}
-  ${note('warn','All brand and sponsor names in this demo are <b>illustrative</b>. None is a signed partner.')}
+  ${kv([['Sportswear partner A &middot; Sportswear partner C &middot; Sportswear partner B','APPROVED','var(--ok-text)'],['Supplement partner A &middot; Supplement partner B','BATCH &#10003;','var(--ok-text)'],['Protective gear partner','APPROVED','var(--ok-text)']])}
+  ${note('warn','All sponsor and supplier names in this demo are <b>generic placeholders</b>.')}
   <div style="height:18px"></div></div>${tabbar(TABS_M,4)}`},
 
 {id:'M12',app:'Member app',name:'Cover for you (18+)',ix:1,
  notes:[
-  'Chris’s fourth layer: products for the policyholder rather than the player. Short-term and life, which is what King Price can actually write.',
+  'Chris’s fourth layer: products for the policyholder rather than the player. Short-term and life, which is what Insurance Partner can actually write.',
   ['new','Lead generation only. A members-only card, a handoff, no advice given, no quote rendered in MatchFit. That keeps this layer outside FAIS exactly like the onboarding handoff does.'],
-  'Integration surface is deliberately in King Price red so a member can see they are crossing into another company’s product.',
-  ['q','"API to King Price to make management and claims easier" is a much bigger step than lead generation. Displaying policy data may work under a mandate; <b>handling claims is intermediary work</b> and needs the FSP or a properly drawn outsourcing agreement. Split the two in the contract so phase 1 is not blocked by phase 2’s licensing.'],
-  ['q','King Price cannot write medical insurance, so this layer can never cover the player. Is that clear enough on the screen that a parent will not assume their child is covered by an adult policy bought here?']],
+  'Integration surface is deliberately in Insurance Partner red so a member can see they are crossing into another company’s product.',
+  ['q','"API to Insurance Partner to make management and claims easier" is a much bigger step than lead generation. Displaying policy data may work under a mandate; <b>handling claims is intermediary work</b> and needs the FSP or a properly drawn outsourcing agreement. Split the two in the contract so phase 1 is not blocked by phase 2’s licensing.'],
+  ['q','Insurance Partner cannot write medical insurance, so this layer can never cover the player. Is that clear enough on the screen that a parent will not assume their child is covered by an adult policy bought here?']],
  html:()=>`${sb()}
   <div style="display:flex;align-items:center;gap:10px;padding:15px 18px 2px"><span style="color:var(--muted-1);font-size:11px;font-weight:700">&larr; OnePlan</span><b style="font-size:12.5px">Risk Management &middot; 18+</b></div>
   ${hd('Cover for you','Products for the policyholder, 18 and over.')}
-  ${note('bad','<b>King Price is an authorised FSP.</b> Quotes, advice and claims are handled in their channel &mdash; MatchFit only makes the introduction.')}
+  ${note('bad','<b>Insurance Partner is an authorised FSP.</b> Quotes, advice and claims are handled in their channel &mdash; MatchFit only makes the introduction.')}
   ${ix('KING PRICE',
     [['Car insurance','Decreasing premiums &middot; school-run cover'],
      ['Household contents','Home and portable possessions'],
@@ -914,11 +914,11 @@ const SCREENS=[
   </div>
   <h3 class="dh">Listing approvals <span>pre-approval requirement</span></h3>
   <table class="g"><thead><tr><th>Brand</th><th>Item</th><th>Member discount</th><th>Batch</th><th>Status</th></tr></thead><tbody>
-   ${[['Puma','King Match FG boots','15%','&mdash;','APPROVED','ok'],
-      ['Adidas','Kakari rugby boots','12%','&mdash;','APPROVED','ok'],
-      ['Max Mouthguards','Custom-fit mouthguard','20%','&mdash;','APPROVED','ok'],
-      ['USN','Whey recovery blend 1kg','15%','27-0491','BATCH VERIFIED','info'],
-      ['Living Brands','Junior multivitamin','12%','27-0388','BATCH VERIFIED','info']]
+   ${[['Sportswear partner A','Firm-ground match boots','15%','&mdash;','APPROVED','ok'],
+      ['Sportswear partner B','Forward's rugby boots','12%','&mdash;','APPROVED','ok'],
+      ['Protective gear partner','Custom-fit mouthguard','20%','&mdash;','APPROVED','ok'],
+      ['Supplement partner A','Whey recovery blend 1kg','15%','27-0491','BATCH VERIFIED','info'],
+      ['Supplement partner B','Junior multivitamin','12%','27-0388','BATCH VERIFIED','info']]
      .map(([b,n,d,bt,s,c])=>`<tr><td>${b}</td><td>${n}</td><td class="num">${d}</td><td class="num" style="font-family:var(--mono);font-size:11px">${bt}</td><td><span class="pill ${c}">${s}</span></td></tr>`).join('')}
   </tbody></table>
   <h3 class="dh">Redemptions per month <span>winter season 2027</span></h3>
@@ -937,7 +937,7 @@ const SCREENS=[
   ['q','Are sponsor tiers fixed nationally or negotiable per school? A fixed tier is far easier to sell and to report against; per-school pricing gets a bigger cheque from a marquee school and makes the SED evidence pack harder to standardise. Decide before the first sponsor pack goes out.']],
  html:()=>`
   <div style="border:1px solid var(--warn-text);background:var(--tint-warn);border-radius:12px;padding:14px 18px;margin-bottom:22px;font-size:12.5px;color:var(--warn-text)">
-   <b>Illustrative sponsor.</b> Volkswagen Group is a worked example of a principal sponsorship. <b>Nothing is signed</b> &mdash; replace before this is shown to a board.</div>
+   <b>Illustrative sponsor.</b> National Motor Group is a worked example of a principal sponsorship. <b>Nothing is signed</b> &mdash; replace before this is shown to a board.</div>
   <div class="dstat">
    <div><b class="num">${rnd(3140000)}</b><small>Fund balance</small><em>Standing float maintained</em></div>
    <div><b class="num">7</b><small>Players supported</small><em>Catastrophic HNS cases</em></div>
@@ -1005,8 +1005,8 @@ const FLOW=[
  ]},
  {ln:'Path F &middot; Adult cover, 4th layer',nodes:[
    ['Member taps Cover for you',null,'M12','new'],
-   ['Handoff to King Price','Their FSP, their advice','M12','partner'],
-   ['Policy activated','In King Price systems',null,'partner'],
+   ['Handoff to Insurance Partner','Their FSP, their advice','M12','partner'],
+   ['Policy activated','In Insurance Partner systems',null,'partner'],
    ['In-app management','Needs intermediary agreement',null,'gap'],
  ]},
 ];

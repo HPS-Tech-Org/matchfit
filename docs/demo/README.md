@@ -139,14 +139,14 @@ numbers do not align and the whole thing looks amateur.
 
 ---
 
-## Illustrative names — read before showing anyone
+## Placeholder names
 
-Volkswagen Group, Spur, Checkers, King Price, Puma, Nike, Adidas, USN, Living Brands and Max
-Mouthguards appear as **illustrative** partner and sponsor examples. None is signed. They are
-labelled as illustrative on screen and in the notes.
+Sponsors and suppliers are **generic placeholders** by design: "National Motor Group", "Insurance
+Partner", "Sportswear partner A", "Supplement partner B". No real company is named anywhere.
 
-**Replace them with real or clearly generic names before a board presentation.** A director will
-reasonably ask whether VW is signed, and the answer is no.
+Keep it that way while the artefact is public. If you swap in a real sponsor for a specific
+pitch, do it on a branch and do not merge it — a named sponsor on a public URL reads as a signed
+sponsor, and that is a conversation you do not want to have in a board meeting.
 
 ---
 
