@@ -49,8 +49,8 @@ Six amber questions carry real cost. In rough order of what they move:
    which needs an FSP with a rep register, compliance officer, PI cover and Ombud exposure.
    **This one changes the price of the whole build.**
 2. **Shop payment model (M9).** Vouchers redeemed at the partner, or card checkout in-app.
-   Checkout is roughly 3–4× the build and brings PCI scope, fulfilment, returns and the
-   merchant-of-record VAT question.
+   Checkout is roughly 3–4× the build and brings PCI scope, fulfilment and returns with it. It
+   also decides who is the seller of record, and therefore who owns Consumer Protection duties.
 3. **Facility directory (M7).** Nobody owns a hospital list tagged for casualty, ICU and trauma
    capability. It gates emergency pathways 1 and 2 both, and wrong data sends a child to the
    wrong hospital.
@@ -86,7 +86,6 @@ Settings → Pages → Source: **Deploy from a branch** → Branch `main`, folde
 
 The site appears at `https://<owner>.github.io/matchfit/` within a minute or two.
 
-> **Before you make this repo public:** the spec notes contain HPS commercial detail — the sponsor
-> package split, the rewards margin and the merchant-of-record position. Pages on a private repo
-> needs a paid GitHub plan. If the repo must stay private and Pages is unavailable, send the client
-> `docs/demo/index.html` as a file; it works standalone from disk.
+The artefact is safe to share: the spec notes cover product and scoping decisions only. Internal
+commercial positions — pricing splits, margin structure and negotiating stances — are deliberately
+kept out of this repo and live in HPS's own planning documents instead.

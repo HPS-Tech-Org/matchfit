@@ -689,9 +689,9 @@ const SCREENS=[
   'Categories, pre-approved listings, member pricing shown as a percentage rather than a rand figure so it reads the same whatever the item costs.',
   ['new','Savings are tracked against premium paid, not against spend. "' + rnd(720) + ' earned back of ' + rnd(3598) + ' premium" is true and defensible. It replaces the brief’s claim that discounts offset the premium.'],
   '<b>The claim that cannot be made.</b> At a 15% member discount a parent must spend ' + rnd(12000) + ' through the app to recoup a ' + money(1799) + ' premium &mdash; roughly four times a realistic annual sporting budget. Said in a school hall it is both false and a mis-selling exposure.',
-  ['q','<b>The decision that sizes the build.</b> Vouchers or full card checkout? Vouchers mean a single-use code redeemed on the partner’s own store: no PCI scope, no cart, no fulfilment, no returns, no merchant-of-record VAT question. Card checkout is roughly three to four times the build and makes MatchFit the retailer, liable for goods it never handles. Chris asked for card payment. Recommend vouchers for phase 1 and let volume justify checkout.'],
+  ['q','<b>The decision that sizes the build.</b> Vouchers or full card checkout? Vouchers mean a single-use code redeemed on the partner’s own store: no PCI scope, no cart, no fulfilment and no returns to handle. Card checkout is roughly three to four times the build and makes MatchFit the retailer, liable for goods it never handles. Chris asked for card payment. Recommend vouchers for phase 1 and let volume justify checkout.'],
   ['q','Puma, Nike and Adidas run strict channel and pricing control and rarely permit third-party discounting of this kind. USN, Living Brands and Max Mouthguards are the realistic launch partners. Do not let a plan depend on Nike in month one.'],
-  ['q','If MatchFit is merchant of record, VAT applies to the full sale value rather than the margin, and the 15% platform share drops to about 13%. Taking the margin as a commission invoiced to the partner keeps the full 15% and is the cheaper build. Confirm which before contracts are drafted.']],
+  ['q','Who is the seller of record &mdash; the platform or the supplier? It decides who carries returns, refunds, chargebacks and Consumer Protection Act duties, and it has to be settled before supplier contracts are drafted rather than after the first faulty pair of boots.']],
  html:()=>`${sb('19:20')}${hd('Shop','Member pricing from approved supplier partners.')}
   <div class="card" style="padding:14px 15px;margin-top:13px">
     <div style="display:flex;justify-content:space-between;align-items:baseline;font-size:9.5px;color:var(--muted-1);font-weight:600"><span>Earned back so far</span><b class="num" style="color:var(--ok-text);font-family:var(--mono);font-size:19px;letter-spacing:-.03em">${rnd(720)}</b></div>
@@ -732,7 +732,7 @@ const SCREENS=[
 {id:'M11',app:'Member app',name:'More &mdash; Fund & partners',
  notes:[
   'The Fund balance, the principal sponsor, the donor roll and the supplier partners. Everything a member might reasonably want to know about who backs this.',
-  ['new','<b>The sponsor split is deliberately not published here.</b> An earlier draft showed parents the full waterfall including the platform fee. Showing a fund balance, a beneficiary count and a donor roll builds the same trust without publishing HPS margin to every parent.'],
+  ['new','<b>The sponsor split is deliberately not published to members here.</b> An earlier draft showed parents a full line-by-line waterfall. A fund balance, a beneficiary count and a donor roll build the same trust and are far easier to keep accurate every month.'],
   'The Fund is described on screen as a fund and not insurance, because it is discretionary and that distinction is where a regulator would look first.',
   ['q','Sponsors will assume their money helped their school; the Fund pools nationally. Say which on this screen before the first sponsor asks, and if surplus is ever pooled, publish the waterfall order so nobody feels misled.'],
   ['q','Volkswagen Group, Spur, Checkers and King Price appear here as illustrative examples and are labelled as such in the demo. They must be replaced with real or clearly generic names before this is shown to a board, because a director will reasonably ask whether VW is signed.']],
@@ -902,9 +902,9 @@ const SCREENS=[
  notes:[
   'What a supplier sees: vouchers issued, approved listings, batch verification, members reached. Aggregate only, enforced at the data layer and mirrored in the contract.',
   ['new','The listing approvals table is Chris’s "pre-approve the listings" requirement, with batch verification alongside it so supplements cannot go live uncertified.'],
-  '<b>The platform fee appears nowhere in this portal.</b> A supplier sees redemptions and discount delivered, never HPS margin.',
+  '<b>The platform fee appears nowhere in this portal.</b> A supplier sees redemptions and discount delivered, never platform margin.',
   ['q','Settlement mechanism: single-use codes settled on issuance, or partner self-reported redemptions? Self-reporting is cheaper to build and you will be underpaid without being able to prove it. Issue codes and reconcile against redemption.'],
-  ['q','The rewards margin is disintermediable. Once volume is proven a partner can go direct to schools or squeeze the 30%. Defend it with three-year supply terms, category exclusivity as the trade, and a most-favoured-nation clause &mdash; or accept that the main revenue line has a two-year life.']],
+  ['q','How long is a supply agreement, and is category exclusivity on the table? A supplier who wants exclusivity will trade for it; one who does not will want a short term. Both are workable, but the answer sets how much of the catalogue can be promised to a school for a full season.']],
  html:()=>`
   <div class="dstat">
    <div><b class="num">1 243</b><small>Vouchers issued</small><em>+3 this session</em></div>
@@ -934,7 +934,7 @@ const SCREENS=[
   ['new','<b>"Premium subsidy &mdash; NOT FUNDED" is stated on the screen.</b> One row that makes the whole revised model legible: sponsors fund the Fund and school equipment, parents pay premiums.'],
   ['new','Framing sponsorship as B-BBEE socio-economic development spend moves the sale from a marketing budget, which is small and cut first, to a compliance budget that must be spent annually. That is the single biggest change to the sponsorship pitch.'],
   'No individual member is visible. Sponsor contracts mirror the data-layer restriction so a request for member-level data is a contractual breach, not a negotiation.',
-  ['q','R20 000 per sponsor per season splits R7 500 to the Fund, R10 000 to school equipment and R2 500 to the platform. HPS does the selling, onboarding, hosting and reporting for 12.5%. Raising the package to R25 000 with R7 500 to the platform leaves the R17 500 impact story untouched and triples that revenue line. Decide before the first sponsor pack goes out.']],
+  ['q','Are sponsor tiers fixed nationally or negotiable per school? A fixed tier is far easier to sell and to report against; per-school pricing gets a bigger cheque from a marquee school and makes the SED evidence pack harder to standardise. Decide before the first sponsor pack goes out.']],
  html:()=>`
   <div style="border:1px solid var(--warn-text);background:var(--tint-warn);border-radius:12px;padding:14px 18px;margin-bottom:22px;font-size:12.5px;color:var(--warn-text)">
    <b>Illustrative sponsor.</b> Volkswagen Group is a worked example of a principal sponsorship. <b>Nothing is signed</b> &mdash; replace before this is shown to a board.</div>
