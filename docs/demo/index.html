@@ -122,7 +122,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 :focus-visible{outline:2px solid var(--partner-line);outline-offset:2px;border-radius:4px}
 .num{font-variant-numeric:tabular-nums}
 
-.app{display:grid;grid-template-columns:250px 1fr 320px;height:100vh;overflow:hidden}
+.app{display:grid;grid-template-columns:268px 1fr 320px;height:100vh;overflow:hidden}
 @media(max-width:1180px){.app{grid-template-columns:210px 1fr}.notes-col{display:none}}
 
 /* left rail */
@@ -320,6 +320,7 @@ a.tbtn.try:hover{background:var(--tint-ok)}
 .hbar i{width:116px;height:5px;border-radius:99px;background:var(--ink);opacity:.75}
 
 /* dark-chrome screens (coach) */
+.screen.dk .tabbar span.on{color:var(--sp-rugby)}
 .screen.dk{--surface:var(--coach-surface);--canvas-screen:var(--coach-canvas);--line:rgba(255,255,255,.09);
   --ink:var(--coach-ink);--ink-2:var(--coach-ink-2);--muted-1:var(--coach-muted);
   --tabbar:rgba(14,23,19,.97);--surface-2:var(--coach-surface-2)}
@@ -336,7 +337,7 @@ a.tbtn.try:hover{background:var(--tint-ok)}
 .ix-band>*{margin-left:0;margin-right:0}
 
 /* oneplan hosted chrome */
-.ophost{background:var(--surface-2);min-height:100%}
+.ophost{background:var(--surface-2)}
 .ophead{background:var(--partner-line);color:var(--on-brand);padding:13px 16px}
 [data-theme="dark"] .ophead{color:var(--on-accent)}
 .ophead .url{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.16);border-radius:8px;padding:6px 10px;font-family:var(--mono);font-size:8.5px}
@@ -428,9 +429,14 @@ h3.dh span{font-family:var(--mono);font-size:8.5px;color:var(--muted-1);letter-s
 /* ============================================================
    FORMATTERS (§9) — South African conventions: R 1 799,00
    ============================================================ */
-const money = n => 'R ' + n.toLocaleString('en-ZA',{minimumFractionDigits:2,maximumFractionDigits:2})
-  .replace(/,/g,' ').replace(/\.(\d\d)$/,',$1');
-const rnd = n => 'R ' + Math.round(n).toLocaleString('en-ZA').replace(/,/g,' ');
+/* South African convention: R 1 799,00 - space for thousands, comma for decimals.
+   Built from formatToParts so each piece is replaced by its ROLE. Swapping by
+   character breaks the moment the runtime's en-ZA data already uses those
+   separators, which is exactly what happened here. */
+const _fmt = (n, dp) => new Intl.NumberFormat('en-ZA',{minimumFractionDigits:dp,maximumFractionDigits:dp})
+  .formatToParts(n).map(x => x.type==='group' ? ' ' : x.type==='decimal' ? ',' : x.value).join('');
+const money = n => 'R ' + _fmt(n, 2);
+const rnd   = n => 'R ' + _fmt(Math.round(n), 0);
 const pctf = n => n + '%';
 
 /* ============================================================
@@ -481,7 +487,10 @@ const spc=k=>`var(${SPT[k]})`, spt=k=>`var(${SPTINT[k]})`, spcard=k=>`var(${SPCA
 /* ============================================================
    UI KIT (§7) — screens are composed, never hand-written
    ============================================================ */
-const sb    = t => `<div class="sb"><span>${t||'07:42'}</span><span>5G &#9646;&#9646;&#9646;</span></div>`;
+/* sb() opens the .body scroll container. Every phone screen closes it with the
+   </div> immediately before tabbar(). Without this, content below the fold is
+   clipped by .screen{overflow:hidden} and the tab bar floats mid-screen. */
+const sb    = (t,cls='',style='') => `<div class="sb"><span>${t||'07:42'}</span><span>5G &#9646;&#9646;&#9646;</span></div><div class="body ${cls}"${style?` style="${style}"`:''}>`;
 const hd    = (h,p) => `<div class="hd"><h2>${h}</h2>${p?`<p>${p}</p>`:''}</div>`;
 const abar  = (ini,eyebrow,name,badge) => `<div class="abar"><span class="ava">${ini}</span>
   <span class="who"><small>${eyebrow}</small><b>${name}</b></span>
@@ -558,8 +567,7 @@ const SCREENS=[
   ['new','Native iOS and Android builds arrive in Phase 2, once the onboarding flow has been proven with real policyholders.'],
   'HPS Tech is credited at the foot. The underwriter and licensed-manager disclosure sits on the plan and handoff screens, where the product is actually presented.',
  ],
- html:()=>`${sb()}
-  <div class="body" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;background:var(--brand-1)">
+ html:()=>`${sb('07:42','','display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;background:var(--brand-1)')}
    <div style="width:170px;color:var(--sp-rugby)">${field('rugby',{sw:5})}</div>
    <div style="text-align:center">
      <div style="font-weight:900;font-size:26px;letter-spacing:-.04em;color:var(--on-brand)">MatchFit</div>
@@ -606,8 +614,22 @@ const SCREENS=[
   ${DEPS.map(d=>lrow(field(d.code,{w:20,h:14,sw:14}),spt(d.code),spc(d.code),d.short+' M.','ActiveCare Season &middot; '+d.team,pill('&#9679; ACTIVE','ok'))).join('')}
   ${lrow(ic('plus',18),'var(--surface-2)','var(--ink)','Onboard a new player','ActiveCare &middot; seamless sign-up',`<span style="color:var(--muted-2)">${ic('chev',15,2.2)}</span>`,'dash')}
   ${ix('ONEPLAN API',mcard('rugby','THABO A. MOKOENA',DEPS[0].no,'U16A Rugby',rnd(DEPS[0].cover-DEPS[0].used)))}
-  ${sect('What is covered','Per event')}
-  ${kv([['Accident treatment',rnd(50000)],['MRI / CT scan, upfront',rnd(25000)],['Rehabilitation &amp; physio',rnd(5000)],['Assistive devices',rnd(3000)],['Claims management fee',rnd(500)]])}
+  ${sect('What is covered','ActiveCare')}
+  ${kv([
+    ['Cover per event',rnd(250000)],
+    ['Cover per season',rnd(250000)],
+    ['MRI &amp; CT scans, paid upfront',rnd(25000)],
+    ['Rehabilitation &amp; physio',rnd(5000)],
+    ['Assistive devices',rnd(3000)],
+    ['Blue Card concussion clearance','Included'],
+    ['Claims management fee',rnd(500)],
+  ])}
+  ${kv([
+    ['Covered where','Official matches and accredited practice'],
+    ['Payment','Loaded to the cover card before treatment'],
+    ['Any facility','No network restriction'],
+  ])}
+  ${lrow(ic('doc',17),'var(--surface-2)','var(--ink)','Policy documents','Schedule, wording, certificate of cover',`<span class="chev">${ic('chev',15,2.2)}</span>`)}
   ${note('info','Product terms and advice are provided by <b>Oneplan</b> as the licensed underwriting manager. MatchFit is the servicing platform.')}
   <div style="height:18px"></div></div>${tabbar(TABS_M,1)}`}},
 
@@ -626,14 +648,14 @@ const SCREENS=[
   <div class="opt sel" style="flex-direction:column;align-items:stretch;gap:0">
     <div style="display:flex;align-items:center;gap:11px">
       <span class="ico" style="background:var(--tint-hockey);color:var(--sp-hockey)">${ic('shield',19)}</span>
-      <span style="flex:1"><b>ActiveCare Season</b><small>One sport &middot; 8-month season</small></span>
+      <span style="flex:1"><b>ActiveCare Season</b><small>Single sport &middot; 8-month season</small></span>
       <span style="text-align:right"><b class="num" style="font-size:15px;letter-spacing:-.02em">${money(1799)}</b><small>once-off, per player</small></span></div>
     <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--line);font-size:8.5px;color:var(--muted-1);line-height:1.5">${rnd(250000)} per event and per season &middot; ${rnd(25000)} scans upfront &middot; ${rnd(5000)} rehab &middot; Blue Card included</div></div>
   <div class="opt" style="flex-direction:column;align-items:stretch;gap:0">
     <div style="display:flex;align-items:center;gap:11px">
       <span class="ico" style="background:var(--tint-hockey);color:var(--sp-hockey)">${ic('shield',19)}</span>
       <span style="flex:1"><b>ActiveCare Multi-Sport</b><small>All codes &middot; 12 months</small></span>
-      <span style="text-align:right"><b class="num" style="font-size:15px;letter-spacing:-.02em">${money(249)}</b><small>per month, per player</small></span></div>
+      <span style="text-align:right"><b class="num" style="font-size:15px;letter-spacing:-.02em">${money(249)}</b><small>per month &times; 12, per player</small></span></div>
     <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--line);font-size:8.5px;color:var(--muted-1);line-height:1.5">Covers overlapping seasons &middot; no off-season gap</div></div>
   ${note('warn','A player who only plays one winter code is cheaper on Season. Two codes or a year-round athlete is cheaper on Multi-Sport from month eight.')}
   <div style="height:18px"></div></div>${tabbar(TABS_M,1)}`},
@@ -645,8 +667,7 @@ const SCREENS=[
   ['q','<b>Phase 1 &middot; the question that unblocks the whole build.</b> What does the Oneplan onboarding endpoint expect? Field-level payload, authentication, validation rules, sandbox access, and what a successful response returns. <b>Nothing can be scheduled or priced until this is documented.</b>'],
   ['q','<b>Phase 1 &middot; hosted or rendered?</b> Does Oneplan have an onboarding journey we can deep-link into and skin, or does the app render the whole flow? It changes who is presenting the product, and therefore where the compliance obligation sits.'],
  ],
- html:()=>`${sb()}
-  <div class="body ophost">
+ html:()=>`${sb('07:42','ophost')}
    <div class="ophead">
      <div class="url">${ic('lock',11,2.2)} secure.oneplan.co.za/activecare</div>
      <div class="t">Oneplan Underwriting Managers</div>
@@ -674,10 +695,10 @@ const SCREENS=[
  html:()=>`${sb('16:48')}${hd('Emergency','Pick what happened. We handle the rest.')}
   ${note('bad','<b>If someone is not breathing or is unconscious, call 112 now.</b> This app is a shortcut, never a replacement for a phone call.')}
   <div style="height:13px"></div>
-  ${epath(ic('hospital',19),'var(--ok-text)','var(--tint-ok)','x','I need to go to hospital','Not urgent, no ambulance. We alert the call centre, you pick the facility, and funds are cleared before you arrive.','PHASE 1','ok')}
-  ${epath(ic('ambulance',19),'var(--warn-text)','var(--tint-warn)','x','Critical &mdash; send transport','Emergency transport to the nearest hospital with an open emergency ward. Dispatch receives your location.','PHASE 2','warn')}
-  ${epath(ic('siren',19),'var(--brand-4)','var(--tint-bad)','x','Head, neck or spine injury','Catastrophic HNS protocol. Spineline is activated and the discretionary fund process begins.','PHASE 2','bad')}
-  ${epath(ic('brain',19),'var(--sp-soccer)','var(--tint-soccer)','x','Suspected concussion','Blue Card pathway. Admission, confirmation, then the 6-week protocol and clearance from an approved doctor.','PHASE 1','info')}
+  ${epath(ic('hospital',19),'var(--ok-text)','var(--tint-ok)','I need to go to hospital','Not urgent, no ambulance. We alert the call centre, you pick the facility, and funds are cleared before you arrive.','PHASE 1','ok')}
+  ${epath(ic('ambulance',19),'var(--warn-text)','var(--tint-warn)','Critical &mdash; send transport','Emergency transport to the nearest hospital with an open emergency ward. Dispatch receives your location.','PHASE 2','warn')}
+  ${epath(ic('siren',19),'var(--brand-4)','var(--tint-bad)','Head, neck or spine injury','Catastrophic HNS protocol. Spineline is activated and the discretionary fund process begins.','PHASE 2','bad')}
+  ${epath(ic('brain',19),'var(--sp-soccer)','var(--tint-soccer)','Suspected concussion','Blue Card pathway. Admission, confirmation, then the 6-week protocol and clearance from an approved doctor.','PHASE 1','info')}
   ${note('info','These pathways are for <b>insured players</b>. An uninsured player with an HNS injury is still covered by the Fund &mdash; a coach or the call centre triggers that.')}
   <div style="height:16px"></div></div>
   <div class="embar">${ic('phone',15,2.2)} Emergency line <span class="n">010 001 0141</span></div>
@@ -708,7 +729,7 @@ const SCREENS=[
 {id:'M8',phase:2,app:'Member app',name:'Emergency &mdash; Blue Card',
  notes:[
   'Pathway 4, and the most specifiable thing in the product: a scheduled six-week care pathway, not an emergency. Admission, confirmed diagnosis, protocol timer, clearance from a pre-approved panel.',
-  ['new','<b>Phase 2.</b> The protocol writes through to the coach portal and the school console, so a player under a Blue Card cannot be marked available for contact play. One safeguarding mechanism working across three user types.'],
+  ['new','<b>Phase 2.</b> The protocol writes through to the coach portal and the school / group console, so a player under a Blue Card cannot be marked available for contact play. One safeguarding mechanism working across three user types.'],
   ['new','Concussion is where school sport is most exposed and least served. Existing products exclude it entirely.'],
   ['q','<b>Phase 2 &middot; the approved panel.</b> Who maintains the list of doctors who can clear a Blue Card, and how often does it change? A stale panel means a family drives to a doctor who cannot clear their child.'],
  ],
@@ -804,7 +825,7 @@ const SCREENS=[
 
 {id:'M12',phase:3,app:'Member app',name:'Cover for you (18+)',ix:1,
  notes:[
-  'Products for the policyholder rather than the player: short-term and life, sold by a licensed partner.',
+  'Products for the policyholder rather than the player: short-term and life insurance, offered by a licensed insurance partner.',
   ['new','<b>Phase 3.</b> Cross-selling additional insurance to policyholders over 18 is a referral, not a sale. A members-only card, a handoff, no advice given and no quote rendered in the app.'],
   'The integration surface is deliberately in the partner&rsquo;s own colour so a member can see they are crossing into another company&rsquo;s product.',
   ['q','<b>Phase 3 &middot; regulatory review.</b> As the app expands into shopping, rewards and cross-sold insurance, what compliance review is needed and who owns it? Each new revenue line potentially brings a different licence, a different disclosure and a different complaints route.'],
@@ -814,7 +835,7 @@ const SCREENS=[
   <div style="display:flex;align-items:center;gap:10px;padding:15px 18px 2px"><span style="color:var(--muted-1);font-size:11px;font-weight:700">&larr; OnePlan</span><b style="font-size:12.5px">Risk Management &middot; 18+</b></div>
   ${hd('Cover for you','Products for the policyholder, 18 and over.')}
   ${note('bad','<b>Insurance Partner is an authorised FSP.</b> Quotes, advice and claims are handled in their channel &mdash; MatchFit only makes the introduction.')}
-  ${ix('KING PRICE',
+  ${ix('INSURANCE PARTNER',
     [['Car insurance','Decreasing premiums &middot; school-run cover'],
      ['Household contents','Home and portable possessions'],
      ['Cellphone cover','Family devices']]
@@ -904,7 +925,7 @@ const SCREENS=[
   ${tabbar([['s','scan','Scan'],['t','doc','Team'],['h','phone','Help']],0)}`},
 
 /* ---------- SCHOOL ---------- */
-{id:'S1',phase:2,app:'School console',name:'Sports office',frame:'desk',
+{id:'S1',phase:2,app:'School / Group console',name:'Sports office console',frame:'desk',
  notes:[
   'Desktop, because a sports office runs it on a laptop between lessons. Roster import, accreditation status, coach grants and an append-only activity log.',
   ['new','<b>Phase 2.</b> Whole-school onboarding, either managed by the school through fee inclusion or by parents responding to a school referral.'],

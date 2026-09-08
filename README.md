@@ -47,7 +47,7 @@ Hosted:
 
 ## What it is
 
-18 screens across five personas — member app, dependant login, coach portal, school console and
+18 screens across five personas — member app, dependant login, coach portal, school / group console and
 partner portal — plus a six-lane process map. Every screen carries its spec in the right-hand
 column, in three forms:
 
@@ -70,7 +70,7 @@ every screen also carries a phase badge in the rail.
 | Phase | Scope | Screens |
 |---|---|---|
 | **1 · MVP** | Web app only. Onboard policyholders over 18 and hand the application to Oneplan. Proven live at a Golden Oldies tournament: activation stand, QR code, policy sold on the spot. | M1–M5 |
-| **2 · Schools & dependants** | Whole-school onboarding via fee inclusion or school referral. Dependant logins. Emergency and concussion pathways. Native iOS and Android. | M6–M8, D1, C1–C2, S1 |
+| **2 · Schools, groups & dependants** | Whole-school onboarding via fee inclusion or school referral. Dependant logins. Emergency and concussion pathways. Native iOS and Android. | M6–M8, D1, C1–C2, S1 |
 | **3 · Shop & cross-sell** | Member pricing, batch track-and-trace, referrals for additional insurance to policyholders over 18. | M9–M12, X1–X2 |
 | **4 · Sports integration** | A tracker with rewards, and progressive feature expansion. Last, deliberately. | — |
 
@@ -98,7 +98,7 @@ Every one of these sits on a screen in the demo as an amber note, next to the th
   with a coach, and the fee-bundled distribution plan runs through schools. An app only a parent
   can open leaves an injured child at an away fixture with nothing. Both are drawn here (C1, C2,
   S1) as the argument for putting them in phase 1.
-- **Netball and hockey depth.** The school console shows netball and hockey are 64 of 148 enrolled
+- **Netball and hockey depth.** The school / group console shows netball and hockey are 64 of 148 enrolled
   players. A rugby-shaped product understates this book by nearly half.
 
 ## Placeholder content
