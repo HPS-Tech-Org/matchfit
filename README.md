@@ -9,19 +9,40 @@ scope before any plumbing is written.
 
 ```
 docs/
-  index.html          redirect, so the bare Pages URL lands on the demo
+  index.html          redirect, so the bare Pages URL lands on the scoping demo
   demo/
-    index.html        the artefact: markup, CSS, screen data, spec notes
+    index.html        the scoping artefact: screens + the spec, side by side
     README.md         how to add a screen, change the palette, edit notes
+  app/
+    index.html        the working demo: interactive, five personas, real flows
 tools/
   contrast.py         the WCAG gate — run after any palette change
 ```
+
+## Two artefacts, two jobs
+
+| | `docs/demo/` — scoping | `docs/app/` — working |
+|---|---|---|
+| Job | settle scope and flow | show it behaving |
+| State | none, every screen a pure function | one state object, real interactions |
+| Read it for | the notes column and the flow map | the claim clearing funds |
+
+They are linked, not merged. Every screen in the scoping demo has a **Try this flow →**
+button that opens the working demo at the matching persona and tab, and the working demo has a
+**← Back to the spec** link that returns to the screen you came from.
+
+Keeping them separate is deliberate. The scoping artefact's value is that a stakeholder reads
+the spec beside the screen; interactivity competes with that, and a stateless file can be
+regenerated screen by screen without touching the rest.
 
 ## View it
 
 Open `docs/demo/index.html` in any browser. No build step, no dependencies, no server.
 
-Hosted: **`https://<owner>.github.io/matchfit/`** once Pages is enabled (see below).
+Hosted:
+
+- Scoping demo — **https://hps-tech-org.github.io/matchfit/**
+- Working demo — **https://hps-tech-org.github.io/matchfit/app/**
 
 ## What it is
 

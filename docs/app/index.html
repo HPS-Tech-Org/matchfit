@@ -1,0 +1,1137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MatchFit Platform Demo</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#0F1013; --panel:#181A1F; --panel2:#20232A; --ink:#ECEEF1; --ink2:#979BA4; --ink3:#63676F;
+  --line:#282B32; --brass:#D2A24C;
+  --brand:#151C25; --brand2:#22303F; --paper:#F4F7F9;
+  --t1:#111823; --t2:#4F5966; --t3:#8A929E; --hair:rgba(17,24,35,.09);
+  --ok:#1D9A66; --bad:#C0392B; --amber:#B5761A;
+  --rugby:#17643E; --rugby-t:#E6F0EA;
+  --soccer:#22499E; --soccer-t:#E7EDF8;
+  --hockey:#0C7B80; --hockey-t:#E2F1F1;
+  --netball:#C2631F; --netball-t:#FAEDE2;
+  --op:#1B3C8C;
+  --sh-s:0 1px 2px rgba(12,18,28,.05),0 1px 3px rgba(12,18,28,.04);
+  --sh-m:0 1px 2px rgba(12,18,28,.05),0 10px 26px -14px rgba(12,18,28,.2);
+  --sh-l:0 2px 5px rgba(12,18,28,.07),0 22px 46px -18px rgba(12,18,28,.4);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:Archivo,system-ui,sans-serif;line-height:1.55;min-height:100vh}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;padding:0;text-align:left}
+button:focus-visible{outline:2px solid var(--brass);outline-offset:2px;border-radius:6px}
+svg.ic{display:block;flex:none}
+
+.shell{max-width:1560px;margin:0 auto;padding:20px 26px 90px}
+.topbar{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;padding:6px 0 18px;border-bottom:1px solid var(--line);margin-bottom:30px}
+.logo{font-weight:900;letter-spacing:-.03em;font-size:17px}
+.logo small{display:block;font-family:"IBM Plex Mono",monospace;font-size:9px;letter-spacing:.15em;color:var(--brass);text-transform:uppercase;font-weight:500;margin-top:1px}
+.seg{display:flex;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:3px;gap:2px;flex-wrap:wrap}
+.seg button{padding:8px 14px;border-radius:9px;font-size:12.5px;font-weight:600;color:var(--ink2);transition:.15s}
+.seg button:hover{color:var(--ink)}
+.seg button.on{background:var(--panel2);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line),0 2px 6px rgba(0,0,0,.25)}
+.spacer{flex:1}
+.tbtn{font-size:11.5px;color:var(--ink3);border:1px solid var(--line);padding:8px 13px;border-radius:9px;transition:.15s}
+.tbtn:hover{color:var(--ink);border-color:var(--ink3)}
+.stage{display:flex;gap:36px;align-items:flex-start;justify-content:center;flex-wrap:wrap}
+.phonewrap{position:relative;flex:none}
+.glow{position:absolute;inset:-60px -80px;border-radius:50%;filter:blur(70px);opacity:.15;pointer-events:none}
+.notes{width:288px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px 20px;font-size:12.5px;color:var(--ink2)}
+.notes h4{margin:0 0 10px;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--brass);font-family:"IBM Plex Mono",monospace;font-weight:600}
+.notes ul{margin:0;padding-left:16px}
+.notes li{margin-bottom:8px;line-height:1.5}
+.notes .flag{margin-top:12px;padding:10px 12px;border-radius:10px;background:rgba(210,162,76,.09);border:1px solid rgba(210,162,76,.3);color:var(--brass);font-size:11.5px;line-height:1.5}
+.notes .disc{margin-top:13px;padding-top:12px;border-top:1px solid var(--line);font-size:10.5px;color:var(--ink3);line-height:1.55}
+
+.phone{position:relative;width:326px;height:716px;border-radius:48px;background:linear-gradient(160deg,#3a3d45,#181A1F 32%);padding:11px;box-shadow:0 36px 78px -26px rgba(0,0,0,.85),0 0 0 1px #383B43,inset 0 0 0 1.5px #52555C;flex:none}
+.phone::before{content:"";position:absolute;left:-2.5px;top:150px;width:3px;height:62px;border-radius:2px;background:#494c54}
+.phone::after{content:"";position:absolute;right:-2.5px;top:186px;width:3px;height:88px;border-radius:2px;background:#494c54}
+.scr{position:relative;width:100%;height:100%;border-radius:38px;overflow:hidden;display:flex;flex-direction:column;background:var(--sc,#fff)}
+.island{position:absolute;top:9px;left:50%;transform:translateX(-50%);width:90px;height:24px;background:#000;border-radius:13px;z-index:60}
+.island::after{content:"";position:absolute;right:8px;top:7px;width:9px;height:9px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#1e2f4a,#000 70%)}
+.sb{display:flex;justify-content:space-between;align-items:center;font-size:11.5px;font-weight:700;padding:15px 24px 5px;flex:none}
+.body{flex:1;overflow-y:auto;overflow-x:hidden;scrollbar-width:none}
+.body::-webkit-scrollbar{display:none}
+.scr[data-scrolls]::after{content:"";position:absolute;left:0;right:0;bottom:74px;height:30px;pointer-events:none;z-index:25;background:linear-gradient(to top,var(--sc),transparent)}
+.view{animation:rise .28s cubic-bezier(.2,.7,.3,1)}
+@keyframes rise{from{transform:translateY(9px)}to{transform:none}}
+@keyframes pop{from{transform:scale(.96) translateY(12px)}to{transform:none}}
+@keyframes pulseDot{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes sweep{0%{transform:translateX(-100%)}100%{transform:translateX(300%)}}
+
+/* 5-tab bar */
+.tabbar{flex:none;display:flex;background:rgba(255,255,255,.97);border-top:1px solid var(--hair);padding:6px 3px 3px}
+.tabbar button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:8px;font-weight:700;padding:6px 0 4px;color:#9aa0ab;border-radius:11px;transition:.15s;letter-spacing:.01em}
+.tabbar button:active{transform:scale(.93)}
+.homebar{flex:none;display:flex;justify-content:center;padding:2px 0 8px;background:rgba(255,255,255,.97)}
+.homebar i{width:116px;height:5px;border-radius:99px;background:#1c2027;opacity:.8}
+.dark .tabbar,.dark .homebar{background:rgba(14,23,19,.97);border-top-color:rgba(255,255,255,.07)}
+.dark .homebar i{background:#e6efe9;opacity:.55}
+
+/* shared */
+.hd{padding:14px 18px 0}
+.hd h2{margin:0;font-size:20px;font-weight:900;letter-spacing:-.032em;color:var(--t1)}
+.hd p{margin:1px 0 0;font-size:10.5px;color:var(--t2);line-height:1.45}
+.appbar{display:flex;align-items:center;gap:11px;padding:10px 18px 0}
+.ava{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:13px;flex:none}
+.who{flex:1;min-width:0}
+.who small{display:block;font-family:"IBM Plex Mono",monospace;font-size:7.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--t3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.who b{font-size:15.5px;font-weight:800;color:var(--t1);letter-spacing:-.018em;display:block;margin-top:1px}
+.bell{width:38px;height:38px;border-radius:50%;background:#fff;border:1px solid var(--hair);display:flex;align-items:center;justify-content:center;box-shadow:var(--sh-s);position:relative;flex:none}
+.bell .bd{position:absolute;top:7px;right:8px;min-width:15px;height:15px;padding:0 3px;border-radius:99px;background:#C0392B;border:1.5px solid #fff;color:#fff;font-size:8.5px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.sect{display:flex;align-items:center;justify-content:space-between;padding:16px 18px 8px}
+.sect b{font-size:12px;font-weight:800;color:var(--t1);letter-spacing:-.012em}
+.sect small{font-family:"IBM Plex Mono",monospace;font-size:7.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--t3)}
+.row{display:flex;align-items:center;gap:11px;background:#fff;border:1px solid var(--hair);border-radius:16px;padding:11px 12px;box-shadow:var(--sh-s);margin:0 15px 8px;width:calc(100% - 30px);transition:.15s}
+.row:active{transform:scale(.985)}
+.row .ri{width:36px;height:36px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex:none}
+.row b{font-size:11.5px;font-weight:800;color:var(--t1);display:block}
+.row small{font-size:8.5px;color:var(--t3);display:block;line-height:1.35;margin-top:1px}
+.row .pil{margin-left:auto;font-size:7.5px;font-weight:800;letter-spacing:.07em;padding:3px 8px;border-radius:99px;white-space:nowrap}
+.pil.g{background:#E7F5EC;color:#14764D}.pil.r{background:#FAE7E6;color:#B3202C}
+.pil.n{background:#E9EDF1;color:#4F5966}.pil.a{background:#FBF0DD;color:#8A6210}
+.pil.p2{background:#EFEAF6;color:#5B4A94}
+.chev{margin-left:auto;color:#C2C7D0}
+.notice{margin:11px 15px 0;border-radius:13px;padding:9px 12px;font-size:9px;font-weight:600;display:flex;gap:8px;align-items:flex-start;line-height:1.45}
+.kv{margin:0 15px 8px;background:#fff;border:1px solid var(--hair);border-radius:16px;box-shadow:var(--sh-s);overflow:hidden}
+.kv div{display:flex;padding:10px 13px;border-bottom:1px solid var(--hair);font-size:10.5px;gap:10px}
+.kv div:last-child{border-bottom:none}
+.kv span.k{color:var(--t3);font-weight:600;flex:none;width:88px}
+.kv span.v{color:var(--t1);font-weight:600;text-align:right;margin-left:auto}
+.btnP{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border-radius:16px;padding:14px;font-size:13px;font-weight:800;color:#fff;box-shadow:var(--sh-m);transition:.15s;letter-spacing:-.01em}
+.btnP:active{transform:scale(.98)}
+.btnP:disabled{background:#c9cdd6!important;box-shadow:none;cursor:not-allowed}
+.btnG{display:block;width:100%;margin-top:10px;font-size:11px;font-weight:600;color:var(--t3);padding:8px;text-align:center}
+.toast{position:absolute;left:14px;right:14px;top:52px;z-index:90;background:rgba(18,22,32,.97);color:#fff;border-radius:16px;padding:12px 15px;font-size:10.5px;font-weight:600;box-shadow:0 16px 40px rgba(0,0,0,.45);opacity:0;transform:translateY(-14px);transition:.3s cubic-bezier(.2,.8,.3,1);pointer-events:none;line-height:1.5;display:flex;gap:9px;align-items:flex-start}
+.toast.show{opacity:1;transform:none}
+.backrow{display:flex;align-items:center;gap:10px;padding:14px 18px 2px}
+.backrow button{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:var(--t2)}
+
+/* cover card */
+.cover{margin:13px 15px 0;border-radius:22px;padding:16px 17px 15px;color:#fff;position:relative;overflow:hidden;box-shadow:var(--sh-l)}
+.cover .wm{position:absolute;right:-32px;top:-16px;width:196px;opacity:.13;pointer-events:none}
+.cover>*{position:relative;z-index:2}
+.cover .lbl{font-family:"IBM Plex Mono",monospace;font-size:8px;letter-spacing:.15em;text-transform:uppercase;opacity:.72}
+.cover .amt{font-size:24px;font-weight:900;letter-spacing:-.033em;margin:2px 0 0;font-variant-numeric:tabular-nums;white-space:nowrap}
+.cover .amt small{font-size:10.5px;font-weight:600;opacity:.7;letter-spacing:0;margin-left:5px}
+.cover .who2{font-size:10px;opacity:.8;margin-top:3px}
+.cover .meter{height:4.5px;border-radius:99px;background:rgba(255,255,255,.2);overflow:hidden;margin-top:12px}
+.cover .meter i{display:block;height:100%;border-radius:99px;background:#fff;opacity:.94;transition:width .5s}
+.cover .mrow{display:flex;justify-content:space-between;font-family:"IBM Plex Mono",monospace;font-size:7.5px;letter-spacing:.09em;opacity:.72;margin-top:5px;text-transform:uppercase}
+.stp{display:inline-flex;align-items:center;gap:5px;font-size:8.5px;font-weight:800;padding:4px 10px;border-radius:99px;letter-spacing:.08em}
+.stp i{width:5.5px;height:5.5px;border-radius:50%;background:currentColor;animation:pulseDot 2.2s infinite}
+.stp.abs{position:absolute;top:15px;right:15px;z-index:3}
+.stp.ok{background:rgba(255,255,255,.16);color:#B7F4CE;box-shadow:inset 0 0 0 1px rgba(255,255,255,.22)}
+.mcard{margin:13px 15px;border-radius:20px;padding:17px;color:#fff;position:relative;overflow:hidden;box-shadow:0 22px 46px -16px rgba(0,0,0,.55)}
+.mcard .wm{position:absolute;left:-26px;bottom:-42px;width:236px;opacity:.14}
+.mcard>*{position:relative;z-index:2}
+.chip2{width:32px;height:24px;border-radius:5px;background:linear-gradient(135deg,#E8CF7E,#C9A24B 60%,#a9843a);position:relative;box-shadow:inset 0 0 0 1px rgba(0,0,0,.18)}
+.chip2::after{content:"";position:absolute;inset:4px 6px;border:1px solid rgba(0,0,0,.22);border-radius:2px}
+.ctls{display:flex;gap:2.5px;align-items:center;margin-left:8px}
+.ctls i{display:block;width:6px;height:11px;border:1.5px solid rgba(255,255,255,.68);border-left:none;border-radius:0 6px 6px 0}
+.ctls i:nth-child(2){height:14px}.ctls i:nth-child(3){height:17px}
+.mno{font-family:"IBM Plex Mono",monospace;font-size:13px;letter-spacing:.13em;margin-top:13px}
+.qr{background:#fff;border-radius:10px;padding:7px;display:inline-block;line-height:0;box-shadow:0 5px 14px rgba(0,0,0,.3)}
+.act3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;padding:0 15px}
+.act3 button{display:flex;flex-direction:column;align-items:center;gap:5px;background:#fff;border:1px solid var(--hair);border-radius:16px;padding:12px 6px;font-size:9px;font-weight:700;color:var(--t1);box-shadow:var(--sh-s);text-align:center}
+.act3 .qic{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+
+/* EMERGENCY */
+.embar{flex:none;background:#8E1F1C;color:#fff;padding:9px 15px;display:flex;align-items:center;gap:9px;font-size:10.5px;font-weight:800;letter-spacing:-.005em;position:relative;overflow:hidden}
+.embar::after{content:"";position:absolute;top:0;bottom:0;width:30%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.13),transparent);animation:sweep 3.4s linear infinite}
+.embar span.n{margin-left:auto;font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.05em}
+.epath{display:block;width:calc(100% - 30px);margin:0 15px 10px;background:#fff;border:1px solid var(--hair);border-left:5px solid var(--ec);border-radius:16px;padding:13px 14px;box-shadow:var(--sh-s);transition:.15s}
+.epath:active{transform:scale(.98)}
+.epath .top{display:flex;align-items:center;gap:10px}
+.epath .ei{width:34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex:none;background:var(--et);color:var(--ec)}
+.epath b{font-size:12px;font-weight:800;color:var(--t1);display:block;letter-spacing:-.015em;line-height:1.25}
+.epath small{font-size:8.5px;color:var(--t3);display:block;line-height:1.4;margin-top:2px}
+.epath .tag2{margin-left:auto;font-size:7px;font-weight:800;letter-spacing:.09em;padding:3px 7px;border-radius:99px;white-space:nowrap}
+.steps{display:flex;gap:5px;margin:0 18px 14px}
+.steps i{flex:1;height:3.5px;border-radius:99px;background:#E2E7EB;transition:.3s}
+.opt{display:flex;align-items:center;gap:11px;width:calc(100% - 36px);border:1.5px solid var(--hair);border-radius:16px;padding:12px 13px;margin:0 18px 9px;background:#fff;box-shadow:var(--sh-s);transition:.15s}
+.opt:active{transform:scale(.98)}
+.opt .oic{width:36px;height:36px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex:none}
+.opt b{font-size:12px;color:var(--t1);display:block;font-weight:800;letter-spacing:-.012em}
+.opt small{font-size:8.5px;color:var(--t3);display:block;margin-top:2px;line-height:1.4}
+.chk{display:flex;align-items:flex-start;gap:10px;padding:11px 13px;border-radius:16px;background:#fff;border:1px solid var(--hair);box-shadow:var(--sh-s);margin:0 18px 8px;transition:.25s}
+.chk .ic2{width:20px;height:20px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;color:#fff;margin-top:1px;transition:.25s}
+.chk b{font-size:11px;color:var(--t1);display:block;font-weight:800}
+.chk small{font-size:8.5px;color:var(--t3);display:block;line-height:1.4;margin-top:1px}
+.ring{width:118px;height:118px;margin:22px auto 14px;position:relative;display:flex;align-items:center;justify-content:center}
+.ring svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.ring b{font-family:"IBM Plex Mono",monospace;font-size:21px;color:var(--t1)}
+.refbox{background:#fff;border:1px solid var(--hair);border-radius:16px;padding:12px;box-shadow:var(--sh-s);text-align:center;margin:0 18px 12px}
+.proto{margin:0 15px 9px;background:#fff;border:1px solid var(--hair);border-radius:16px;padding:13px 14px;box-shadow:var(--sh-s)}
+.proto .pt{display:flex;align-items:center;gap:9px;margin-bottom:9px}
+.proto .pw{height:6px;border-radius:99px;background:#EAEEF2;overflow:hidden}
+.proto .pw i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--soccer),#5B8AD8)}
+.wkrow{display:flex;gap:4px;margin-top:9px}
+.wkrow i{flex:1;height:20px;border-radius:5px;background:#EEF1F5;display:flex;align-items:center;justify-content:center;font-family:"IBM Plex Mono",monospace;font-size:7px;color:var(--t3);font-style:normal;font-weight:600}
+.wkrow i.done{background:var(--soccer);color:#fff}
+.wkrow i.now{background:#D8E3F5;color:var(--soccer)}
+
+/* SHOP */
+.catrow{display:flex;gap:7px;padding:12px 15px 0;overflow-x:auto;scrollbar-width:none}
+.catrow::-webkit-scrollbar{display:none}
+.catrow button{flex:none;font-size:10px;font-weight:700;padding:7px 13px;border-radius:99px;border:1px solid var(--hair);background:#fff;color:var(--t2);white-space:nowrap;box-shadow:var(--sh-s)}
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:12px 15px 0}
+.st{background:#fff;border:1px solid var(--hair);border-radius:16px;padding:11px 12px;box-shadow:var(--sh-s);transition:.15s;position:relative}
+.st:active{transform:scale(.97)}
+.st .brand{font-family:"IBM Plex Mono",monospace;font-size:7px;letter-spacing:.13em;text-transform:uppercase;color:var(--t3);display:block}
+.st b{font-size:11px;font-weight:800;color:var(--t1);display:block;line-height:1.3;margin-top:2px;letter-spacing:-.01em}
+.st .disc{display:inline-block;margin-top:7px;font-family:"IBM Plex Mono",monospace;font-size:13px;font-weight:600;color:#14764D;letter-spacing:-.02em}
+.st .sub{font-size:8px;color:var(--t3);display:block;margin-top:1px}
+.st .appr{position:absolute;top:9px;right:9px;font-size:6.5px;font-weight:800;letter-spacing:.08em;padding:2px 6px;border-radius:99px;background:#E7F5EC;color:#14764D}
+.st .cert{position:absolute;top:9px;right:9px;font-size:6.5px;font-weight:800;letter-spacing:.08em;padding:2px 6px;border-radius:99px;background:#EAF0FA;color:#22499E}
+.savebar{margin:12px 15px 0;background:#fff;border:1px solid var(--hair);border-radius:18px;padding:13px 15px;box-shadow:var(--sh-s)}
+.savebar .r1{display:flex;justify-content:space-between;align-items:baseline;font-size:9.5px;color:var(--t3);font-weight:600}
+.savebar .r1 b{color:var(--t1);font-size:19px;font-family:"IBM Plex Mono",monospace;letter-spacing:-.03em}
+.savebar .trk{height:6px;border-radius:99px;background:#EAEEF2;margin-top:9px;overflow:hidden}
+.savebar .trk i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#1D9A66,#54C795);transition:width .6s}
+.savebar .r2{display:flex;justify-content:space-between;font-family:"IBM Plex Mono",monospace;font-size:7.5px;letter-spacing:.09em;color:var(--t3);margin-top:7px;text-transform:uppercase}
+
+/* ONEPLAN HOSTED chrome */
+.ophost{background:#F2F5FA;min-height:100%}
+.ophead{background:var(--op);color:#fff;padding:12px 16px}
+.ophead .url{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.14);border-radius:8px;padding:6px 10px;font-family:"IBM Plex Mono",monospace;font-size:8.5px;letter-spacing:.04em}
+.ophead .t{font-weight:800;font-size:13px;margin-top:9px;letter-spacing:-.015em}
+.ophead .s{font-size:9px;opacity:.8;margin-top:1px}
+.opbox{margin:12px 15px;background:#fff;border:1px solid #D7DEE9;border-radius:14px;padding:13px 14px}
+.opbox h5{margin:0 0 6px;font-size:11.5px;font-weight:800;color:var(--t1)}
+.opbox p{margin:0;font-size:9.5px;color:var(--t2);line-height:1.5}
+.opcheck{display:flex;gap:9px;align-items:flex-start;margin-top:10px;font-size:9px;color:var(--t2);line-height:1.45}
+.opcheck i{width:16px;height:16px;border-radius:4px;border:1.5px solid var(--op);background:var(--op);color:#fff;display:flex;align-items:center;justify-content:center;flex:none;font-style:normal;margin-top:1px}
+
+/* desktop personas */
+.desk{flex:1;min-width:660px;max-width:940px;background:var(--panel);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 30px 70px -30px rgba(0,0,0,.6)}
+.desk-head{padding:22px 28px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.desk-head h2{margin:0;font-size:19px;font-weight:800;letter-spacing:-.018em}
+.desk-head .sub2{font-size:12px;color:var(--ink2);margin-top:2px}
+.desk-body{padding:24px 28px 32px}
+.statrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:12px;margin-bottom:24px}
+.stat{background:linear-gradient(180deg,var(--panel2),#1e2026);border:1px solid var(--line);border-radius:14px;padding:16px 17px}
+.stat b{font-family:"IBM Plex Mono",monospace;font-size:22px;font-weight:600;display:block;letter-spacing:-.025em}
+.stat small{font-size:10px;color:var(--ink2);letter-spacing:.06em;text-transform:uppercase;font-family:"IBM Plex Mono",monospace}
+.stat .delta{font-size:10.5px;color:#4ecf96;display:block;margin-top:4px}
+table.grid{width:100%;border-collapse:collapse;font-size:12.5px}
+table.grid th{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);text-align:left;padding:8px 12px;border-bottom:1px solid var(--line)}
+table.grid td{padding:10px 12px;border-bottom:1px solid var(--line);color:var(--ink)}
+table.grid tbody tr:hover{background:rgba(255,255,255,.02)}
+table.grid tr:last-child td{border-bottom:none}
+.desk h3{font-size:13px;font-weight:700;margin:26px 0 12px;display:flex;align-items:baseline;gap:10px}
+.desk h3 .mono{font-size:9px;color:var(--ink3);letter-spacing:.12em;text-transform:uppercase}
+.badge{font-family:"IBM Plex Mono",monospace;font-size:9px;letter-spacing:.08em;padding:4px 10px;border-radius:99px;white-space:nowrap}
+.badge.ok{background:rgba(34,160,107,.15);color:#4ecf96}
+.badge.warn{background:rgba(210,162,76,.15);color:var(--brass)}
+.badge.off{background:rgba(224,82,82,.15);color:#e08787}
+.badge.p2{background:rgba(122,100,170,.18);color:#b3a3dd}
+.logbox{background:#0c0e12;border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--ink2);line-height:2;max-height:150px;overflow-y:auto}
+.logbox b{color:#4ecf96;font-weight:500}
+.banner{border:1px solid var(--brass);background:rgba(210,162,76,.07);border-radius:12px;padding:14px 18px;margin-bottom:22px;font-size:13px;color:var(--ink2)}
+.banner b{color:var(--ink)}
+.bar{height:24px;border-radius:8px;display:flex;overflow:hidden;margin:10px 0 8px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:11px;color:var(--ink2)}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:6px}
+@media (max-width:780px){.desk{min-width:0}.notes{width:100%}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="topbar">
+    <div class="logo">MatchFit<small>Platform demo &middot; v2 &middot; Chris's 5-section scope</small></div>
+    <div class="seg" id="personaSeg"></div>
+    <span class="spacer"></span>
+    <button class="tbtn" onclick="replaySplash()">&#9654; Splash</button>
+    <button class="tbtn" onclick="resetDemo()">&#8634; Reset</button>
+    <a class="tbtn" id="backToSpec" href="../demo/" style="text-decoration:none">&larr; Back to the spec</a>
+  </div>
+  <div class="stage" id="stage"></div>
+</div>
+
+<script>
+/* ============ ICONS ============ */
+const IC={
+user:'<circle cx="12" cy="8" r="3.8"/><path d="M4.5 20.5c0-4.1 3.4-7.5 7.5-7.5s7.5 3.4 7.5 7.5"/>',
+shield:'<path d="M12 3.2 19 6v5.1c0 4.8-3.3 7.7-7 9.7-3.7-2-7-4.9-7-9.7V6z"/><path d="m9.2 11.8 2 2 3.8-3.9"/>',
+siren:'<path d="M6 18.5v-5a6 6 0 0 1 12 0v5"/><path d="M4 18.5h16v2.5H4z"/><path d="M12 3v2M5 6.5 6.5 8M19 6.5 17.5 8"/>',
+bag:'<path d="M5.5 8h13l-1 12.5H6.5z"/><path d="M9 8V5.8a3 3 0 0 1 6 0V8"/>',
+more:'<circle cx="6" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="18" cy="12" r="1.6"/>',
+card:'<rect x="2.8" y="5" width="18.4" height="14" rx="3"/><path d="M2.8 9.8h18.4"/>',
+cross:'<path d="M10.2 3.8h3.6v6.4h6.4v3.6h-6.4v6.4h-3.6v-6.4H3.8v-3.6h6.4z"/>',
+hospital:'<path d="M4 20.5V8.5l8-5 8 5v12"/><path d="M10.2 11h3.6v2.2h2.2v3.6h-2.2V19h-3.6v-2.2H8v-3.6h2.2z"/>',
+ambulance:'<path d="M2.5 16.5V9h11v7.5"/><path d="M13.5 11h4l4 3.2v2.3h-8z"/><circle cx="6.5" cy="18" r="1.8"/><circle cx="17" cy="18" r="1.8"/><path d="M6.4 11.8h2.4v1.2h1.2v2.4H8.8v1.2H6.4v-1.2H5.2v-2.4h1.2z"/>',
+brain:'<path d="M9.5 4.5a3 3 0 0 0-3 3 2.6 2.6 0 0 0-1 4.6 3 3 0 0 0 1.6 5.2 2.8 2.8 0 0 0 2.4 2.2V4.5z"/><path d="M14.5 4.5a3 3 0 0 1 3 3 2.6 2.6 0 0 1 1 4.6 3 3 0 0 1-1.6 5.2 2.8 2.8 0 0 1-2.4 2.2V4.5z"/>',
+phone:'<path d="M7 3.5h2.8l1.5 4.2-2.1 1.6a12.8 12.8 0 0 0 5.5 5.5l1.6-2.1 4.2 1.5V17a2.6 2.6 0 0 1-2.7 2.6A15.4 15.4 0 0 1 4.4 6.2 2.6 2.6 0 0 1 7 3.5z"/>',
+chev:'<path d="m9.5 6 6 6-6 6"/>',
+chevL:'<path d="m14.5 6-6 6 6 6"/>',
+check:'<path d="m5.5 12.5 4.2 4.2 8.8-9"/>',
+bell:'<path d="M12 4a5.5 5.5 0 0 1 5.5 5.5c0 4 1.4 5.4 2 6H4.5c.6-.6 2-2 2-6A5.5 5.5 0 0 1 12 4z"/><path d="M10 19a2 2 0 0 0 4 0"/>',
+doc:'<path d="M7 3.5h7l4 4V20a.9.9 0 0 1-.9.9H7a.9.9 0 0 1-.9-.9V4.4A.9.9 0 0 1 7 3.5z"/><path d="M13.6 3.8v4h4"/><path d="M9.5 12.5h5M9.5 15.8h5"/>',
+scan:'<path d="M4 8V5.5A1.5 1.5 0 0 1 5.5 4H8M16 4h2.5A1.5 1.5 0 0 1 20 5.5V8M20 16v2.5a1.5 1.5 0 0 1-1.5 1.5H16M8 20H5.5A1.5 1.5 0 0 1 4 18.5V16"/><path d="M4 12h16"/>',
+plus:'<path d="M12 5v14M5 12h14"/>',
+lock:'<rect x="4.5" y="10.5" width="15" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/>',
+physio:'<path d="M6.5 20.5V14a5.5 5.5 0 0 1 11 0v6.5"/><path d="M9 8.5V6a3 3 0 0 1 6 0v2.5"/><path d="M4 20.5h16"/>',
+boot:'<path d="M4 15.5h5l1.5-3h4l1.5 3h5"/><path d="M6 15.5V19h12v-3.5"/>',
+shirt:'<path d="M8.5 4 5 6v5h2.5v9.5h9V11H19V6l-3.5-2z"/><path d="M8.5 4a3.5 3.5 0 0 0 7 0"/>',
+guard:'<path d="M8 4v9a4 4 0 0 0 8 0V4"/><path d="M6 4h4M14 4h4"/>',
+flask:'<path d="M9 3.5h6v5l4 9.5a1.6 1.6 0 0 1-1.5 2.5H6.5A1.6 1.6 0 0 1 5 18z"/><path d="M9 8.5h6"/>',
+gift:'<rect x="4" y="9.5" width="16" height="4" rx="1"/><path d="M5.5 13.5V19a1.5 1.5 0 0 0 1.5 1.5h10a1.5 1.5 0 0 0 1.5-1.5v-5.5M12 9.5v11"/>',
+crown:'<path d="M4 8.5 8 12l4-6 4 6 4-3.5-1.5 10h-13z"/>',
+info:'<circle cx="12" cy="12" r="9"/><path d="M12 8.5v5M12 16.8v.2"/>',
+users:'<circle cx="9" cy="8" r="3.4"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M16 5.2a3.4 3.4 0 0 1 0 5.6M18 20c0-2.3-.9-4.4-2.3-5.9"/>',
+pin:'<path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/>',
+clock:'<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3.2 2"/>',
+dl:'<path d="M12 4v10.5M7.5 10.5 12 15l4.5-4.5"/><path d="M5 19.5h14"/>',
+wallet:'<path d="M3.5 7.5a2 2 0 0 1 2-2H18a1.5 1.5 0 0 1 1.5 1.5v1"/><path d="M3.5 7.5V17a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2h-15z"/>',
+key:'<circle cx="8.5" cy="8.5" r="4.5"/><path d="m11.8 11.8 8 8"/>'
+};
+const ic=(n,s=20,w=1.85)=>`<svg class="ic" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round">${IC[n]}</svg>`;
+const icF=(n,s=20)=>`<svg class="ic" width="${s}" height="${s}" viewBox="0 0 24 24" fill="currentColor" stroke="none">${IC[n]}</svg>`;
+
+/* ============ FIELDS ============ */
+const FIELD={
+ rugby:{vb:'0 0 400 233',s:`<rect x="1.5" y="1.5" width="397" height="230"/><line x1="33" y1="1.5" x2="33" y2="231.5"/><line x1="367" y1="1.5" x2="367" y2="231.5"/><line x1="200" y1="1.5" x2="200" y2="231.5"/><line x1="107" y1="1.5" x2="107" y2="231.5"/><line x1="293" y1="1.5" x2="293" y2="231.5"/>`,t:`<rect x="7" y="7" width="386" height="219"/><line x1="200" y1="7" x2="200" y2="226"/><line x1="33" y1="7" x2="33" y2="226"/>`},
+ soccer:{vb:'0 0 400 259',s:`<rect x="1.5" y="1.5" width="397" height="256"/><line x1="200" y1="1.5" x2="200" y2="257.5"/><circle cx="200" cy="129.5" r="35"/><rect x="1.5" y="52.8" width="61.5" height="153.5"/><rect x="337" y="52.8" width="61.5" height="153.5"/>`,t:`<rect x="7" y="7" width="386" height="245"/><circle cx="200" cy="129.5" r="46"/><line x1="200" y1="7" x2="200" y2="252"/>`},
+ hockey:{vb:'0 0 400 241',s:`<rect x="1.5" y="1.5" width="397" height="238"/><line x1="200" y1="1.5" x2="200" y2="239.5"/><line x1="100" y1="1.5" x2="100" y2="239.5"/><line x1="300" y1="1.5" x2="300" y2="239.5"/><path d="M1.5 48.5 A64 64 0 0 1 64 112.5 L64 128.5 A64 64 0 0 1 1.5 192.5"/><path d="M398.5 48.5 A64 64 0 0 0 336 112.5 L336 128.5 A64 64 0 0 0 398.5 192.5"/>`,t:`<rect x="7" y="7" width="386" height="227"/><line x1="200" y1="7" x2="200" y2="234"/><path d="M7 60 A62 62 0 0 1 66 120 L66 122 A62 62 0 0 1 7 181"/>`},
+ netball:{vb:'0 0 400 200',s:`<rect x="1.5" y="1.5" width="397" height="197"/><line x1="133.3" y1="1.5" x2="133.3" y2="198.5"/><line x1="266.7" y1="1.5" x2="266.7" y2="198.5"/><circle cx="200" cy="100" r="12"/><path d="M1.5 35.7 A64.3 64.3 0 0 1 1.5 164.3"/><path d="M398.5 35.7 A64.3 64.3 0 0 0 398.5 164.3"/>`,t:`<rect x="7" y="7" width="386" height="186"/><line x1="133" y1="7" x2="133" y2="193"/><line x1="267" y1="7" x2="267" y2="193"/>`}
+};
+const fieldSvg=(c,v,o={})=>`<svg viewBox="${FIELD[c].vb}" ${o.w?`width="${o.w}" height="${o.h||''}"`:'style="width:100%;height:auto"'} fill="none" stroke="${o.stroke||'currentColor'}" stroke-width="${o.sw||2.4}" stroke-linecap="round">${FIELD[c][v]}</svg>`;
+
+/* ============ DATA ============ */
+const SPORTS={
+ rugby:{n:'Rugby',c:'var(--rugby)',t:'var(--rugby-t)',hex:'#17643E',lite:'#2E8B60',dark:'#0A3220'},
+ soccer:{n:'Soccer',c:'var(--soccer)',t:'var(--soccer-t)',hex:'#22499E',lite:'#3A66C4',dark:'#122A5E'},
+ hockey:{n:'Hockey',c:'var(--hockey)',t:'var(--hockey-t)',hex:'#0C7B80',lite:'#199A9F',dark:'#06474A'},
+ netball:{n:'Netball',c:'var(--netball)',t:'var(--netball-t)',hex:'#C2631F',lite:'#DD803C',dark:'#6E3810'}};
+const HH={
+ principal:{name:'Dineo Mokoena',first:'Dineo',ini:'DM',no:'MF-2027-0846',
+   mobile:'082 555 0142',email:'dineo.m@example.co.za',id:'8&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;',addr:'14 Loop Street, Paarl'},
+ premium:3598,
+ deps:[
+  {name:'THABO A. MOKOENA',short:'Thabo M.',first:'Thabo',ini:'TM',age:16,code:'rugby',team:'U16A Rugby',
+   school:'Demo High School',no:'MF-2027-0847',cover:250000,plan:'ActiveCare Season',blue:'cleared'},
+  {name:'LERATO N. MOKOENA',short:'Lerato M.',first:'Lerato',ini:'LN',age:15,code:'netball',team:'U15 Netball',
+   school:'Demo High School',no:'MF-2027-0848',cover:250000,plan:'ActiveCare Season',blue:'cleared'}]};
+const BENEFITS=[
+ {k:'acc',n:'Accident treatment',d:'Doctor, casualty or hospital',lim:50000,limTxt:'R50 000 per event',i:'cross'},
+ {k:'scan',n:'MRI / CT scan',d:'Paid upfront, no claim-back',lim:25000,limTxt:'R25 000 upfront',i:'scan'},
+ {k:'rehab',n:'Rehabilitation &amp; physio',d:'Includes Blue Card clearance',lim:5000,limTxt:'R5 000 per season',i:'physio'},
+ {k:'dev',n:'Assistive devices',d:'Braces, crutches, moonboot',lim:3000,limTxt:'R3 000 per season',i:'doc'}];
+const FACILITIES=[
+ {n:'Paarl Mediclinic',d:'4.2 km',er:true,tr:false,cap:'24h casualty'},
+ {n:'Wellington Medi-Centre',d:'11.8 km',er:true,tr:false,cap:'Casualty, no ICU'},
+ {n:'Tygerberg Hospital',d:'42 km',er:true,tr:true,cap:'Level 1 trauma, neurosurgery'},
+ {n:'Dr M. Steyn &mdash; GP rooms',d:'2.1 km',er:false,tr:false,cap:'GP, X-ray'}];
+const PANEL=[
+ {n:'Dr A. Petersen',s:'Neurologist &middot; Paarl',w:'Tue &amp; Thu'},
+ {n:'Dr S. Naidoo',s:'Sports physician &middot; Stellenbosch',w:'Mon, Wed, Fri'},
+ {n:'Dr J. Botha',s:'Neurologist &middot; Bellville',w:'Wed only'}];
+const PLANS=[
+ {k:'season',n:'ActiveCare Season',d:'One sport &middot; 8-month season',p:'R1 799',sub:'once-off, per player',cover:'R250 000'},
+ {k:'annual',n:'ActiveCare Multi-Sport',d:'All codes &middot; 12 months',p:'R249',sub:'per month, per player',cover:'R250 000'}];
+const SCHOOLS=['Demo High School','Paarl Boys&rsquo; High','Grey College','Glenwood High','Other / not listed'];
+const CATS=[
+ {k:'boots',n:'Boots',i:'boot'},{k:'apparel',n:'Apparel',i:'shirt'},
+ {k:'protect',n:'Protective',i:'guard'},{k:'supp',n:'Supplements',i:'flask'},
+ {k:'recover',n:'Recovery',i:'physio'}];
+const SHOP=[
+ {k:'p1',cat:'boots',brand:'Sportswear partner A',n:'Firm-ground match boots',pct:15,i:'boot'},
+ {k:'p2',cat:'boots',brand:'Sportswear partner B',n:'Forward&rsquo;s rugby boots',pct:12,i:'boot'},
+ {k:'p3',cat:'boots',brand:'Sportswear partner C',n:'Netball court trainers',pct:10,i:'boot'},
+ {k:'p4',cat:'apparel',brand:'Sportswear partner A',n:'Training tee &amp; shorts set',pct:15,i:'shirt'},
+ {k:'p5',cat:'apparel',brand:'Sportswear partner B',n:'Match jersey, club fit',pct:12,i:'shirt'},
+ {k:'p6',cat:'protect',brand:'Protective gear partner',n:'Custom-fit mouthguard',pct:20,i:'guard'},
+ {k:'p7',cat:'protect',brand:'Protective gear partner',n:'Scrum cap, World Rugby approved',pct:15,i:'guard'},
+ {k:'p8',cat:'supp',brand:'Supplement partner A',n:'Whey recovery blend 1kg',pct:15,i:'flask',cert:true,batch:'27-0491'},
+ {k:'p9',cat:'supp',brand:'Supplement partner A',n:'Electrolyte hydration sachets',pct:15,i:'flask',cert:true,batch:'27-0512'},
+ {k:'p10',cat:'supp',brand:'Supplement partner B',n:'Junior multivitamin',pct:12,i:'flask',cert:true,batch:'27-0388'},
+ {k:'p11',cat:'recover',brand:'Supplement partner B',n:'Compression recovery sleeve',pct:15,i:'physio'},
+ {k:'p12',cat:'recover',brand:'Supplement partner B',n:'Ice &amp; heat therapy pack',pct:18,i:'physio'}];
+const FUND={balance:3140000,supported:7,donors:31};
+const PRINCIPAL={name:'National Motor Group',role:'Principal sponsor &middot; season 2027',c:'#001E50',mark:'VW'};
+const SPONSORS=[
+ {n:'SP',t:'Family Restaurant Group',r:'FUND DONOR',c:'#C8102E'},
+ {n:'CH',t:'National Grocery Retailer',r:'FUND DONOR',c:'#0E6B34'},
+ {n:'+29',t:'Clubs, old boys&rsquo; unions &amp; businesses',r:'',c:'#7B848F'}];
+const KP={name:'Insurance Partner',color:'#D6001C'};
+const TEAMS=[
+ {t:'U16A Rugby',code:'rugby',coach:'Coach J. du Plessis',roster:[
+  {n:'Thabo Mokoena',no:'0847',s:'covered',dep:0},{n:'Pieter van Wyk',no:'0231',s:'covered'},
+  {n:'Liam Fourie',no:'0512',s:'covered'},{n:'Sipho Ndlovu',no:'0698',s:'lapsed'},{n:'Jaco Smit',no:'0104',s:'covered'}]},
+ {t:'U15 Netball',code:'netball',coach:'Coach A. Ntombela',roster:[
+  {n:'Lerato Mokoena',no:'0848',s:'covered',dep:1},{n:'Zanele Dube',no:'0455',s:'covered'},
+  {n:'Kayla Adams',no:'0388',s:'covered'},{n:'Nomvula Sithole',no:'0501',s:'uninsured'}]}];
+const SCHOOL={players:620,covered:148,lapsed:5,codes:[
+ {l:'Rugby',v:71,c:'#17643E'},{l:'Netball',v:38,c:'#C2631F'},
+ {l:'Hockey',v:26,c:'#0C7B80'},{l:'Soccer',v:13,c:'#22499E'}]};
+
+/* ============ STATE ============ */
+let S;
+function initState(){
+ S={persona:'parent',booting:true,splashT:0,
+    tab:'oneplan',sub:null,depIdx:0,cardIdx:0,depTab:'home',
+    ob:null,em:null,cat:'boots',
+    claims:[],notif:[],savings:720,redeemed:[],
+    protoWeek:0,blueActive:false,
+    coachTeam:0,coachSel:null,coachClaimed:{},pv:'rewards',
+    logs:['06:58 sync &middot; 148 cover tokens refreshed'],
+    used:{0:18800,1:0}};
+}
+initState();
+
+/* Deep link support, so the scoping demo can hand off to a specific place here.
+   ?p=<persona>&t=<tab>&pv=principal&skip=1
+   Unknown values are ignored rather than throwing - a stale link from the
+   scoping demo must never land a client on a blank screen. */
+(function(){
+  try{
+    const q=new URLSearchParams(location.search);
+    const from=q.get('from');
+    if(from&&/^[A-Z]\d{1,2}$/.test(from)){
+      addEventListener('DOMContentLoaded',()=>{
+        const a=document.getElementById('backToSpec');
+        if(a) a.href='../demo/#'+from;
+      });
+    }
+    const P=['parent','dependant','coach','school','partner'];
+    const T=['profile','oneplan','emergency','shop','more'];
+    const p=q.get('p'); if(p&&P.includes(p)) S.persona=p;
+    const t=q.get('t'); if(t&&T.includes(t)) S.tab=t;
+    if(q.get('pv')==='principal') S.pv='principal';
+    if(q.get('skip')==='1'||S.persona!=='parent'){ S.booting=false; S.splashT=8; }
+  }catch(e){}
+})();
+
+const $=id=>document.getElementById(id);
+const rand=n=>'R'+n.toLocaleString('en-ZA').replace(/,/g,' ');
+const dep=i=>HH.deps[i===undefined?S.depIdx:i];
+const sp=c=>SPORTS[c];
+
+/* ============ SHELL ============ */
+const PERSONAS=[['parent','Parent app'],['dependant','Dependant'],['coach','Coach portal'],['school','School console'],['partner','Partner portal']];
+function renderShell(){
+ $('personaSeg').innerHTML=PERSONAS.map(([k,l])=>`<button class="${S.persona===k?'on':''}" onclick="setPersona('${k}')">${l}</button>`).join('');
+ render();
+}
+function setPersona(k){S.persona=k;S.sub=null;S.ob=null;S.em=null;S.coachSel=null;S.tab='oneplan';S.depTab='home';render();renderShell();}
+function resetDemo(){initState();renderShell();bootSplash();}
+function replaySplash(){S.persona='parent';S.booting=true;renderShell();bootSplash();}
+function toast(m){const t=document.querySelector('.toast');if(!t)return;
+ t.innerHTML=`<span style="color:#7ee2ae;margin-top:1px">${ic('check',15,2.4)}</span><span>${m}</span>`;
+ t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),3400);}
+function notify(t){S.notif.unshift(t);}
+
+/* ============ SPLASH ============ */
+let sT=null;
+function bootSplash(){clearInterval(sT);S.splashT=0;S.booting=true;render();
+ sT=setInterval(()=>{S.splashT++;if(S.splashT>=8){clearInterval(sT);S.booting=false}render()},700);}
+const CODES=['rugby','soccer','hockey','netball'];
+function splash(){
+ const i=S.splashT%4,c=CODES[i],s=sp(c);
+ return `<div class="phonewrap"><div class="glow" style="background:${s.hex}"></div>
+ <div class="phone"><div class="scr" style="--sc:#151C25">
+  <div class="island"></div><div class="sb" style="color:#B9C2CC"><span>07:42</span><span>5G &#9646;&#9646;&#9646;</span></div>
+  <div class="body" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px">
+    <div style="width:158px">${fieldSvg(c,'s',{stroke:s.lite,sw:5})}</div>
+    <div style="text-align:center">
+      <div style="font-weight:900;font-size:25px;letter-spacing:-.04em;color:#fff">MatchFit</div>
+      <div class="mono" style="font-size:8px;letter-spacing:.24em;text-transform:uppercase;color:#7C8794;margin-top:5px">Sport injury cover</div>
+      <div class="mono" style="font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:${s.lite};margin-top:12px">${s.n}</div>
+    </div></div>
+  <div style="padding:0 24px 26px;text-align:center"><div class="mono" style="font-size:7.5px;letter-spacing:.18em;color:#5C6672;text-transform:uppercase">Powered by HPS Tech</div></div>
+ </div></div></div>`+notes();
+}
+
+/* ============ PARENT (5 tabs) ============ */
+const TABS=[['profile','user','Profile'],['oneplan','shield','OnePlan'],['emergency','siren','Emergency'],['shop','bag','Shop'],['more','more','More']];
+function renderParent(){
+ if(S.booting)return splash();
+ let body='',emBar=false;
+ if(S.tab==='profile')body=tProfile();
+ if(S.tab==='oneplan')body=S.ob?obFlow():(S.sub==='kp'?kpScreen():tOneplan());
+ if(S.tab==='emergency'){body=S.em?emFlow():tEmergency();emBar=true}
+ if(S.tab==='shop')body=S.sub==='cert'?certScreen():tShop();
+ if(S.tab==='more')body=S.sub==='fund'?fundScreen():tMore();
+ return `<div class="phonewrap"><div class="glow" style="background:${S.tab==='emergency'?'#8E1F1C':'#22303F'}"></div>
+ <div class="phone"><div class="scr" style="--sc:var(--paper)">
+  <div class="island"></div><div class="sb" style="color:#3B4653"><span>07:42</span><span>5G &#9646;&#9646;&#9646;</span></div>
+  <div class="body"><div class="view">${body}</div></div>
+  <div class="toast"></div>
+  ${emBar?`<button class="embar" onclick="toast('Dialing Oneplan emergency line 010 001 0141. In the real app this is a direct tel: link that works with no data connection.')">${ic('phone',15,2.2)} Emergency line <span class="n">010 001 0141</span></button>`:''}
+  <div class="tabbar">${TABS.map(([k,i,l])=>{const on=S.tab===k;
+    return `<button style="${on?(k==='emergency'?'color:#8E1F1C':'color:var(--brand)'):''}" onclick="goTab('${k}')">${ic(i,20,on?2.15:1.85)}${l}</button>`}).join('')}</div>
+  <div class="homebar"><i></i></div>
+ </div></div></div>`+notes();
+}
+function goTab(k){S.tab=k;S.sub=null;S.ob=null;S.em=null;render();}
+
+/* ---- 1. PROFILE ---- */
+function tProfile(){
+ return `<div class="appbar">
+   <span class="ava" style="background:linear-gradient(135deg,var(--brand2),var(--brand))">${HH.principal.ini}</span>
+   <span class="who"><small>Principal member &middot; ${HH.principal.no}</small><b>${HH.principal.name}</b></span>
+   <button class="bell" style="color:var(--brand)" onclick="S.notif.length?toast(S.notif[0]):toast('No new notifications.')">${ic('bell',18)}${S.notif.length?`<span class="bd">${S.notif.length}</span>`:''}</button>
+ </div>
+ <div class="sect"><b>My details</b><small>Editable</small></div>
+ <div class="kv">
+  <div><span class="k">Mobile</span><span class="v">${HH.principal.mobile}</span></div>
+  <div><span class="k">Email</span><span class="v">${HH.principal.email}</span></div>
+  <div><span class="k">ID number</span><span class="v">${HH.principal.id}</span></div>
+  <div><span class="k">Address</span><span class="v">${HH.principal.addr}</span></div>
+ </div>
+ <div class="notice" style="background:#EDF0F3;color:#3B4653">${ic('info',13,2.1)}<span>You are the <b>principal member</b>. You hold the policies and make the claims &mdash; the cover applies to your dependants, not to you.</span></div>
+ <div class="sect"><b>Dependants</b><small>${HH.deps.length} on file</small></div>
+ ${HH.deps.map((d,i)=>{const s=sp(d.code);return `<button class="row" onclick="viewDep(${i})">
+   <span class="ri" style="background:${s.t};color:${s.c}">${fieldSvg(d.code,'t',{w:20,h:14,sw:14})}</span>
+   <span><b>${d.short} &middot; ${d.age}</b><small>${d.team} &middot; ${d.school}</small></span>
+   <span class="pil g">COVERED</span></button>`}).join('')}
+ <button class="row" style="border-style:dashed;box-shadow:none;background:transparent" onclick="startOb()">
+   <span class="ri" style="background:#E4E9EE;color:var(--brand)">${ic('plus',18)}</span>
+   <span><b>Add a dependant</b><small>Onboards a new ActiveCare policy</small></span>
+   <span class="chev">${ic('chev',15,2.2)}</span></button>
+ <div class="sect"><b>Consents &amp; access</b><small>POPIA</small></div>
+ <div class="kv">
+  <div><span class="k">POPIA consent</span><span class="v" style="color:#14764D">Given 12 Jan 2027</span></div>
+  <div><span class="k">Emergency medical</span><span class="v" style="color:#14764D">Both dependants</span></div>
+  <div><span class="k">Dependant logins</span><span class="v">2 active</span></div>
+  <div><span class="k">Coach lookup</span><span class="v">Allowed &middot; season only</span></div>
+ </div>
+ <div class="sect"><b>Payment methods</b><small>For the Shop</small></div>
+ <div class="row"><span class="ri" style="background:#E4E9EE;color:var(--brand)">${ic('card',17)}</span>
+   <span><b>Visa &bull;&bull;&bull;&bull; 4182</b><small>Default for Shop purchases</small></span><span class="pil n">SAVED</span></div>
+ <button class="row" style="opacity:.62" onclick="toast('Performance tracker is deliberately out of scope for phase 1 &mdash; Chris deferred it and it should stay deferred.')">
+   <span class="ri" style="background:#EEF1F4;color:#6B7480">${ic('users',17)}</span>
+   <span><b>Performance tracker</b><small>Training, matches, fitness</small></span><span class="pil p2">LATER</span></button>
+ <div style="height:16px"></div>`;
+}
+function viewDep(i){S.depIdx=i;S.persona='dependant';S.depTab='home';render();renderShell();toast(`Switched to ${HH.deps[i].first}'s dependant login.`);}
+
+/* ---- 2. ONEPLAN ---- */
+function tOneplan(){
+ const total=HH.deps.reduce((a,d)=>a+d.cover,0);
+ const rem=total-Object.values(S.used).reduce((a,b)=>a+b,0);
+ return `<div class="hd"><h2>OnePlan</h2><p>Your ActiveCare policies, cover card and onboarding.</p></div>
+ <div class="cover" style="background:linear-gradient(140deg,var(--brand2) -25%,var(--brand) 45%,#0B1219)">
+   <span class="stp ok abs"><i></i>ACTIVE</span>
+   <div class="wm">${fieldSvg('rugby','s',{stroke:'#fff',sw:4})}</div>
+   <div style="padding-right:74px"><span class="lbl">${HH.deps.length} policies &middot; winter 2027</span>
+   <div class="amt">${rand(total)}<small>total cover</small></div></div>
+   <div class="who2">${HH.deps.map(d=>`${d.first} &middot; ${sp(d.code).n}`).join(' &nbsp;&middot;&nbsp; ')}</div>
+   <div class="meter"><i style="width:${Math.round(rem/total*100)}%"></i></div>
+   <div class="mrow"><span>${rand(rem)} remaining</span><span>Verified 12 min ago</span></div>
+ </div>
+ <div class="sect"><b>Risk Management &middot; Player</b><small>ActiveCare</small></div>
+ ${HH.deps.map((d,i)=>{const s=sp(d.code);return `<button class="row" onclick="S.cardIdx=${i};toast('${d.first}: ${d.plan}, ${rand(d.cover)} cover. Card and benefit breakdown below.')">
+   <span class="ri" style="background:${s.t};color:${s.c}">${fieldSvg(d.code,'t',{w:20,h:14,sw:14})}</span>
+   <span><b>${d.short}</b><small>${d.plan} &middot; ${d.team}</small></span>
+   <span class="pil g">ACTIVE</span></button>`}).join('')}
+ <button class="row" style="border-style:dashed;box-shadow:none;background:transparent" onclick="startOb()">
+   <span class="ri" style="background:#E4E9EE;color:var(--brand)">${ic('plus',18)}</span>
+   <span><b>Onboard a new player</b><small>ActiveCare &middot; seamless sign-up</small></span>
+   <span class="chev">${ic('chev',15,2.2)}</span></button>
+ <div class="sect"><b>Cover card</b><small>${S.cardIdx+1} of ${HH.deps.length}</small></div>
+ ${cardBlock(S.cardIdx)}
+ <div class="sect"><b>What is covered</b><small>Per event</small></div>
+ <div class="kv">${BENEFITS.map(b=>`<div><span class="k" style="width:auto;flex:1">${b.n}</span><span class="v">${b.limTxt}</span></div>`).join('')}
+  <div><span class="k" style="width:auto;flex:1">Claims management fee</span><span class="v">R500</span></div></div>
+ <div class="sect"><b>Risk Management &middot; Policyholder 18+</b><small>4th layer</small></div>
+ <button class="row" style="border-color:${KP.color}" onclick="S.sub='kp';render()">
+   <span class="ri" style="background:#FAE7E6;color:${KP.color}">${ic('crown',17)}</span>
+   <span><b>Cover for you</b><small>${KP.name} &middot; car, household, life</small></span>
+   <span class="chev">${ic('chev',15,2.2)}</span></button>
+ <div class="notice" style="background:#EDF0F3;color:#3B4653">${ic('lock',13,2.1)}<span>Product terms and advice are provided by <b>Oneplan</b> as the licensed underwriting manager. MatchFit is the servicing platform.</span></div>
+ <div style="height:16px"></div>`;
+}
+function cardBlock(i){
+ const d=dep(i),s=sp(d.code),avail=d.cover-(S.used[i]||0);
+ return `<div class="mcard" style="background:linear-gradient(135deg,${s.lite} -20%,${s.hex} 55%,${s.dark})">
+   <div class="wm">${fieldSvg(d.code,'s',{stroke:'#fff',sw:4})}</div>
+   <div style="display:flex;justify-content:space-between;align-items:flex-start">
+     <span style="font-weight:900;font-size:14px;letter-spacing:-.03em">MatchFit</span>
+     <span style="font-size:7.5px;font-weight:800;letter-spacing:.09em;padding:4px 9px;border-radius:99px;background:rgba(0,0,0,.25)">${d.team.toUpperCase()}</span></div>
+   <div style="display:flex;align-items:center;margin-top:13px"><span class="chip2"></span><span class="ctls"><i></i><i></i><i></i></span></div>
+   <div class="mno">${d.no.replace(/-/g,' &middot; ')}</div>
+   <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:11px">
+     <div><div style="font-weight:800;font-size:12.5px">${d.name}</div>
+     <div class="mono" style="font-size:7.5px;opacity:.72;margin-top:2px">${rand(avail)} AVAILABLE &middot; OFFLINE 72H</div>
+     <span class="stp ok" style="margin-top:8px"><i></i>COVERED</span></div>
+     ${qr(s.dark,50)}</div>
+ </div>
+ <div class="act3">
+   <button onclick="toast('Wallet pass added (demo). The physical Oneplan card still works &mdash; this is the virtual version.')"><span class="qic" style="background:#E4E9EE;color:var(--brand)">${ic('wallet',17)}</span>Wallet</button>
+   <button onclick="toast('New PIN sent by SMS to the principal member (demo).')"><span class="qic" style="background:#E4E9EE;color:var(--brand)">${ic('key',17)}</span>Reset PIN</button>
+   <button onclick="S.cardIdx=(S.cardIdx+1)%HH.deps.length;render()"><span class="qic" style="background:#E4E9EE;color:var(--brand)">${ic('chev',17)}</span>Next</button>
+ </div>`;
+}
+function qr(c,s){return `<span class="qr"><svg width="${s}" height="${s}" viewBox="0 0 21 21"><rect width="21" height="21" fill="#fff"/><path fill="${c}" d="M1 1h5v5H1zM15 1h5v5h-5zM1 15h5v5H1zM2 2h3v3H2zM16 2h3v3h-3zM2 16h3v3H2zM8 1h2v2H8zM12 3h2v2h-2zM8 5h3v2H8zM14 8h3v2h-3zM1 8h2v3H1zM4 9h3v2H4zM8 9h2v3H8zM11 11h3v2h-3zM18 12h2v3h-2zM8 14h2v3H8zM12 15h3v2h-3zM15 18h3v2h-3zM11 18h2v2h-2z"/></svg></span>`}
+function kpScreen(){
+ return `<div class="backrow"><button onclick="S.sub=null;render()">${ic('chevL',15,2.4)} OnePlan</button></div>
+ <div class="hd" style="padding-top:2px"><h2>Cover for you</h2><p>Products for the policyholder, 18 and over.</p></div>
+ <div class="notice" style="background:#FAE7E6;color:#B3202C;margin-top:12px">${ic('info',13,2.1)}<span><b>${KP.name} is an authorised FSP.</b> Quotes, advice and claims are handled in their channel &mdash; MatchFit only makes the introduction.</span></div>
+ ${[['Car insurance','Decreasing premiums &middot; school-run cover'],['Household contents','Home and portable possessions'],['Cellphone cover','Family devices']].map(([a,b])=>`<button class="row" style="margin-top:9px" onclick="toast('Handing off to ${KP.name} for a quote. Their FSP, their advice, their record &mdash; that boundary is the compliance design.')">
+   <span class="ri" style="background:#FAE7E6;color:${KP.color}">${ic('crown',17)}</span>
+   <span><b>${a}</b><small>${b}</small></span><span class="pil r">GET QUOTE</span></button>`).join('')}
+ <div class="sect"><b>Once a policy is live</b><small>Phase 2</small></div>
+ <div class="row" style="opacity:.62"><span class="ri" style="background:#EEF1F4;color:#6B7480">${ic('doc',17)}</span>
+  <span><b>Manage &amp; claim in-app</b><small>Needs an intermediary agreement</small></span><span class="pil p2">PHASE 2</span></div>
+ <div style="height:16px"></div>`;
+}
+
+/* ---- ONBOARDING ---- */
+function startOb(){S.tab='oneplan';S.ob={step:1,name:'',sport:null,school:0,plan:null,prog:0};render();}
+function obFlow(){
+ const o=S.ob;
+ const bar=`<div class="steps">${[1,2,3,4,5].map(i=>`<i style="${i<=o.step?'background:var(--brand)':''}"></i>`).join('')}</div>`;
+ if(o.step===1)return `<div class="backrow"><button onclick="S.ob=null;render()">${ic('chevL',15,2.4)} Cancel</button><b style="font-size:13px">New player</b></div>
+  <div class="hd" style="padding-top:6px"><h2>Who are we covering?</h2><p>ActiveCare covers the player. You stay the policyholder.</p></div>
+  <div style="height:14px"></div>${bar}
+  ${['Amahle Mokoena &middot; 13','Someone else'].map((n,i)=>`<button class="opt" onclick="S.ob.name='${n.split(' &middot;')[0]}';S.ob.step=2;render()">
+   <span class="oic" style="background:#E4E9EE;color:var(--brand)">${ic('user',19)}</span>
+   <span><b>${n}</b><small>${i===0?'Already on your profile as a dependant':'Add a new dependant'}</small></span></button>`).join('')}`;
+ if(o.step===2)return `<div class="backrow"><button onclick="S.ob.step=1;render()">${ic('chevL',15,2.4)} Back</button></div>
+  <div class="hd"><h2>Which sport?</h2><p>Cover applies between the four white lines of that code.</p></div>
+  <div style="height:14px"></div>${bar}
+  ${CODES.map(c=>{const s=sp(c);return `<button class="opt" style="${o.sport===c?`border-color:${s.hex};box-shadow:0 0 0 1.5px ${s.hex}`:''}" onclick="S.ob.sport='${c}';render()">
+   <span class="oic" style="background:${s.t};color:${s.c}">${fieldSvg(c,'t',{w:22,h:15,sw:13})}</span>
+   <span><b>${s.n}</b><small>Official matches and accredited practice</small></span></button>`}).join('')}
+  ${o.sport?`<div style="padding:4px 18px 0"><div style="font-size:10.5px;color:var(--t2);font-weight:600;margin-bottom:8px">School</div>
+  <div class="kv" style="margin:0 0 12px">${SCHOOLS.slice(0,3).map((sc,i)=>`<div style="cursor:pointer" onclick="S.ob.school=${i};S.ob.step=3;render()"><span class="k" style="width:auto;flex:1;color:var(--t1)">${sc}</span><span class="v">${ic('chev',13,2.2)}</span></div>`).join('')}</div></div>`:''}`;
+ if(o.step===3)return `<div class="backrow"><button onclick="S.ob.step=2;render()">${ic('chevL',15,2.4)} Back</button></div>
+  <div class="hd"><h2>Choose a plan</h2><p>${o.name} &middot; ${sp(o.sport).n} &middot; ${SCHOOLS[o.school]}</p></div>
+  <div style="height:14px"></div>${bar}
+  ${PLANS.map(p=>`<button class="opt" style="flex-direction:column;align-items:stretch;gap:0" onclick="S.ob.plan='${p.k}';S.ob.step=4;render()">
+   <div style="display:flex;align-items:center;gap:11px"><span class="oic" style="background:var(--rugby-t);color:var(--rugby)">${ic('shield',19)}</span>
+   <span style="flex:1"><b>${p.n}</b><small>${p.d}</small></span>
+   <span style="text-align:right"><b class="mono" style="font-size:14px;letter-spacing:-.02em">${p.p}</b><small>${p.sub}</small></span></div>
+   <div style="margin-top:9px;padding-top:9px;border-top:1px solid var(--hair);font-size:8.5px;color:var(--t3)">Cover ${p.cover} per event and per season &middot; R25 000 scans upfront &middot; R5 000 rehab &middot; Blue Card included</div></button>`).join('')}`;
+ if(o.step===4){
+  const p=PLANS.find(x=>x.k===o.plan);
+  return `<div class="ophost">
+   <div class="ophead">
+     <div class="url">${ic('lock',11,2.2)} secure.oneplan.co.za/activecare</div>
+     <div class="t">Oneplan Underwriting Managers</div>
+     <div class="s">Licensed UMA &middot; underwritten by Bryte</div>
+   </div>
+   <div style="padding:12px 15px 0"><div class="mono" style="font-size:7.5px;letter-spacing:.14em;text-transform:uppercase;color:#7C8794">Step 4 of 5 &middot; handed off for advice &amp; disclosure</div></div>
+   <div class="opbox">
+     <h5>${p.n} for ${o.name}</h5>
+     <p>${p.p} ${p.sub} &middot; ${p.cover} cover. Cover starts on the first successful payment and applies to official matches and accredited practice sessions.</p>
+   </div>
+   <div class="opbox">
+     <h5>Disclosures</h5>
+     <div class="opcheck"><i>${ic('check',10,3.4)}</i><span>I have read the product summary, exclusions and the claims process.</span></div>
+     <div class="opcheck"><i>${ic('check',10,3.4)}</i><span>I understand this is medical <b>insurance</b>, not a medical scheme, and benefits are limited to the amounts shown.</span></div>
+     <div class="opcheck"><i>${ic('check',10,3.4)}</i><span>I consent to Oneplan processing my and my dependant's information for this policy.</span></div>
+     <div class="opcheck"><i>${ic('check',10,3.4)}</i><span>Record of advice will be emailed to me by Oneplan.</span></div>
+   </div>
+   <div style="padding:0 15px 8px"><button class="btnP" style="background:var(--op)" onclick="S.ob.step=5;render();obRun()">Accept &amp; activate policy</button>
+   <button class="btnG" onclick="S.ob.step=3;render()">Back to plans</button></div>
+   <div style="padding:0 22px 20px"><p style="font-size:8.5px;color:#7C8794;line-height:1.6;text-align:center;margin:0">This step is hosted by Oneplan. Product presentation, advice and consent are captured by the licensed UMA &mdash; <b>not by MatchFit</b>. It is skinned to feel native so the journey stays seamless.</p></div>
+  </div>`;
+ }
+ if(o.step===5){
+  const p=o.prog||0,done=p>=100;
+  return `<div class="wiz" style="padding:0 0 10px"><div style="text-align:center;padding:0 18px">
+   <div class="ring"><svg width="118" height="118"><circle cx="59" cy="59" r="51" fill="none" stroke="#E4E9EE" stroke-width="8.5"/><circle cx="59" cy="59" r="51" fill="none" stroke="${done?'var(--ok)':'var(--op)'}" stroke-width="8.5" stroke-linecap="round" stroke-dasharray="${2*Math.PI*51}" stroke-dashoffset="${2*Math.PI*51*(1-p/100)}" style="transition:stroke-dashoffset .25s linear"/></svg><b style="${done?'color:var(--ok)':''}">${done?'&#10003;':p+'%'}</b></div>
+   <h2 style="font-size:19px;font-weight:900;letter-spacing:-.03em;color:var(--t1);margin:0">${done?'Policy active':'Activating policy'}</h2>
+   <p style="font-size:10.5px;color:var(--t2);max-width:225px;margin:6px auto 15px;line-height:1.5">${done?`${o.name} is covered for ${rand(250000)}. A virtual card has been issued and the physical card is on its way.`:'Writing the policy to the Oneplan backend&hellip;'}</p>
+   ${done?`<div class="refbox" style="margin:0 0 12px"><span class="mono" style="font-size:8px;color:var(--t3);letter-spacing:.13em">POLICY NUMBER</span><div class="mono" style="font-weight:600;font-size:16px;color:var(--t1);margin-top:2px">MF-2027-0849</div></div>
+   <button class="btnP" style="background:var(--brand)" onclick="obDone()">Done</button>`:''}
+  </div></div>`;
+ }
+}
+function obRun(){S.ob.prog=0;
+ const t=setInterval(()=>{if(!S.ob||S.ob.step!==5){clearInterval(t);return}S.ob.prog=Math.min(100,(S.ob.prog||0)+9);render();if(S.ob.prog>=100)clearInterval(t)},220);}
+function obDone(){
+ S.logs.unshift(`08:12 onboard &middot; ${S.ob.name} &middot; ${PLANS.find(p=>p.k===S.ob.plan).n} &middot; policy MF-2027-0849 active`);
+ S.ob=null;render();toast('Policy active. It appears in the school console roster immediately.');
+}
+
+/* ---- 3. EMERGENCY ---- */
+const EPATHS=[
+ {k:'e1',n:'I need to go to hospital',s:'Not urgent, no ambulance needed. We alert the call centre, you pick the facility and we clear funds before you arrive.',i:'hospital',c:'var(--ok)',t:'#E7F5EC',tag:'PHASE 1',tc:'#E7F5EC;color:#14764D'},
+ {k:'e2',n:'Critical &mdash; send transport',s:'Emergency transport to the nearest hospital with an emergency ward. Dispatch is alerted with your location.',i:'ambulance',c:'#B5761A',t:'#FBF0DD',tag:'PHASE 2',tc:'#EFEAF6;color:#5B4A94'},
+ {k:'e3',n:'Head, neck or spine injury',s:'Catastrophic HNS protocol. Spineline is activated and the discretionary fund process begins.',i:'siren',c:'#8E1F1C',t:'#F7E6E5',tag:'PHASE 2',tc:'#EFEAF6;color:#5B4A94'},
+ {k:'e4',n:'Suspected concussion',s:'Blue Card pathway. Admission, confirmation, then the 6-week protocol and clearance from an approved doctor.',i:'brain',c:'var(--soccer)',t:'var(--soccer-t)',tag:'PHASE 1',tc:'#E7F5EC;color:#14764D'}];
+function tEmergency(){
+ return `<div class="hd"><h2>Emergency</h2><p>Four pathways. Pick what happened and we handle the rest.</p></div>
+ <div class="notice" style="background:#F7E6E5;color:#8E1F1C">${ic('info',13,2.1)}<span><b>If someone is not breathing or is unconscious, call 112 now.</b> This app is a shortcut, never a replacement for a phone call.</span></div>
+ <div style="height:12px"></div>
+ ${EPATHS.map(p=>`<button class="epath" style="--ec:${p.c};--et:${p.t}" onclick="startEm('${p.k}')">
+   <div class="top"><span class="ei">${ic(p.i,19)}</span>
+   <span style="flex:1"><b>${p.n}</b></span>
+   <span class="tag2" style="background:${p.tc}">${p.tag}</span></div>
+   <small style="margin-top:7px">${p.s}</small></button>`).join('')}
+ <div class="notice" style="background:#EDF0F3;color:#3B4653">${ic('lock',13,2.1)}<span>These pathways are for <b>insured players</b>. An uninsured player with an HNS injury is still covered by the Fund &mdash; a coach or the call centre triggers that.</span></div>
+ ${S.blueActive?`<div class="sect"><b>Active protocol</b><small>Blue Card</small></div>${protoBlock()}`:''}
+ <div style="height:14px"></div>`;
+}
+function startEm(k){S.em={p:k,step:1,dep:null,fac:null,amt:null};render();}
+function emFlow(){
+ const e=S.em,P=EPATHS.find(x=>x.k===e.p);
+ const back=`<div class="backrow"><button onclick="S.em=null;render()">${ic('chevL',15,2.4)} Emergency</button><b style="font-size:12.5px">${P.n}</b></div>`;
+ const bar=n=>`<div class="steps">${Array.from({length:n},(_,i)=>`<i style="${i+1<=e.step?`background:${P.c}`:''}"></i>`).join('')}</div>`;
+ /* step 1 shared: pick dependant */
+ if(e.step===1)return `${back}<div class="hd" style="padding-top:4px"><h2>Who is injured?</h2><p>Insured dependants only.</p></div><div style="height:14px"></div>${bar(4)}
+  ${HH.deps.map((d,i)=>{const s=sp(d.code);return `<button class="opt" onclick="S.em.dep=${i};S.em.step=2;render()">
+   <span class="oic" style="background:${s.t};color:${s.c}">${fieldSvg(d.code,'t',{w:22,h:15,sw:13})}</span>
+   <span><b>${d.short} &middot; ${d.team}</b><small>${rand(d.cover-(S.used[i]||0))} available &middot; cover active</small></span></button>`}).join('')}`;
+ if(e.p==='e1')return e1(e,back,bar);
+ if(e.p==='e4')return e4(e,back,bar);
+ return e23(e,back,P);
+}
+/* pathway 1 */
+function e1(e,back,bar){
+ const d=dep(e.dep);
+ if(e.step===2)return `${back}<div class="hd"><h2>Where are you going?</h2><p>Any facility. We clear funds before you arrive.</p></div><div style="height:14px"></div>${bar(4)}
+  ${FACILITIES.map((f,i)=>`<button class="opt" onclick="S.em.fac=${i};S.em.step=3;render()">
+   <span class="oic" style="background:#E7F5EC;color:#14764D">${ic(f.er?'hospital':'physio',19)}</span>
+   <span><b>${f.n}</b><small>${f.d} &middot; ${f.cap}</small></span>
+   ${f.tr?`<span class="pil a" style="margin-left:auto">TRAUMA</span>`:''}</button>`).join('')}`;
+ if(e.step===3){
+  const f=FACILITIES[e.fac];
+  return `${back}<div class="hd"><h2>Clear the funds</h2><p>${d.short} &middot; ${f.n}</p></div><div style="height:14px"></div>${bar(4)}
+  <div style="padding:0 18px"><div style="font-size:10.5px;color:var(--t2);font-weight:600;margin-bottom:9px">How much should we load?</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:13px">
+   ${[2500,7500,15000,25000].map(a=>`<button style="border:1.5px solid ${S.em.amt===a?'var(--ok)':'var(--hair)'};box-shadow:${S.em.amt===a?'0 0 0 1.5px var(--ok)':'var(--sh-s)'};background:#fff;border-radius:14px;padding:13px;font-weight:700;font-size:14px;color:${S.em.amt===a?'#14764D':'var(--t1)'};font-family:'IBM Plex Mono',monospace;text-align:center" onclick="S.em.amt=${a};render()">${rand(a)}</button>`).join('')}</div>
+  <button class="btnP" style="background:var(--ok)" ${e.amt?'':'disabled'} onclick="S.em.step=4;render();emRun()">Alert call centre &amp; load card</button>
+  <button class="btnG" onclick="S.em=null;render()">Cancel</button></div>`;
+ }
+ if(e.step===4){
+  const p=e.prog||0,done=p>=100,f=FACILITIES[e.fac];
+  const rows=[['Cover active for '+d.short,'Policy in force &middot; token verified'],
+   ['Call centre alerted',`Oneplan notified &middot; ${f.n}`],
+   ['Within benefit limit',`${rand(e.amt)} against R50 000 per event`],
+   ['Funds cleared to card','Swipe on arrival &middot; PIN required']];
+  const step=Math.min(4,Math.floor(p/25)+(done?0:1));
+  return `${back}<div class="hd"><h2>${done?'Ready to go':'Clearing&hellip;'}</h2><p>${f.n} &middot; ${f.d}</p></div><div style="height:14px"></div>${bar(4)}
+  ${rows.map((r,i)=>`<div class="chk" style="${i<step?'':'opacity:.45'}"><span class="ic2" style="background:${i<step?'var(--ok)':'#dfe3ea'}">${i<step?ic('check',12,3):''}</span><span><b>${r[0]}</b><small>${r[1]}</small></span></div>`).join('')}
+  ${done?`<div class="refbox"><span class="mono" style="font-size:8px;color:var(--t3);letter-spacing:.13em">AUTHORISATION</span><div class="mono" style="font-weight:600;font-size:16px;color:var(--t1);margin-top:2px">AUTH-88214</div></div>
+  <div style="padding:0 18px"><button class="btnP" style="background:var(--ok)" onclick="emDone1()">Done</button></div>`:''}`;
+ }
+}
+function emRun(){S.em.prog=0;
+ const t=setInterval(()=>{if(!S.em||S.em.step!==4){clearInterval(t);return}S.em.prog=Math.min(100,(S.em.prog||0)+8);render();if(S.em.prog>=100)clearInterval(t)},240);}
+function emDone1(){
+ const d=dep(S.em.dep),f=FACILITIES[S.em.fac];
+ S.used[S.em.dep]=(S.used[S.em.dep]||0)+S.em.amt;
+ S.claims.unshift({ref:'AUTH-88214',dep:S.em.dep,b:'Accident treatment',amt:S.em.amt,st:'invoice'});
+ S.logs.unshift(`16:20 emergency &middot; pathway 1 &middot; ${d.short} &middot; ${f.n} &middot; ${rand(S.em.amt)} cleared`);
+ S.em=null;S.tab='emergency';render();toast('Funds cleared. Upload the invoice afterwards to finalise.');
+}
+/* pathway 4 - blue card */
+function e4(e,back,bar){
+ const d=dep(e.dep);
+ if(e.step===2)return `${back}<div class="hd"><h2>Admission &amp; check-in</h2><p>${d.short} &middot; ${d.team}</p></div><div style="height:14px"></div>${bar(4)}
+  <div class="notice" style="background:#E7EDF8;color:#22499E;margin-top:0">${ic('info',13,2.1)}<span>Take ${d.first} to admissions. Show the cover card at check-in &mdash; the R5 000 rehabilitation benefit funds this.</span></div>
+  ${FACILITIES.filter(f=>f.er).map((f,i)=>`<button class="opt" style="margin-top:9px" onclick="S.em.fac=${i};S.em.step=3;render()">
+   <span class="oic" style="background:var(--soccer-t);color:var(--soccer)">${ic('hospital',19)}</span>
+   <span><b>${f.n}</b><small>${f.d} &middot; ${f.cap}</small></span></button>`).join('')}`;
+ if(e.step===3)return `${back}<div class="hd"><h2>Confirm the diagnosis</h2><p>Recorded by the attending clinician.</p></div><div style="height:14px"></div>${bar(4)}
+  <button class="opt" onclick="S.em.step=4;render()">
+   <span class="oic" style="background:var(--soccer-t);color:var(--soccer)">${ic('brain',19)}</span>
+   <span><b>Concussion confirmed</b><small>Starts the 6-week return-to-play protocol</small></span></button>
+  <button class="opt" onclick="toast('No concussion recorded. The visit is still covered from the rehabilitation benefit and no protocol starts.')">
+   <span class="oic" style="background:#E7F5EC;color:#14764D">${ic('check',19)}</span>
+   <span><b>Cleared &mdash; no concussion</b><small>Visit covered, no protocol</small></span></button>`;
+ if(e.step===4)return `${back}<div class="hd"><h2>Blue Card issued</h2><p>${d.short} may not return to play for 6 weeks.</p></div><div style="height:14px"></div>${bar(4)}
+  ${protoBlock(true)}
+  <div class="sect"><b>Book the clearance visit</b><small>Week 6 &middot; approved panel</small></div>
+  ${PANEL.map((p,i)=>`<button class="row" onclick="bookPanel(${i})">
+   <span class="ri" style="background:var(--soccer-t);color:var(--soccer)">${ic('user',17)}</span>
+   <span><b>${p.n}</b><small>${p.s} &middot; ${p.w}</small></span>
+   <span class="pil n">BOOK</span></button>`).join('')}
+  <div class="notice" style="background:#EDF0F3;color:#3B4653">${ic('lock',13,2.1)}<span>Only these pre-approved doctors can clear a Blue Card. The coach portal shows the same status, so nobody can quietly return a player to play.</span></div>`;
+}
+function protoBlock(fresh){
+ const wk=fresh?1:S.protoWeek||1;
+ return `<div class="proto">
+  <div class="pt">${ic('clock',15,2.1)}<b style="font-size:11.5px;color:var(--t1)">6-week return-to-play protocol</b><span class="pil n" style="margin-left:auto">WEEK ${wk} OF 6</span></div>
+  <div class="pw"><i style="width:${Math.round(wk/6*100)}%"></i></div>
+  <div class="wkrow">${[1,2,3,4,5,6].map(w=>`<i class="${w<wk?'done':w===wk?'now':''}">W${w}</i>`).join('')}</div>
+  <div style="font-size:8.5px;color:var(--t3);margin-top:9px;line-height:1.5">No contact training or matches. The app reminds you weekly and blocks the coach portal from marking ${dep(S.em?S.em.dep:0).first} available.</div>
+ </div>`;
+}
+function bookPanel(i){
+ const p=PANEL[i],d=dep(S.em.dep);
+ S.blueActive=true;S.protoWeek=1;
+ S.logs.unshift(`16:35 blue card &middot; ${d.short} &middot; concussion confirmed &middot; clearance booked with ${p.n} for week 6`);
+ notify(`<b>Blue Card</b> issued for ${d.first}. Clearance booked with ${p.n} in week 6. No contact play until cleared.`);
+ S.em=null;S.tab='emergency';render();toast(`Clearance booked with ${p.n}. The coach portal now shows ${d.first} as unavailable.`);
+}
+/* pathways 2 & 3 - walkthrough */
+function e23(e,back,P){
+ const d=dep(e.dep);
+ const steps=P.k==='e2'
+  ?[['Location captured','GPS fix at the field, shared with dispatch'],
+    ['Nearest emergency ward found','Filtered for open casualty and capacity'],
+    ['Dispatch alerted','Provider receives player, location and cover status'],
+    ['Funds pre-cleared','Card loaded before arrival so admission is not delayed'],
+    ['Guardian and coach notified','SMS on three channels, all logged']]
+  :[['Spineline activated','ER24 Spineline called, HNS protocol opens'],
+    ['On-field doctor assessment','Stabilisation recorded, spine status noted'],
+    ['Specialist consensus required','Two-party sign-off before any fund release'],
+    ['Tiered fund approval','Trustee approval against the discretionary fund'],
+    ['Transfer to a capable facility','Air or road, to a unit with the right equipment and protocols']];
+ return `${back}<div class="hd" style="padding-top:4px"><h2>${P.n}</h2><p>${d.short} &middot; ${d.team}</p></div>
+ <div class="notice" style="background:#EFEAF6;color:#5B4A94;margin-top:12px">${ic('info',13,2.1)}<span><b>Phase 2 pathway.</b> This is the designed flow, shown as a walkthrough. It needs a dispatch partner and written clinical governance before it ships.</span></div>
+ <div style="height:12px"></div>
+ ${steps.map((s,i)=>`<div class="chk"><span class="ic2" style="background:${P.c}">${i+1}</span><span><b>${s[0]}</b><small>${s[1]}</small></span></div>`).join('')}
+ <div style="padding:6px 18px 0"><button class="btnP" style="background:#8E1F1C" onclick="toast('In the live app this dials the emergency line immediately and runs the workflow in the background. The call always happens first.')">${ic('phone',15,2.2)} Call the emergency line now</button>
+ <button class="btnG" onclick="S.em=null;render()">Back to pathways</button></div>
+ <div style="height:14px"></div>`;
+}
+
+/* ---- 4. SHOP ---- */
+function tShop(){
+ const pct=Math.min(100,Math.round(S.savings/HH.premium*100));
+ const items=SHOP.filter(i=>i.cat===S.cat);
+ return `<div class="hd"><h2>Shop</h2><p>Member pricing from approved supplier partners.</p></div>
+ <div class="savebar">
+   <div class="r1"><span>Earned back so far</span><b style="color:#14764D">${rand(S.savings)}</b></div>
+   <div class="trk"><i style="width:${pct}%"></i></div>
+   <div class="r2"><span>Of ${rand(HH.premium)} premium paid</span><span>Member pricing</span></div>
+ </div>
+ <div class="catrow">${CATS.map(c=>`<button style="${S.cat===c.k?'background:var(--brand);color:#fff;border-color:var(--brand)':''}" onclick="S.cat='${c.k}';render()">${c.n}</button>`).join('')}</div>
+ <div class="sgrid">${items.map(it=>{
+   const done=S.redeemed.includes(it.k);
+   return `<button class="st" onclick="buy('${it.k}')">
+    <span class="${it.cert?'cert':'appr'}">${it.cert?'BATCH &#10003;':'APPROVED'}</span>
+    <span class="brand">${it.brand}</span><b>${it.n}</b>
+    <span class="disc">${done?'&#10003; Voucher':`${it.pct}% off`}</span>
+    <span class="sub">${done?'Issued to your card':'member price'}</span></button>`}).join('')}
+ </div>
+ <div class="notice" style="background:#E7F0EB;color:#14764D">${ic('shield',13,2.1)}<span>Every supplement carries a per-batch certificate from a WADA-accredited lab. Tap any supplement to scan and view it.</span></div>
+ <div class="sect"><b>How you pay</b><small>Phase 1</small></div>
+ <div class="row"><span class="ri" style="background:#E7F5EC;color:#14764D">${ic('gift',17)}</span>
+  <span><b>Voucher code</b><small>Redeem in-store or on the partner's site</small></span><span class="pil g">LIVE</span></div>
+ <div class="row" style="opacity:.62"><span class="ri" style="background:#EEF1F4;color:#6B7480">${ic('card',17)}</span>
+  <span><b>Pay with saved card</b><small>Visa &bull;&bull;&bull;&bull; 4182 &middot; needs PCI scope</small></span><span class="pil p2">PHASE 2</span></div>
+ <div style="height:16px"></div>`;
+}
+function buy(k){
+ const it=SHOP.find(x=>x.k===k);
+ if(it.cert){S.sub='cert';S.certItem=k;render();return}
+ if(S.redeemed.includes(k)){toast('Voucher already issued for this item (demo).');return}
+ S.redeemed.push(k);
+ const est=Math.round(600*it.pct/100)+120;
+ S.savings+=est;
+ S.logs.unshift(`09:10 shop &middot; ${it.brand} ${it.n.replace(/&amp;/g,'&')} &middot; voucher at ${it.pct}%`);
+ render();toast(`Voucher issued at ${it.pct}% off. ${rand(S.savings)} earned back against your premium.`);
+}
+function certScreen(){
+ const it=SHOP.find(x=>x.k===S.certItem)||SHOP.find(x=>x.cert);
+ return `<div class="backrow"><button onclick="S.sub=null;render()">${ic('chevL',15,2.4)} Shop</button><b style="font-size:13px">Track &amp; trace</b></div>
+ <div style="text-align:center;padding:16px 18px 0">
+   <div style="width:96px;height:96px;margin:0 auto 12px;border-radius:24px;background:var(--soccer-t);color:var(--soccer);display:flex;align-items:center;justify-content:center">${ic('scan',44,1.6)}</div>
+   <div style="font-size:17px;font-weight:900;letter-spacing:-.03em;color:var(--t1)">${it.brand} &middot; ${it.n}</div>
+   <div class="mono" style="font-size:9px;letter-spacing:.14em;color:var(--t3);text-transform:uppercase;margin-top:4px">Batch ${it.batch}</div>
+ </div>
+ <div class="kv" style="margin-top:14px">
+  <div><span class="k">Lab</span><span class="v">WADA-accredited</span></div>
+  <div><span class="k">Tested</span><span class="v">14 Feb 2027</span></div>
+  <div><span class="k">Result</span><span class="v" style="color:#14764D">No banned substances</span></div>
+  <div><span class="k">Valid for</span><span class="v">This batch only</span></div>
+  <div><span class="k">Expiry</span><span class="v">Nov 2028</span></div>
+ </div>
+ <div class="notice" style="background:#E7F0EB;color:#14764D">${ic('shield',13,2.1)}<span>Schoolboy and schoolgirl players finally get the same batch-level track-and-trace that professionals get from their union.</span></div>
+ <div style="padding:12px 18px 0"><button class="btnP" style="background:var(--brand)" onclick="S.sub=null;buy2('${it.k}')">Get voucher at ${it.pct}% off</button>
+ <button class="btnG" onclick="S.sub=null;render()">Back to shop</button></div>
+ <div style="height:16px"></div>`;
+}
+function buy2(k){
+ const it=SHOP.find(x=>x.k===k);
+ if(!S.redeemed.includes(k)){S.redeemed.push(k);S.savings+=Math.round(600*it.pct/100)+120;
+  S.logs.unshift(`09:12 shop &middot; ${it.brand} ${it.n} &middot; voucher at ${it.pct}% &middot; batch ${it.batch} verified`)}
+ render();toast(`Voucher issued at ${it.pct}% off, batch ${it.batch} verified.`);
+}
+
+/* ---- 5. MORE ---- */
+function tMore(){
+ return `<div class="hd"><h2>More</h2><p>The Fund, partners, documents and support.</p></div>
+ <div class="sect"><b>Catastrophic HNS Fund</b><small>Not insurance</small></div>
+ <button class="row" onclick="S.sub='fund';render()">
+   <span class="ri" style="background:#E4E9EE;color:var(--brand)">${ic('shield',17)}</span>
+   <span><b>${rand(FUND.balance)} held</b><small>${FUND.supported} players supported &middot; ${FUND.donors} donors</small></span>
+   <span class="chev">${ic('chev',15,2.2)}</span></button>
+ <div class="sect"><b>Documents</b><small>Oneplan</small></div>
+ ${[['Policy schedule','Both dependants'],['Certificate of cover','For school submission'],['Claims history','2027 season']].map(([a,b])=>`<button class="row" onclick="toast('${a} downloaded (demo).')">
+   <span class="ri" style="background:#E4E9EE;color:var(--brand)">${ic('doc',17)}</span>
+   <span><b>${a}</b><small>${b}</small></span><span class="pil n">PDF</span></button>`).join('')}
+ <div class="sect"><b>Support</b><small>24/7</small></div>
+ <button class="row" onclick="toast('Dialing Oneplan 010 001 0141 (demo).')"><span class="ri" style="background:#E7F5EC;color:#14764D">${ic('phone',17)}</span>
+   <span><b>Call centre</b><small>010 001 0141 &middot; claims and cover</small></span><span class="chev">${ic('chev',15,2.2)}</span></button>
+ <button class="row" onclick="toast('Opening WhatsApp 083 794 5452 (demo).')"><span class="ri" style="background:#E7F5EC;color:#14764D">${ic('phone',17)}</span>
+   <span><b>WhatsApp</b><small>083 794 5452 &middot; low data</small></span><span class="chev">${ic('chev',15,2.2)}</span></button>
+ <div class="sect"><b>Legal</b><small></small></div>
+ <div class="kv">
+  <div style="cursor:pointer" onclick="toast('Terms of use (demo).')"><span class="k" style="width:auto;flex:1;color:var(--t1)">Terms of use</span><span class="v">${ic('chev',13,2.2)}</span></div>
+  <div style="cursor:pointer" onclick="toast('Privacy notice: POPIA, minors\\' data, operator relationship with Oneplan (demo).')"><span class="k" style="width:auto;flex:1;color:var(--t1)">Privacy notice</span><span class="v">${ic('chev',13,2.2)}</span></div>
+  <div style="cursor:pointer" onclick="toast('Complaints go to Oneplan first, then the FAIS Ombud (demo).')"><span class="k" style="width:auto;flex:1;color:var(--t1)">Complaints &amp; FAIS Ombud</span><span class="v">${ic('chev',13,2.2)}</span></div>
+ </div>
+ <div style="height:16px"></div>`;
+}
+function fundScreen(){
+ return `<div class="backrow"><button onclick="S.sub=null;render()">${ic('chevL',15,2.4)} More</button></div>
+ <div class="hd" style="padding-top:2px"><h2>Partners &amp; the Fund</h2><p>Who backs this, and what the Fund holds.</p></div>
+ <div style="margin:13px 15px 0;border-radius:18px;overflow:hidden;border:1px solid var(--hair);box-shadow:var(--sh-s)">
+  <div style="background:linear-gradient(135deg,#243447,#151C25);color:#fff;padding:13px 15px">
+    <div class="mono" style="font-size:8px;letter-spacing:.13em;text-transform:uppercase;opacity:.8">Catastrophic HNS Fund</div>
+    <div class="mono" style="font-size:22px;letter-spacing:-.03em;margin:3px 0 1px">${rand(FUND.balance)}</div>
+    <div class="mono" style="font-size:8px;letter-spacing:.1em;opacity:.65;text-transform:uppercase">Currently held</div></div>
+  <div style="background:#fff;padding:12px 15px">
+    <div style="font-size:9.5px;color:var(--t2);line-height:1.5">A discretionary fund for head, neck and spine injuries, available to any registered player. Released on the consensus of the on-field doctor and a specialist. <b>This is a fund, not insurance.</b></div>
+    <div style="display:flex;gap:16px;margin-top:11px;padding-top:10px;border-top:1px solid var(--hair)">
+      <div><div class="mono" style="font-size:15px;color:var(--t1)">${FUND.supported}</div><div class="mono" style="font-size:7px;letter-spacing:.12em;color:var(--t3);text-transform:uppercase">Supported</div></div>
+      <div><div class="mono" style="font-size:15px;color:var(--t1)">${FUND.donors}</div><div class="mono" style="font-size:7px;letter-spacing:.12em;color:var(--t3);text-transform:uppercase">Donors</div></div>
+      <div><div class="mono" style="font-size:15px;color:#14764D">R0</div><div class="mono" style="font-size:7px;letter-spacing:.12em;color:var(--t3);text-transform:uppercase">Member cost</div></div>
+    </div>
+  </div>
+ </div>
+ <div class="sect"><b>Principal sponsor</b><small>Season 2027</small></div>
+ <div style="margin:0 15px 8px;border-radius:18px;overflow:hidden;border:1px solid var(--hair);box-shadow:var(--sh-s)">
+  <div style="background:${PRINCIPAL.c};color:#fff;padding:14px 15px;display:flex;align-items:center;gap:12px">
+    <span style="width:38px;height:38px;border-radius:50%;border:2.5px solid #fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;flex:none">${PRINCIPAL.mark}</span>
+    <span><b style="font-size:14.5px;font-weight:800;letter-spacing:-.02em;display:block">${PRINCIPAL.name}</b>
+    <small class="mono" style="font-size:8px;opacity:.8;letter-spacing:.13em;text-transform:uppercase">${PRINCIPAL.role}</small></span></div>
+  <div style="background:#fff;padding:11px 15px">
+    <div style="font-size:9.5px;color:var(--t2);line-height:1.5">Funds the HNS Fund and medical equipment at member schools.</div>
+    <div class="mono" style="font-size:7px;letter-spacing:.12em;color:#B0553A;text-transform:uppercase;margin-top:8px;padding-top:7px;border-top:1px solid var(--hair)">Illustrative in this demo &mdash; not a signed sponsor</div></div>
+ </div>
+ <div class="sect"><b>Sponsors &amp; donors</b><small>${FUND.donors} total</small></div>
+ <div class="kv">${SPONSORS.map(s=>`<div><span class="n" style="width:22px;height:22px;border-radius:7px;background:${s.c};color:#fff;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:900;flex:none">${s.n}</span><span class="k" style="width:auto;flex:1;color:var(--t1);margin-left:9px">${s.t}</span>${s.r?`<span class="v mono" style="font-size:8px;letter-spacing:.09em;color:var(--t3)">${s.r}</span>`:''}</div>`).join('')}</div>
+ <div class="sect"><b>Supplier partners</b><small>Pre-approved</small></div>
+ <div class="kv">${['Sportswear partner A','Sportswear partner C','Sportswear partner B','Supplement partner B','Supplement partner A','Protective gear partner'].map(b=>`<div><span class="k" style="width:auto;flex:1;color:var(--t1)">${b}</span><span class="v mono" style="font-size:8px;color:#14764D;letter-spacing:.08em">APPROVED</span></div>`).join('')}</div>
+ <div class="notice" style="background:#F2ECD9;color:#7A6414">${ic('info',13,2.1)}<span>All brand and sponsor names in this demo are <b>illustrative</b> and none is a signed partner.</span></div>
+ <div style="height:16px"></div>`;
+}
+
+/* ============ DEPENDANT ============ */
+function renderDependant(){
+ const d=dep(),s=sp(d.code);
+ const avail=d.cover-(S.used[HH.deps.indexOf(d)]||0);
+ let body='';
+ if(S.depTab==='home')body=`<div class="appbar">
+   <span class="ava" style="background:linear-gradient(135deg,${s.lite},${s.hex})">${d.ini}</span>
+   <span class="who"><small>Dependant &middot; linked to D. Mokoena</small><b>Hi ${d.first}</b></span>
+   <button class="bell" style="color:${s.c}" onclick="toast('Fixture: ${d.team}, Saturday 09:00.')">${ic('bell',18)}</button></div>
+  <div class="cover" style="background:linear-gradient(140deg,${s.lite} -25%,${s.hex} 45%,${s.dark})">
+   <span class="stp ok abs"><i></i>COVERED</span><div class="wm">${fieldSvg(d.code,'s',{stroke:'#fff',sw:4})}</div>
+   <div style="padding-right:74px"><span class="lbl">My cover &middot; ${d.team}</span><div class="amt">${rand(avail)}<small>available</small></div></div>
+   <div class="who2">Winter 2027 &middot; valid to 30 September</div>
+   <div class="meter"><i style="width:${Math.round(avail/d.cover*100)}%"></i></div>
+   <div class="mrow"><span>Cover in force</span><span>Verified 8 min ago</span></div></div>
+  <div class="sect"><b>My stuff</b><small>Read only</small></div>
+  <button class="row" onclick="toast('Cover card shown. Show this to a coach or clinic &mdash; it proves cover and nothing else.')"><span class="ri" style="background:${s.t};color:${s.c}">${ic('card',17)}</span><span><b>My card</b><small>Show a coach or clinic</small></span><span class="chev">${ic('chev',15,2.2)}</span></button>
+  <button class="row" onclick="toast('Blue Card status: ${S.blueActive&&S.depIdx===0?'PROTOCOL ACTIVE, week '+S.protoWeek+' of 6, no contact play':'cleared, no head injury on record'}.')"><span class="ri" style="background:${s.t};color:${s.c}">${ic('brain',17)}</span><span><b>Blue Card</b><small>My clearance status</small></span><span class="pil ${S.blueActive&&S.depIdx===0?'a':'g'}">${S.blueActive&&S.depIdx===0?'PROTOCOL':'CLEARED'}</span></button>
+  <button class="row" onclick="toast('Shop shows member pricing, but only your principal member can buy.')"><span class="ri" style="background:${s.t};color:${s.c}">${ic('bag',17)}</span><span><b>Shop</b><small>See prices, cannot buy</small></span><span class="chev">${ic('chev',15,2.2)}</span></button>
+  <button class="row" style="border-style:dashed;box-shadow:none;background:transparent" onclick="tellParent()"><span class="ri" style="background:#E1E6EB;color:#6B7480">${ic('phone',17)}</span><span><b style="color:#5C6772">Tell my parent I am hurt</b><small>They open the emergency flow</small></span></button>
+  <div class="notice" style="background:#F1EEE4;color:#7A6414">${ic('info',13,2.1)}<span>You can see <b>your own cover only</b>. Emergency, claims, payment and policy changes stay with your principal member.</span></div>
+  <div class="dashrow" style="display:flex;align-items:center;gap:8px;margin:11px 15px 0;padding:10px 12px;border-radius:14px;border:1.5px dashed #C9D2DB;color:#5C6772;font-size:9.5px;font-weight:600;cursor:pointer" onclick="switchDep()">${ic('users',14)} Demo: switch dependant login</div>
+  <div style="height:16px"></div>`;
+ return `<div class="phonewrap"><div class="glow" style="background:${s.hex}"></div>
+ <div class="phone"><div class="scr" style="--sc:var(--paper)">
+  <div class="island"></div><div class="sb" style="color:#3B4653"><span>15:02</span><span>5G &#9646;&#9646;&#9646;</span></div>
+  <div class="body"><div class="view">${body}</div></div><div class="toast"></div>
+  <div class="tabbar"><button style="color:${s.c}">${ic('home',20,2.1)}Home</button>
+   <button style="color:#9aa0ab" onclick="toast('Card view (demo).')">${ic('card',20)}Card</button>
+   <button style="color:#9aa0ab" onclick="toast('Shop view, prices only (demo).')">${ic('bag',20)}Shop</button></div>
+  <div class="homebar"><i></i></div>
+ </div></div></div>`+notes();
+}
+function switchDep(){S.depIdx=(S.depIdx+1)%HH.deps.length;render();toast(`Now viewing ${dep().first}'s login.`);}
+function tellParent(){const d=dep();
+ notify(`<b>${d.first}</b> reported an injury from their own login. Open the Emergency tab.`);
+ S.logs.unshift(`15:03 dependant &middot; ${d.short} raised an alert to the principal member`);
+ render();toast('Your parent has been notified. They will start the emergency flow.');}
+
+/* ============ COACH ============ */
+function renderCoach(){
+ const T=TEAMS[S.coachTeam],s=sp(T.code),sel=S.coachSel!==null?T.roster[S.coachSel]:null;
+ const blueBlocked=p=>S.blueActive&&p.dep===0;
+ return `<div class="phonewrap"><div class="glow" style="background:#1f5c3d"></div>
+ <div class="phone"><div class="scr dark" style="--sc:#0E1713">
+  <div class="island"></div><div class="sb" style="color:#cfe3d8"><span>16:48</span><span>EDGE &#9646;</span></div>
+  <div class="body"><div class="view">
+   <div style="padding:14px 18px 6px;color:#fff">
+     <span class="mono" style="font-size:8.5px;letter-spacing:.18em;color:var(--brass);display:flex;align-items:center;gap:7px">${ic('scan',13,2)} COACH FIELD PORTAL &middot; OFFLINE OK</span>
+     <div style="font-weight:900;font-size:19px;margin-top:5px;letter-spacing:-.025em">${sel?'Player scanned':'Team sheet'}</div>
+     <div style="font-size:10px;color:#7fa08f;margin-top:1px">${T.coach} &middot; granted for Winter 2027</div></div>
+   ${sel?`<div class="dk-card" style="margin:12px 15px;border-radius:18px;background:#16241D;border:1px solid #24382E;padding:15px;color:#fff">
+     <div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:15px;font-weight:900">${sel.n}</b>
+     <span class="stp ${sel.s==='covered'?'ok':''}" style="${sel.s==='covered'?'background:rgba(87,201,143,.15);color:#57C98F;box-shadow:none':sel.s==='lapsed'?'background:#C0392B;color:#fff':'background:#3A3226;color:#DDBB7A'}"><i></i>${sel.s.toUpperCase()}</span></div>
+     <div class="mono" style="font-size:8.5px;color:#7fa08f;margin-top:5px">MF-2027-${sel.no} &middot; STATUS AGE 9H 50M (CACHED)</div>
+     ${blueBlocked(sel)?`<div style="margin-top:13px;background:#2B2438;border:1px solid #4A3D6B;color:#C9B8E8;border-radius:13px;padding:12px;font-size:10px;line-height:1.55"><b>Blue Card protocol active &mdash; week ${S.protoWeek} of 6.</b> ${sel.n.split(' ')[0]} may not be selected for contact play until cleared by an approved doctor.</div>`:''}
+     <div style="margin-top:13px;display:grid;gap:9px">
+      ${sel.s==='covered'&&!blueBlocked(sel)?(S.coachClaimed[sel.no]
+        ?`<div style="background:rgba(87,201,143,.1);border:1px solid #2c5a42;color:#8fe0b4;border-radius:13px;padding:12px;text-align:center;font-weight:700;font-size:11px">&#10003; Alert ${S.coachClaimed[sel.no]} sent &middot; guardian + Oneplan notified</div>`
+        :`<button class="btnP" style="background:var(--brass);color:#3a2a05" onclick="coachAlert('${sel.no}',${sel.dep===undefined?'null':sel.dep})">${icF('cross',16)} Alert the guardian &amp; call centre</button>`):''}
+      ${sel.s==='lapsed'?`<div style="background:rgba(224,82,82,.1);border:1px solid #6b3232;color:#f0b9b9;border-radius:13px;padding:12px;font-size:10px;line-height:1.55"><b>Cover lapsed.</b> Guardian reminded on 3 channels, all logged. Call Oneplan before treatment.</div>`:''}
+      ${sel.s==='uninsured'?`<div style="background:#2E2718;border:1px solid #5C4C22;color:#E4C88A;border-radius:13px;padding:12px;font-size:10px;line-height:1.55"><b>Not enrolled.</b> No MatchFit cover. The HNS Fund still applies to a catastrophic head, neck or spine injury &mdash; nothing else does.</div>`:''}
+      <button style="background:rgba(255,255,255,.06);color:#cfe3d8;border-radius:13px;padding:11px;text-align:center;font-weight:700;font-size:11px;display:flex;align-items:center;justify-content:center;gap:8px;width:100%" onclick="toast('Dialing Oneplan emergency line (demo).')">${ic('phone',15)} Emergency line</button>
+      <button style="color:#7fa08f;font-size:10px;padding:5px;text-align:center;width:100%" onclick="S.coachSel=null;render()">&larr; Back to team sheet</button></div>
+   </div>
+   <div style="margin:0 15px;border-radius:13px;background:#16241D;padding:10px 12px;font-size:9px;color:#7fa08f;line-height:1.6;border:1px solid #1d2f26">Guardian notified by SMS now.<br>You see cover status only. This lookup is logged.</div>`
+   :`<div class="teamseg" style="display:flex;gap:6px;padding:10px 15px 0">${TEAMS.map((t,i)=>`<button style="flex:1;font-family:'IBM Plex Mono',monospace;font-size:8.5px;letter-spacing:.09em;text-transform:uppercase;padding:8px;border-radius:10px;border:1px solid #24382E;text-align:center;${i===S.coachTeam?`background:${sp(t.code).hex};color:#fff;border-color:${sp(t.code).hex}`:'background:#16241D;color:#7fa08f'}" onclick="S.coachTeam=${i};S.coachSel=null;render()">${t.t}</button>`).join('')}</div>
+   ${T.roster.map((p,i)=>`<button class="dk-tile" style="display:flex;justify-content:space-between;align-items:center;width:calc(100% - 30px);margin:9px 15px 0;background:#16241D;border:1px solid ${blueBlocked(p)?'#4A3D6B':'#24382E'};border-radius:16px;padding:12px 13px;color:#fff" onclick="S.coachSel=${i};coachLog(${i})">
+     <span><b style="font-size:12.5px;font-weight:800">${p.n}</b><small style="display:block;font-family:'IBM Plex Mono',monospace;font-size:8px;color:#7fa08f;margin-top:2px">MF-2027-${p.no}</small></span>
+     <span class="stp" style="${blueBlocked(p)?'background:#3A2F52;color:#C9B8E8':p.s==='covered'?'background:rgba(87,201,143,.15);color:#57C98F':p.s==='lapsed'?'background:#C0392B;color:#fff':'background:#3A3226;color:#DDBB7A'}"><i></i>${blueBlocked(p)?'BLUE CARD':p.s.toUpperCase()}</span></button>`).join('')}
+   <div style="height:16px"></div>`}
+  </div></div><div class="toast"></div>
+  <div class="tabbar"><button style="color:var(--brass)">${ic('scan',20,2.1)}Scan</button>
+   <button style="color:#5d7d6d" onclick="S.coachSel=null;render()">${ic('doc',20)}Team</button>
+   <button style="color:#5d7d6d" onclick="toast('Oneplan emergency line 010 001 0141 (demo).')">${ic('phone',20)}Help</button></div>
+  <div class="homebar"><i></i></div>
+ </div></div></div>`+notes();
+}
+function coachLog(i){const T=TEAMS[S.coachTeam];
+ S.logs.unshift(`16:48 lookup &middot; ${T.coach} &rarr; MF-2027-${T.roster[i].no} &middot; guardian notified &middot; logged`);
+ render();setTimeout(()=>toast('Guardian notified by SMS now.'),300);}
+function coachAlert(no,depIdx){
+ const ref='ALERT-'+(220+Object.keys(S.coachClaimed).length);
+ S.coachClaimed[no]=ref;
+ S.logs.unshift(`16:49 alert &middot; ${ref} raised on-field by coach &middot; call centre engaged`);
+ if(depIdx!==null&&depIdx!==undefined)notify(`Coach raised <b>${ref}</b> for ${HH.deps[depIdx].first} on the field. Open the Emergency tab.`);
+ render();toast(`${ref} sent. Guardian and call centre notified.`);
+}
+
+/* ============ SCHOOL ============ */
+function renderSchool(){
+ const pen=Math.round(SCHOOL.covered/SCHOOL.players*100);
+ const all=TEAMS.flatMap(t=>t.roster.map(r=>({...r,team:t.t})));
+ return `<div class="desk">
+  <div class="desk-head"><span style="width:42px;height:42px;border-radius:12px;background:var(--brand);display:inline-flex;align-items:center;justify-content:center;color:#fff">${ic('shield',20)}</span>
+   <div><h2>Demo High School &mdash; sports office</h2><div class="sub2">Parent-pay season &middot; Winter 2027</div></div>
+   <span class="spacer"></span><span class="badge ok">BOKSMART &#10003; CURRENT</span></div>
+  <div class="desk-body">
+   <div class="banner"><b>Not in Chris's list, and it needs to be.</b> Emergency pathway 4 starts on a field, pathway 1 usually starts with a coach, and the fee-bundling distribution plan runs through schools. An app only a parent can open leaves an injured child at an away fixture with nothing.</div>
+   <div class="statrow">
+    <div class="stat"><b>${SCHOOL.players}</b><small>Active players</small></div>
+    <div class="stat"><b style="color:#4ecf96">${SCHOOL.covered}</b><small>Covered</small><span class="delta">${pen}% opt-in</span></div>
+    <div class="stat"><b style="color:#e08787">${SCHOOL.lapsed}</b><small>Lapsed</small><span class="delta" style="color:#e08787">Chase list ready</span></div>
+    <div class="stat"><b>${S.blueActive?1:0}</b><small>Blue Card active</small><span class="delta">${S.blueActive?'1 player blocked from play':'None'}</span></div></div>
+   <h3>Cover by code <span class="mono">who is enrolled</span></h3>
+   <div class="bar">${SCHOOL.codes.map(c=>`<i style="flex:${c.v};background:${c.c}"></i>`).join('')}</div>
+   <div class="legend">${SCHOOL.codes.map(c=>`<span><i style="background:${c.c}"></i>${c.l} &middot; ${c.v}</span>`).join('')}</div>
+   <h3>Roster <span class="mono">both squads</span></h3>
+   <table class="grid"><thead><tr><th>Player</th><th>Member no.</th><th>Team</th><th>Status</th></tr></thead><tbody>
+    ${all.map(p=>{const blue=S.blueActive&&p.dep===0;
+     return `<tr><td>${p.n}</td><td class="mono" style="font-size:11px">MF-2027-${p.no}</td><td>${p.team}</td>
+     <td><span class="badge ${blue?'p2':p.s==='covered'?'ok':p.s==='lapsed'?'off':'warn'}">${blue?'BLUE CARD':p.s.toUpperCase()}</span></td></tr>`}).join('')}
+   </tbody></table>
+   <h3>Activity log <span class="mono">append-only</span></h3>
+   <div class="logbox">${S.logs.map(l=>`<div>${l.replace(/&middot;/g,'<b>&middot;</b>')}</div>`).join('')}</div>
+  </div></div>`+notes();
+}
+
+/* ============ PARTNER ============ */
+function renderPartner(){
+ if(S.pv==='principal')return renderPrincipal();
+ const red=S.redeemed.length;
+ return `<div class="desk">
+  <div class="desk-head"><span style="width:42px;height:42px;border-radius:12px;background:#151C25;display:inline-flex;align-items:center;justify-content:center;color:#fff">${ic('gift',20)}</span>
+   <div><h2>Supplier partner portal</h2><div class="sub2">Aggregate only &middot; no member is identifiable here</div></div>
+   <span class="spacer"></span>${pvToggle()}
+   <button class="tbtn" onclick="alert('Partner statement (PDF) generated. Demo.')">${ic('dl',14)} Statement</button></div>
+  <div class="desk-body">
+   <div class="statrow">
+    <div class="stat"><b>${1240+red}</b><small>Vouchers issued</small><span class="delta">+${red} this session</span></div>
+    <div class="stat"><b>12</b><small>Approved listings</small><span class="delta">6 brands live</span></div>
+    <div class="stat"><b>6</b><small>Batches certified</small><span class="delta">All WADA-accredited</span></div>
+    <div class="stat"><b>148</b><small>Members reached</small><span class="delta">1 school &middot; 4 codes</span></div></div>
+   <h3>Listing approvals <span class="mono">Chris's pre-approval requirement</span></h3>
+   <table class="grid"><thead><tr><th>Brand</th><th>Item</th><th>Discount</th><th>Batch</th><th>Status</th></tr></thead><tbody>
+    ${SHOP.slice(0,7).map(i=>`<tr><td>${i.brand}</td><td>${i.n}</td><td class="mono">${i.pct}%</td>
+     <td class="mono" style="font-size:11px">${i.batch||'&mdash;'}</td>
+     <td><span class="badge ${i.cert?'ok':'ok'}">${i.cert?'BATCH VERIFIED':'APPROVED'}</span></td></tr>`).join('')}
+   </tbody></table>
+   ${red?`<h3>This session's redemptions <span class="mono">live from the parent app</span></h3>
+   <table class="grid"><thead><tr><th>Brand</th><th>Item</th><th>Member discount</th></tr></thead><tbody>
+    ${S.redeemed.map(k=>{const i=SHOP.find(x=>x.k===k);return `<tr><td>${i.brand}</td><td>${i.n}</td><td class="mono" style="color:#4ecf96">${i.pct}%</td></tr>`}).join('')}
+   </tbody></table>`:`<h3>This session's redemptions</h3><p style="font-size:12.5px;color:var(--ink3)">None yet. Switch to <b style="color:var(--ink)">Parent app</b>, open Shop and tap an item &mdash; it appears here immediately.</p>`}
+   <p style="font-size:11.5px;color:var(--ink3);margin-top:18px">Brand names are illustrative. Individual member data is structurally unavailable to this portal.</p>
+  </div></div>`+notes();
+}
+function pvToggle(){return `<div class="seg" style="margin-right:8px">
+ <button class="${S.pv!=='principal'?'on':''}" onclick="S.pv='rewards';render()">Supplier</button>
+ <button class="${S.pv==='principal'?'on':''}" onclick="S.pv='principal';render()">Principal sponsor</button></div>`}
+function renderPrincipal(){
+ return `<div class="desk">
+  <div class="desk-head"><span style="width:42px;height:42px;border-radius:50%;background:${PRINCIPAL.c};border:2.5px solid #fff;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:12px">${PRINCIPAL.mark}</span>
+   <div><h2>${PRINCIPAL.name} &mdash; principal sponsor</h2><div class="sub2">Funds the HNS Fund and school equipment &mdash; not premiums</div></div>
+   <span class="spacer"></span>${pvToggle()}
+   <button class="tbtn" onclick="alert('B-BBEE SED evidence pack (PDF) generated. Demo.')">${ic('dl',14)} SED pack</button></div>
+  <div class="desk-body">
+   <div class="banner"><b>Illustrative sponsor.</b> ${PRINCIPAL.name} is a worked example of a principal sponsorship. <b>Nothing is signed</b> &mdash; replace before this goes in front of anyone who might assume otherwise.</div>
+   <div class="statrow">
+    <div class="stat"><b>${rand(FUND.balance)}</b><small>Fund balance</small></div>
+    <div class="stat"><b>${FUND.supported}</b><small>Players supported</small></div>
+    <div class="stat"><b>R10 000</b><small>School equipment</small><span class="delta">Spine boards, courses</span></div>
+    <div class="stat"><b>148</b><small>Members reached</small></div></div>
+   <h3>What the sponsorship funds</h3>
+   <table class="grid"><tbody>
+    <tr><td>Contribution to the Catastrophic HNS Fund</td><td class="mono" style="text-align:right">R7 500</td></tr>
+    <tr><td>School medical equipment</td><td class="mono" style="text-align:right">R10 000</td></tr>
+    <tr><td>Socio-economic development spend</td><td style="text-align:right"><span class="badge ok">ELIGIBLE</span></td></tr>
+    <tr><td>Premium subsidy</td><td style="text-align:right"><span class="badge off">NOT FUNDED</span></td></tr>
+   </tbody></table>
+   <p style="font-size:11.5px;color:var(--ink3);margin-top:18px">No individual member is visible to a sponsor. No platform margin appears in either view, by design.</p>
+  </div></div>`+notes();
+}
+
+/* ============ NOTES ============ */
+function notes(){
+ const n={
+  parent:['<b>Five tabs exactly as Chris asked:</b> Profile, OnePlan, Emergency, Shop, More.',
+   '<b>OnePlan &rarr; Onboard a new player.</b> Watch step 4 &mdash; the journey hands off to an <b>Oneplan-hosted</b> screen for disclosure and consent, skinned to feel native. Seamless for the member, no FAIS exposure for HPS.',
+   '<b>Emergency</b> has all four pathways. 1 and 4 are functional; 2 and 3 are walkthroughs marked PHASE 2.',
+   'Run pathway 4 (concussion) to the end &mdash; it starts a 6-week protocol and <b>blocks the coach portal from selecting the player</b>.',
+   '<b>Shop</b> shows % discounts, approved-listing badges, and supplements open a batch certificate.',
+   'The red emergency bar is pinned above the tab bar on the Emergency tab and never disappears.'],
+  dependant:['Scoped to one child: own cover only, no premiums, no emergency flow, no buying.',
+   'Three tabs, and Blue Card status is visible if a protocol is running.',
+   '"Tell my parent" sends a real notification &mdash; check the Profile tab bell in the Parent app.'],
+  coach:['Not in Chris&rsquo;s spec. It is here because pathway 4 starts on a field.',
+   'Switch squads: rugby and netball, to show it is not a rugby-only product.',
+   'Run the concussion pathway in the Parent app first, then come back &mdash; <b>Thabo shows BLUE CARD and cannot be selected</b>.',
+   '<b>Nomvula Sithole</b> is uninsured: only the HNS Fund applies.'],
+  school:['24% opt-in penetration &mdash; honest for parent-pay, and the argument for fee bundling.',
+   'Netball and hockey are 64 of 148. The rugby-only assumption understates the book.',
+   'Blue Card protocols surface here too, so the school knows who cannot play.',
+   'Everything done in the other personas lands in the activity log.'],
+  partner:['Two views: <b>Supplier</b> (listings and redemptions) and <b>Principal sponsor</b>.',
+   'The listing approvals table is Chris&rsquo;s "pre-approve the listings" requirement, with batch verification.',
+   'Redeem in the Parent app Shop and it appears here immediately.',
+   'Premium subsidy is marked <b>NOT FUNDED</b> in the sponsor view. No platform margin appears in either.']
+ }[S.persona];
+ const flag=S.persona==='parent'
+  ?'<b>Naming flag:</b> the tab is labelled "OnePlan" as Chris asked. Recommend "My Cover" or "Policy" instead, with "administered by Oneplan" inside &mdash; a hard-coded underwriter breaks if Insurance Partner ever takes it on.'
+  :S.persona==='coach'?'<b>Scope flag:</b> the coach portal is missing from Chris&rsquo;s list. Put it back into phase 1.':'';
+ return `<div class="notes"><h4>Presenter notes &middot; ${S.persona}</h4><ul>${n.map(x=>`<li>${x}</li>`).join('')}</ul>
+ ${flag?`<div class="flag">${flag}</div>`:''}
+ <div class="disc"><b>Demonstration only &mdash; not an offer of insurance.</b> Every sponsor and supplier name is a <b>generic placeholder</b>; no real company is named and none is a signed partner. Player names, member numbers, references, balances and savings are fictional. Cover limits are from the Oneplan SportActive brief and unverified. &quot;MatchFit&quot; is an unregistered working name pending trademark clearance.</div></div>`;
+}
+
+/* ============ RENDER ============ */
+function render(){
+ const v={parent:renderParent,dependant:renderDependant,coach:renderCoach,school:renderSchool,partner:renderPartner}[S.persona]();
+ $('stage').innerHTML=v;
+ document.querySelectorAll('.phone .scr').forEach(scr=>{
+   const b=scr.querySelector('.body');
+   if(b&&b.scrollHeight-b.clientHeight>6)scr.setAttribute('data-scrolls','');
+ });
+}
+renderShell();
+if(S.booting) bootSplash();
+</script>
+</body>
+</html>

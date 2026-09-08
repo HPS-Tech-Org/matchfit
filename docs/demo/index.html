@@ -137,6 +137,9 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .tbtn{font-size:11.5px;font-weight:600;color:var(--ink-2);border:1px solid var(--line-hard);padding:7px 13px;border-radius:9px;background:var(--surface)}
 .tbtn:hover{color:var(--ink)}
 .tbtn.on{background:var(--brand-1);color:var(--on-brand);border-color:var(--brand-1)}
+a.tbtn{text-decoration:none;display:inline-block}
+a.tbtn.try{border-color:var(--ok-text);color:var(--ok-text);font-weight:700}
+a.tbtn.try:hover{background:var(--tint-ok)}
 [data-theme="dark"] .tbtn.on{background:var(--ok-text);color:var(--on-accent);border-color:var(--ok-text)}
 
 /* device frames */
@@ -361,6 +364,7 @@ h3.dh span{font-family:var(--mono);font-size:8.5px;color:var(--muted-1);letter-s
     <div class="toolbar">
       <div class="t" id="stitle"></div>
       <span class="sp"></span>
+      <a class="tbtn try" id="tTry" hidden>Try this flow &rarr;</a>
       <button class="tbtn" id="tFlow">Flow map</button>
       <button class="tbtn" id="tTheme">Dark</button>
     </div>
@@ -700,7 +704,7 @@ const SCREENS=[
   <div style="display:flex;gap:7px;padding:13px 15px 0;overflow-x:auto">${['Boots','Apparel','Protective','Supplements','Recovery'].map((c,i)=>`<span style="flex:none;font-size:10px;font-weight:700;padding:7px 13px;border-radius:99px;border:1px solid ${i===0?'var(--brand-1)':'var(--line)'};background:${i===0?'var(--brand-1)':'var(--surface)'};color:${i===0?'var(--on-brand)':'var(--ink-2)'}">${c}</span>`).join('')}</div>
   <div class="grid2" style="margin-top:13px">
     ${tile(ic('boot',17),'var(--tint-rugby)','var(--sp-rugby)','Sportswear partner A','Firm-ground match boots',15,['APPROVED','ok'])}
-    ${tile(ic('boot',17),'var(--tint-netball)','var(--netball-text)','Sportswear partner B','Forward's rugby boots',12,['APPROVED','ok'])}
+    ${tile(ic('boot',17),'var(--tint-netball)','var(--netball-text)','Sportswear partner B','Forward&rsquo;s rugby boots',12,['APPROVED','ok'])}
     ${tile(ic('guard',17),'var(--tint-hockey)','var(--sp-hockey)','Protective gear partner','Custom-fit mouthguard',20,['APPROVED','ok'])}
     ${tile(ic('flask',17),'var(--tint-ok)','var(--ok-text)','Supplement partner A','Whey recovery blend 1kg',15,['BATCH &#10003;','info'])}
   </div>
@@ -915,7 +919,7 @@ const SCREENS=[
   <h3 class="dh">Listing approvals <span>pre-approval requirement</span></h3>
   <table class="g"><thead><tr><th>Brand</th><th>Item</th><th>Member discount</th><th>Batch</th><th>Status</th></tr></thead><tbody>
    ${[['Sportswear partner A','Firm-ground match boots','15%','&mdash;','APPROVED','ok'],
-      ['Sportswear partner B','Forward's rugby boots','12%','&mdash;','APPROVED','ok'],
+      ['Sportswear partner B','Forward&rsquo;s rugby boots','12%','&mdash;','APPROVED','ok'],
       ['Protective gear partner','Custom-fit mouthguard','20%','&mdash;','APPROVED','ok'],
       ['Supplement partner A','Whey recovery blend 1kg','15%','27-0491','BATCH VERIFIED','info'],
       ['Supplement partner B','Junior multivitamin','12%','27-0388','BATCH VERIFIED','info']]
@@ -1014,6 +1018,18 @@ const FLOW=[
 /* ============================================================
    RENDER / ROUTER
    ============================================================ */
+/* Where each screen hands off to in the working demo (docs/app).
+   Deliberately a lookup rather than a key on each SCREENS entry: the scoping
+   artefact must stay readable without the working demo existing at all. */
+const TRY={
+  M2:'parent&t=profile',   M3:'parent&t=oneplan',   M4:'parent&t=oneplan',
+  M5:'parent&t=oneplan',   M6:'parent&t=emergency', M7:'parent&t=emergency',
+  M8:'parent&t=emergency', M9:'parent&t=shop',      M10:'parent&t=shop',
+  M11:'parent&t=more',     M12:'parent&t=oneplan',
+  D1:'dependant', C1:'coach', C2:'coach', S1:'school',
+  X1:'partner',   X2:'partner&pv=principal'
+};
+
 const byApp = SCREENS.reduce((m,s)=>{(m[s.app]=m[s.app]||[]).push(s);return m},{});
 
 function renderRail(activeId){
@@ -1072,11 +1088,15 @@ function route(){
     title.innerHTML=`<span>&#9673;</span>Flow map`;
     stage.innerHTML=renderFlow(); renderRail('FLOW'); renderNotes(null);
     document.getElementById('tFlow').classList.add('on');
+    document.getElementById('tTry').hidden=true;
     window.scrollTo(0,0); return;
   }
   document.getElementById('tFlow').classList.remove('on');
   const s=SCREENS.find(x=>x.id===id)||SCREENS[0];
   title.innerHTML=`<span>${s.id}</span>${s.name}`;
+  const tryBtn=document.getElementById('tTry');
+  if(TRY[s.id]){ tryBtn.href=`../app/?p=${TRY[s.id]}&skip=1&from=${s.id}`; tryBtn.hidden=false; }
+  else { tryBtn.hidden=true; }
   stage.innerHTML = s.frame==='desk'
     ? `<div class="desk"><div class="chrome"><i></i><i></i><i></i><div class="url">app.matchfit.co.za/${s.id.toLowerCase()}</div></div><div class="dbody">${s.html()}</div></div>`
     : `<div class="phone"><div class="screen${s.dark?' dk':''}">${s.html()}</div></div>`;

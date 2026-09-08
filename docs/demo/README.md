@@ -139,6 +139,24 @@ numbers do not align and the whole thing looks amateur.
 
 ---
 
+## The "Try this flow" button
+
+`TRY` maps a screen ID to a persona and tab in the working demo at `../app/`:
+
+```js
+const TRY={ M6:'parent&t=emergency', C1:'coach', X2:'partner&pv=principal', ... };
+```
+
+Add a screen ID to `TRY` and the button appears; leave it out and the button hides. It is a
+lookup rather than a key on each `SCREENS` entry on purpose — **this file must stay readable and
+correct even if `docs/app/` does not exist.**
+
+The link carries `&from=<id>` so the working demo's "Back to the spec" button returns to the
+screen the viewer came from. Unknown persona or tab values in the URL are ignored rather than
+thrown, so a stale link can never land a client on a blank screen.
+
+---
+
 ## Placeholder names
 
 Sponsors and suppliers are **generic placeholders** by design: "National Motor Group", "Insurance
