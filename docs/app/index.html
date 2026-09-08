@@ -40,9 +40,10 @@ svg.ic{display:block;flex:none}
 .spacer{flex:1}
 .tbtn{font-size:11.5px;color:var(--ink3);border:1px solid var(--line);padding:8px 13px;border-radius:9px;transition:.15s}
 .tbtn:hover{color:var(--ink);border-color:var(--ink3)}
-.stage{display:flex;gap:36px;align-items:flex-start;justify-content:center;flex-wrap:wrap}
+.stage{display:flex;gap:28px;align-items:flex-start;justify-content:center;flex-wrap:wrap}
 .phonewrap{position:relative;flex:none}
 .glow{position:absolute;inset:-60px -80px;border-radius:50%;filter:blur(70px);opacity:.15;pointer-events:none}
+.foot{width:100%;text-align:center;font-size:10.5px;color:var(--ink3);line-height:1.6;max-width:820px;margin:8px auto 0;padding-top:14px;border-top:1px solid var(--line)}
 .notes{width:288px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px 20px;font-size:12.5px;color:var(--ink2)}
 .notes h4{margin:0 0 10px;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--brass);font-family:"IBM Plex Mono",monospace;font-weight:600}
 .notes ul{margin:0;padding-left:16px}
@@ -247,7 +248,7 @@ table.grid tr:last-child td{border-bottom:none}
 <body>
 <div class="shell">
   <div class="topbar">
-    <div class="logo">MatchFit<small>Platform demo &middot; v2 &middot; Chris's 5-section scope</small></div>
+    <div class="logo">MatchFit<small>Platform demo &middot; v2</small></div>
     <div class="seg" id="personaSeg"></div>
     <span class="spacer"></span>
     <button class="tbtn" onclick="replaySplash()">&#9654; Splash</button>
@@ -1088,37 +1089,12 @@ function renderPrincipal(){
   </div></div>`+notes();
 }
 
-/* ============ NOTES ============ */
+/* ============ FOOTER ============ */
+/* Presenter notes live in the scoping demo (../demo/), not here. The working
+   demo shows only the product, plus the one line that must stay on a public
+   insurance demo. */
 function notes(){
- const n={
-  parent:['<b>Five tabs exactly as Chris asked:</b> Profile, OnePlan, Emergency, Shop, More.',
-   '<b>OnePlan &rarr; Onboard a new player.</b> Watch step 4 &mdash; the journey hands off to an <b>Oneplan-hosted</b> screen for disclosure and consent, skinned to feel native. Seamless for the member, no FAIS exposure for HPS.',
-   '<b>Emergency</b> has all four pathways. 1 and 4 are functional; 2 and 3 are walkthroughs marked PHASE 2.',
-   'Run pathway 4 (concussion) to the end &mdash; it starts a 6-week protocol and <b>blocks the coach portal from selecting the player</b>.',
-   '<b>Shop</b> shows % discounts, approved-listing badges, and supplements open a batch certificate.',
-   'The red emergency bar is pinned above the tab bar on the Emergency tab and never disappears.'],
-  dependant:['Scoped to one child: own cover only, no premiums, no emergency flow, no buying.',
-   'Three tabs, and Blue Card status is visible if a protocol is running.',
-   '"Tell my parent" sends a real notification &mdash; check the Profile tab bell in the Parent app.'],
-  coach:['Not in Chris&rsquo;s spec. It is here because pathway 4 starts on a field.',
-   'Switch squads: rugby and netball, to show it is not a rugby-only product.',
-   'Run the concussion pathway in the Parent app first, then come back &mdash; <b>Thabo shows BLUE CARD and cannot be selected</b>.',
-   '<b>Nomvula Sithole</b> is uninsured: only the HNS Fund applies.'],
-  school:['24% opt-in penetration &mdash; honest for parent-pay, and the argument for fee bundling.',
-   'Netball and hockey are 64 of 148. The rugby-only assumption understates the book.',
-   'Blue Card protocols surface here too, so the school knows who cannot play.',
-   'Everything done in the other personas lands in the activity log.'],
-  partner:['Two views: <b>Supplier</b> (listings and redemptions) and <b>Principal sponsor</b>.',
-   'The listing approvals table is Chris&rsquo;s "pre-approve the listings" requirement, with batch verification.',
-   'Redeem in the Parent app Shop and it appears here immediately.',
-   'Premium subsidy is marked <b>NOT FUNDED</b> in the sponsor view. No platform margin appears in either.']
- }[S.persona];
- const flag=S.persona==='parent'
-  ?'<b>Naming flag:</b> the tab is labelled "OnePlan" as Chris asked. Recommend "My Cover" or "Policy" instead, with "administered by Oneplan" inside &mdash; a hard-coded underwriter breaks if Insurance Partner ever takes it on.'
-  :S.persona==='coach'?'<b>Scope flag:</b> the coach portal is missing from Chris&rsquo;s list. Put it back into phase 1.':'';
- return `<div class="notes"><h4>Presenter notes &middot; ${S.persona}</h4><ul>${n.map(x=>`<li>${x}</li>`).join('')}</ul>
- ${flag?`<div class="flag">${flag}</div>`:''}
- <div class="disc"><b>Demonstration only &mdash; not an offer of insurance.</b> Every sponsor and supplier name is a <b>generic placeholder</b>; no real company is named and none is a signed partner. Player names, member numbers, references, balances and savings are fictional. Cover limits are from the Oneplan SportActive brief and unverified. &quot;MatchFit&quot; is an unregistered working name pending trademark clearance.</div></div>`;
+ return `<div class="foot">Demonstration only &mdash; not an offer of insurance. Every sponsor and supplier name is a generic placeholder; no real company is named. Names, numbers, balances and savings are fictional. &ldquo;MatchFit&rdquo; is an unregistered working name.</div>`;
 }
 
 /* ============ RENDER ============ */
