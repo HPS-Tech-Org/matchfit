@@ -41,8 +41,9 @@ Open `docs/demo/index.html` in any browser. No build step, no dependencies, no s
 
 Hosted:
 
-- Scoping demo — **https://hps-tech-org.github.io/matchfit/**
-- Working demo — **https://hps-tech-org.github.io/matchfit/app/**
+- **Roadmap — https://hps-tech-org.github.io/matchfit/#ROADMAP** (start here)
+- Scoping demo — https://hps-tech-org.github.io/matchfit/
+- Working demo — https://hps-tech-org.github.io/matchfit/app/
 
 ## What it is
 
@@ -61,26 +62,35 @@ column, in three forms:
 Not the app and not its starting code. No backend, no state, no persistence, no routing library.
 It gets thrown away, and that is fine — its output is decisions.
 
-## The decisions it is waiting on
+## The roadmap
 
-Six amber questions carry real cost. In rough order of what they move:
+Four phases, each shippable on its own. Open the **Roadmap** view in the demo for the full version;
+every screen also carries a phase badge in the rail.
 
-1. **Onboarding pattern (M5).** Oneplan-hosted handoff, as drawn, keeps HPS outside FAIS. Fully
-   native in-app onboarding is more seamless and makes MatchFit the party presenting the product,
-   which needs an FSP with a rep register, compliance officer, PI cover and Ombud exposure.
-   **This one changes the price of the whole build.**
-2. **Shop payment model (M9).** Vouchers redeemed at the partner, or card checkout in-app.
-   Checkout is roughly 3–4× the build and brings PCI scope, fulfilment and returns with it. It
-   also decides who is the seller of record, and therefore who owns Consumer Protection duties.
-3. **Facility directory (M7).** Nobody owns a hospital list tagged for casualty, ICU and trauma
-   capability. It gates emergency pathways 1 and 2 both, and wrong data sends a child to the
-   wrong hospital.
-4. **Emergency dispatch (M6).** API or phone call? Whether pathway 2 can be automated at all
-   depends on the answer, and nobody has asked ER24 yet.
-5. **The insured-only contradiction (M6).** Emergency is scoped to insured players, but the HNS
-   Fund pays out whether or not a player is insured. So who triggers it for an uninsured player?
-6. **Dependant login age floor (M2, D1).** POPIA needs the competent person's consent for a
-   child's data. A 16-year-old with their own login is uncontroversial; a 10-year-old is not.
+| Phase | Scope | Screens |
+|---|---|---|
+| **1 · MVP** | Web app only. Onboard policyholders over 18 and hand the application to Oneplan. Proven live at a Golden Oldies tournament: activation stand, QR code, policy sold on the spot. | M1–M5 |
+| **2 · Schools & dependants** | Whole-school onboarding via fee inclusion or school referral. Dependant logins. Emergency and concussion pathways. Native iOS and Android. | M6–M8, D1, C1–C2, S1 |
+| **3 · Shop & cross-sell** | Member pricing, batch track-and-trace, referrals for additional insurance to policyholders over 18. | M9–M12, X1–X2 |
+| **4 · Sports integration** | A tracker with rewards, and progressive feature expansion. Last, deliberately. | — |
+
+## What we need from Oneplan to scope and price
+
+**Phase 1 is blocked on two answers, and only two:**
+
+1. **The onboarding endpoint.** Field-level payload, authentication, validation rules, sandbox
+   access, and what a successful response returns.
+2. **Premium collection.** Oneplan-initiated DebiCheck mandates, card strikes or debit orders —
+   it decides whether the app captures a mandate or simply hands over.
+
+Also for Phase 1: whether supporting documents are needed at onboarding, what communication
+Oneplan sends once a policy is active, and how claims are handled before the app carries them.
+
+**Phase 2** turns on whether Oneplan has claims APIs, whether premiums are collected in-app, and
+whether we build school- and club-specific tenants. **Phase 3** turns on who holds the merchant
+account, and what regulatory review each new revenue line needs.
+
+Every one of these sits on a screen in the demo as an amber note, next to the thing it affects.
 
 ## Two things missing from the client's scope
 

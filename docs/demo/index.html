@@ -64,6 +64,12 @@
   --chip:linear-gradient(135deg,#E8CF7E,#C9A24B 60%,#A9843A);
   --qr-quiet:#FFFFFF;      /* a QR quiet zone must stay white or a scanner fails */
 
+  /* --- roadmap phases. Four steps, so they separate by lightness AND hue --- */
+  --ph1:#14764D; --ph1-t:#E7F5EC;
+  --ph2:#17457E; --ph2-t:#E6EDF6;
+  --ph3:#7A4E9C; --ph3-t:#F0E9F6;
+  --ph4:#6B6F76; --ph4-t:#ECEEF0;
+
   /* --- text ON a brand fill. Also fixed: a brand fill does not invert. --- */
   --on-brand:#FFFFFF;     /* on brand-1 / brand-4 / partner fills */
   --on-accent:#10151A;    /* on the light accents dark mode uses for fills */
@@ -81,6 +87,11 @@
    2. DARK — re-points tokens only. brand-1/2 and --grad stay put.
    ============================================================ */
 [data-theme="dark"]{
+  --ph1:#5BC28C; --ph1-t:#12281E;
+  --ph2:#7FA3E8; --ph2-t:#16203A;
+  --ph3:#C3A2E0; --ph3-t:#241C33;
+  --ph4:#A9AFB6; --ph4-t:#23272B;
+
   --ink:#E8EAEC; --ink-2:#A7ADB2; --muted-1:#959CA3; --muted-2:#6E757C;
 
   --canvas:#0C0F12; --canvas-screen:#12171C; --surface:#1A2027; --surface-2:#222932;
@@ -126,7 +137,31 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 [data-theme="dark"] .rail a.on{border-left-color:var(--ok-text)}
 .rail a .sid{font-family:var(--mono);font-size:9px;color:var(--muted-1);width:22px;flex:none}
 .rail a.on .sid{color:var(--ink-2)}
-.rail a .dot{width:6px;height:6px;border-radius:50%;background:var(--partner-line);flex:none;margin-left:auto}
+.rail a .dot{width:6px;height:6px;border-radius:50%;background:var(--partner-line);flex:none;margin-left:6px}
+.rail a .ph{font-family:var(--mono);font-size:8px;font-weight:700;letter-spacing:.06em;padding:2px 6px;
+  border-radius:20px;flex:none;margin-left:auto}
+.ph1{background:var(--ph1-t);color:var(--ph1)} .ph2{background:var(--ph2-t);color:var(--ph2)}
+.ph3{background:var(--ph3-t);color:var(--ph3)} .ph4{background:var(--ph4-t);color:var(--ph4)}
+.toolbar .phbig{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;
+  padding:5px 11px;border-radius:20px}
+
+/* roadmap */
+.rmwrap{width:100%;max-width:900px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px 24px 26px}
+.rmwrap h3{margin:0 0 4px;font-size:16px;font-weight:800;letter-spacing:-.02em}
+.rmwrap .rsub{font-size:12px;color:var(--ink-2);margin:0 0 22px;max-width:66ch}
+.phase{border:1px solid var(--line);border-left:5px solid var(--pc);border-radius:11px;padding:16px 18px;margin-bottom:14px;background:var(--surface)}
+.phase .ptop{display:flex;align-items:baseline;gap:11px;flex-wrap:wrap;margin-bottom:9px}
+.phase .ptop b{font-size:14.5px;font-weight:800;letter-spacing:-.018em}
+.phase .ptop .tag{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.09em;padding:3px 8px;border-radius:20px;background:var(--pt);color:var(--pc)}
+.phase .ptop .when{margin-left:auto;font-family:var(--mono);font-size:9px;color:var(--muted-1);letter-spacing:.07em;text-transform:uppercase}
+.phase p{margin:0 0 11px;font-size:13px;color:var(--ink-2);max-width:70ch}
+.phase .chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:11px}
+.phase .chips a{font-family:var(--mono);font-size:9.5px;font-weight:600;text-decoration:none;padding:4px 9px;border-radius:20px;background:var(--surface-2);color:var(--ink-2);border:1px solid var(--line)}
+.phase .chips a:hover{background:var(--pt);color:var(--pc);border-color:var(--pc)}
+.phase .qs{margin:0;padding:0;list-style:none}
+.phase .qs li{font-size:12.5px;line-height:1.55;color:var(--warn-text);background:var(--tint-warn);border-radius:9px;padding:9px 12px;margin-bottom:7px}
+.phase .qs li b{color:var(--warn-text)}
+.phase .qh{font-family:var(--mono);font-size:8.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted-1);margin:0 0 7px;font-weight:600}
 
 /* centre stage */
 .stage{overflow-y:auto;padding:20px 24px 60px;display:flex;flex-direction:column;align-items:center}
@@ -365,6 +400,7 @@ h3.dh span{font-family:var(--mono);font-size:8.5px;color:var(--muted-1);letter-s
       <div class="t" id="stitle"></div>
       <span class="sp"></span>
       <a class="tbtn try" id="tTry" hidden>Try this flow &rarr;</a>
+      <button class="tbtn" id="tRoad">Roadmap</button>
       <button class="tbtn" id="tFlow">Flow map</button>
       <button class="tbtn" id="tTheme">Dark</button>
     </div>
@@ -515,12 +551,13 @@ const TABS_M=[['profile','user','Profile'],['cover','shield','OnePlan'],['em','s
 const SCREENS=[
 
 /* ---------- MEMBER APP ---------- */
-{id:'M1',app:'Member app',name:'Launch & install',
+{id:'M1',phase:1,app:'Member app',name:'Launch & install',
  notes:[
-  'Cold open. The loader cycles the four field outlines &mdash; rugby, soccer, hockey, netball &mdash; then lands on the OnePlan tab. It exists to say "this is not a rugby-only product" before a single word is read.',
-  ['new','Four codes are first-class from day one. Netball is the largest school sport by female participation in South Africa and the original brief ignored it entirely.'],
-  'Underwriter is named in small type at the foot: required disclosure, and it does trust work at the same time.',
-  ['q','Phase 1 as an installable PWA or straight to the app stores? A PWA keeps Apple review off the critical path and updates instantly, but iOS push needs add-to-home-screen first &mdash; and lapse reminders are a safety feature. Store presence via a Capacitor wrapper is 2&ndash;3 weeks and roughly R60k&ndash;R90k. Decide against the launch date, not on preference.']],
+  'Cold open on the web app. The loader cycles the four field outlines so the product reads as multi-code from the first second rather than rugby-only.',
+  ['new','<b>Phase 1 is a web app, not a native one.</b> A QR code at the activation stand opens it directly &mdash; no app store, no install, no friction at a rugby tournament.'],
+  ['new','Native iOS and Android builds arrive in Phase 2, once the onboarding flow has been proven with real policyholders.'],
+  'HPS Tech is credited at the foot. The underwriter and licensed-manager disclosure sits on the plan and handoff screens, where the product is actually presented.',
+ ],
  html:()=>`${sb()}
   <div class="body" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;background:var(--brand-1)">
    <div style="width:170px;color:var(--sp-rugby)">${field('rugby',{sw:5})}</div>
@@ -532,13 +569,14 @@ const SCREENS=[
    <div style="position:absolute;bottom:26px;left:0;right:0;text-align:center;font-family:var(--mono);font-size:7.5px;letter-spacing:.18em;color:rgba(255,255,255,.4);text-transform:uppercase">Powered by HPS Tech</div>
   </div>`},
 
-{id:'M2',app:'Member app',name:'Profile',
+{id:'M2',phase:1,app:'Member app',name:'Profile',
  notes:[
-  'User information only, as scoped. The principal member holds the policies; cover applies to the dependants, not to them. That sentence is on the screen because it is the single most misunderstood thing about the product.',
-  ['new','Emergency medical consent is captured per dependant at onboarding. It is what lets a coach act on the day instead of phoning around for permission.'],
-  'Payment methods live here because the Shop needs them. Nothing in the insurance flow ever touches a member card.',
-  ['q','What is the minimum age for a dependant to hold their own login? A 16-year-old is straightforward, a 10-year-old is not. Under POPIA a child’s data needs the competent person’s consent, so the principal member must be able to grant and revoke each login. Pick an age floor now &mdash; retrofitting consent across an existing user base is a migration, not a setting.'],
-  ['q','Does the principal member see the dependant’s in-app activity? Transparency helps safeguarding; visibility of a teenager’s health-adjacent activity is a different conversation. Decide before the login ships.']],
+  'The policyholder record. In Phase 1 this is the whole of it &mdash; an individual over 18 taking cover for themselves.',
+  ['new','<b>Phase 1 is 18-plus, self-cover only.</b> The dependants block shown here is Phase 2, when schools and parents holding policies for their children come on.'],
+  ['q','<b>Phase 2 &middot; payments.</b> Do premiums need to be collected in the app, or does Oneplan keep collection throughout? It decides whether the app ever needs a payment provider and a merchant account, which is one of the larger cost lines in Phase 2.'],
+  ['q','<b>Phase 2 &middot; dependant logins.</b> What is the minimum age for a dependant to hold their own login, and who grants and revokes it? Under POPIA a child&rsquo;s data needs the competent person&rsquo;s consent, so the policyholder has to be able to switch it off. Worth fixing an age floor before the first school signs.'],
+  ['q','<b>Phase 4 &middot; the sports tracker.</b> Training, matches and fitness, shown greyed here. Is it a differentiator worth building, or a distraction from cover? It is the one feature with no insurance rationale, so it needs a commercial one.'],
+ ],
  html:()=>`${sb()}${abar(MEM.ini,'Principal member &middot; '+MEM.no,MEM.name)}
   ${sect('My details','Editable')}
   ${kv([['Mobile',MEM.mobile],['Email',MEM.email],['ID number','8&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;'],['Address',MEM.addr]])}
@@ -553,13 +591,14 @@ const SCREENS=[
   <div style="height:18px"></div>
   </div>${tabbar(TABS_M,0)}`},
 
-{id:'M3',app:'Member app',name:'OnePlan &mdash; cover',ix:1,
+{id:'M3',phase:1,app:'Member app',name:'OnePlan &mdash; cover',ix:1,
  notes:[
-  'The policy home. Cover card, benefit limits, and the entry point to onboarding another player.',
-  ['new','One card per dependant, sport-coloured, with a signed offline token valid 72 hours. A coach at an away fixture with no signal can still verify cover.'],
-  'Benefit limits are read live from Oneplan, not hardcoded. The R500 claims management fee is shown here so it is never a surprise at claim time.',
-  ['q','The tab is labelled "OnePlan" because that is what Chris asked for. It hard-codes the underwriting manager into permanent navigation, and the brief itself contemplates Insurance Partner taking over underwriting. "My Cover" with "administered by Oneplan" as supporting text costs nothing and survives a change of underwriter. Worth one sentence in the reply.'],
-  ['q','Does the physical Oneplan card stay, or is virtual-only acceptable? The physical card works with no phone, no data and no battery, which matters at a rural away fixture. It also costs R160 and takes 30 days from first debit &mdash; which is a cover gap at season start if a player signs up in round one.']],
+  'What the policyholder sees once Oneplan confirms the policy: cover state, the benefit limits and the card. Phase 1 ends here &mdash; onboard, submit, see your cover.',
+  ['new','Benefit limits are read from Oneplan rather than hardcoded, so a product change on their side does not need an app release.'],
+  ['q','<b>Phase 1 &middot; what does Oneplan send?</b> Once a policyholder is onboarded, what communication comes from Oneplan &mdash; welcome mail, policy schedule, card despatch, payment confirmation? The app must not duplicate it and must not leave a gap either.'],
+  ['q','<b>Phase 1 &middot; claims.</b> How are claims processed during Phase 1, and does the app need to set out the claims process? If a policyholder claims through the call centre the app still has to tell them how, or the first injury becomes a support call to us.'],
+  ['q','<b>Phase 2 &middot; the card.</b> Is a digital card viable, or do we stay with physical cards initially? A physical card works with no phone, no data and no battery, which matters at a rural away fixture. A digital one is instant and free to reissue.'],
+ ],
  html:()=>{const tot=DEPS.reduce((a,d)=>a+d.cover,0),used=DEPS.reduce((a,d)=>a+d.used,0);
   return `${sb()}${hd('OnePlan','Your ActiveCare policies, cover card and onboarding.')}
   ${hero('2 policies &middot; winter season 2027',rnd(tot),'total cover','Thabo &middot; Rugby &nbsp;&middot;&nbsp; Lerato &middot; Netball',Math.round((tot-used)/tot*100),rnd(tot-used)+' remaining','Verified 12 min ago','rugby')}
@@ -572,12 +611,14 @@ const SCREENS=[
   ${note('info','Product terms and advice are provided by <b>Oneplan</b> as the licensed underwriting manager. MatchFit is the servicing platform.')}
   <div style="height:18px"></div></div>${tabbar(TABS_M,1)}`}},
 
-{id:'M4',app:'Member app',name:'Onboard &mdash; plan',
+{id:'M4',phase:1,app:'Member app',name:'Onboard &mdash; plan',
  notes:[
-  'Step 1 to 3 of onboarding: who, which sport and school, then the plan. All native, all inside MatchFit, because none of it is product presentation yet &mdash; it is data capture.',
-  ['new','Sport selection drives everything downstream: the accent colour, the cover trigger, the fixture check at claim time, and which coach can look the player up.'],
-  'Two plans only. ActiveCare Season at ' + money(1799) + ' once-off for one code over an 8-month season, or ActiveCare Multi-Sport at ' + money(249) + ' a month for all codes across 12 months.',
-  ['q','The 8-month season plan leaves a 4-month gap. Is a player injured in the off-season at a holiday tournament covered, or not? If not, say so on this screen &mdash; a repudiation discovered in December is worse than a lost sale in February.']],
+  'Plan selection: the 8-month season policy or the 12-month multi-sport policy. Details in, plan picked, submit.',
+  ['new','<b>The core of the Phase 1 MVP.</b> A policyholder scans the QR at the activation stand, enters their details, picks a plan and submits. Nothing else is needed to sell a policy.'],
+  ['q','<b>Phase 1 &middot; supporting documents.</b> Does Oneplan require anything at onboarding beyond the form &mdash; ID, proof of address, a medical declaration? And how should it arrive: uploaded in the app, emailed, or captured on Oneplan&rsquo;s side after handoff?'],
+  ['q','<b>Phase 1 &middot; premium collection.</b> How is the premium initiated and managed &mdash; Oneplan-initiated DebiCheck mandates, card strikes, or debit orders? This is the largest single unknown in the Phase 1 build, because it decides whether the app captures a mandate or simply hands over.'],
+  ['q','The 8-month season plan leaves a four-month gap. Is a player injured at an off-season tournament covered? If not it should be said on this screen &mdash; a repudiation discovered in December is worse than a lost sale in February.'],
+ ],
  html:()=>`${sb()}
   <div style="display:flex;align-items:center;gap:10px;padding:15px 18px 2px"><span style="color:var(--muted-1);font-size:11px;font-weight:700">&larr; Cancel</span><b style="font-size:12.5px">New player</b></div>
   ${hd('Choose a plan','Amahle Mokoena &middot; Hockey &middot; Demo High School')}
@@ -597,13 +638,13 @@ const SCREENS=[
   ${note('warn','A player who only plays one winter code is cheaper on Season. Two codes or a year-round athlete is cheaper on Multi-Sport from month eight.')}
   <div style="height:18px"></div></div>${tabbar(TABS_M,1)}`},
 
-{id:'M5',app:'Member app',name:'Onboard &mdash; handoff',ix:1,
+{id:'M5',phase:1,app:'Member app',name:'Onboard &mdash; handoff',ix:1,
  notes:[
-  '<b>The most important screen in the artefact.</b> Step 4 hands off to an Oneplan-hosted journey for product presentation, disclosure, consent and the record of advice. It is skinned to feel native so the member experiences one continuous flow.',
-  ['new','This is the pattern that keeps HPS outside FAIS. Oneplan presents the product and captures advice; MatchFit passes data and reads status back. The member sees a seamless sign-up. The regulator sees the licensed party doing the licensed act.'],
-  'Contract detail: HPS posts applicant and dependant data, Oneplan returns a policy number, cover state and card token. If the handoff is down, onboarding queues and the member is told plainly rather than shown a spinner.',
-  ['q','<b>The decision that changes the price of the whole build.</b> Chris asked for "the primary onboarding for all clients" and for it to be "seamless". Hosted handoff, as shown here, costs nothing in compliance. Fully native in-app onboarding is more seamless still, but it makes MatchFit the party presenting the product &mdash; which needs the FSP activated, with a rep register, fit-and-proper, CPD, a compliance officer, PI cover and FAIS Ombud exposure. Settle this before a build price is quoted, not after.'],
-  ['q','Does Oneplan already have a hosted onboarding journey we can deep-link into and skin? If "API into the backend" means we build the front end, the answer to the question above is forced.']],
+  'Step 4 hands off to Oneplan for product presentation, disclosure and the record of advice, skinned so the policyholder experiences one continuous flow.',
+  ['new','This keeps the licensed act with the licensed party: Oneplan presents and advises, the app captures data and reads status back. The member sees one seamless sign-up.'],
+  ['q','<b>Phase 1 &middot; the question that unblocks the whole build.</b> What does the Oneplan onboarding endpoint expect? Field-level payload, authentication, validation rules, sandbox access, and what a successful response returns. <b>Nothing can be scheduled or priced until this is documented.</b>'],
+  ['q','<b>Phase 1 &middot; hosted or rendered?</b> Does Oneplan have an onboarding journey we can deep-link into and skin, or does the app render the whole flow? It changes who is presenting the product, and therefore where the compliance obligation sits.'],
+ ],
  html:()=>`${sb()}
   <div class="body ophost">
    <div class="ophead">
@@ -622,13 +663,14 @@ const SCREENS=[
    <div style="padding:0 22px 22px"><p style="font-size:8.5px;color:var(--muted-1);line-height:1.6;text-align:center;margin:0">Hosted by Oneplan. Product presentation, advice and consent are captured by the licensed UMA &mdash; <b>not by MatchFit</b>.</p></div>
   </div>${tabbar(TABS_M,1)}`},
 
-{id:'M6',app:'Member app',name:'Emergency &mdash; pathways',
+{id:'M6',phase:2,app:'Member app',name:'Emergency &mdash; pathways',
  notes:[
-  'Four pathways sharing a tab and sharing nothing else: a facility lookup, a live ambulance dispatch, a multi-party fund approval, and a six-week care pathway. Treating them as one feature is how this gets underestimated.',
-  ['new','Pathways 1 and 4 are phase 1 &mdash; both are workflows we control end to end. Pathways 2 and 3 are phase 2 because they need a dispatch partner and written clinical governance.'],
-  '<b>Non-negotiable design rule:</b> the emergency number is visible and tappable on every screen in this tab, at every moment, including offline, mid-request and on a failed API call. The app is a shortcut to a phone call, never a replacement for one. This is also the first thing a lawyer will ask about.',
-  ['q','<b>A contradiction in the brief that has to be resolved.</b> Chris wrote that Emergency is "for insured persons only", but the Catastrophic HNS Fund pays out whether or not the player is insured &mdash; that is its entire marketing halo. So who triggers pathway 3 for an uninsured player? Presumably the coach portal or the call centre, which is one more reason the coach portal belongs in phase 1.'],
-  ['q','Is emergency dispatch an API or a phone call? ER24 Spineline exists today for HNS. Whether pathway 2 can be automated at all depends on the answer, and nobody has asked yet.']],
+  'Four pathways sharing a tab and sharing nothing else: a facility lookup, an emergency dispatch, a fund approval and a six-week care pathway.',
+  ['new','<b>Phase 2.</b> Phase 1 policyholders claim through Oneplan directly. In-app emergency flows arrive once schools and dependants are on the platform.'],
+  'Design rule: the emergency number stays visible and tappable on every screen in this tab, offline and mid-request. The app is a shortcut to a phone call, never a replacement for one.',
+  ['q','<b>Phase 2 &middot; claims APIs.</b> Does Oneplan have endpoints to submit and process claims, or is claiming a call-centre process? Everything in this tab depends on the answer, and it decides whether Phase 2 is a workflow build or a thin front end over a phone call.'],
+  ['q','Emergency is scoped to insured players, but the catastrophic fund pays out whether or not a player is insured. So who triggers it for an uninsured player &mdash; the coach, or the call centre?'],
+ ],
  html:()=>`${sb('16:48')}${hd('Emergency','Pick what happened. We handle the rest.')}
   ${note('bad','<b>If someone is not breathing or is unconscious, call 112 now.</b> This app is a shortcut, never a replacement for a phone call.')}
   <div style="height:13px"></div>
@@ -641,13 +683,13 @@ const SCREENS=[
   <div class="embar">${ic('phone',15,2.2)} Emergency line <span class="n">010 001 0141</span></div>
   ${tabbar(TABS_M,2)}`},
 
-{id:'M7',app:'Member app',name:'Emergency &mdash; clear funds',ix:1,
+{id:'M7',phase:2,app:'Member app',name:'Emergency &mdash; clear funds',ix:1,
  notes:[
-  'Pathway 1, the common case. Pick the facility, pick an amount within the benefit limit, and the card is loaded before arrival. The four checks run before the member is told anything is payable.',
-  ['new','This is the product’s actual differentiator. Every incumbent school accident policy reimburses after the fact; this clears funds to a card in about a minute so a parent is never asked for a deposit they do not have.'],
-  'Contract detail: card load is an Oneplan API call against the policy. If it fails the member sees the failure and the call-centre number, never a silent retry.',
-  ['q','Where does the facility directory come from? Pathways 1 and 2 both need hospitals tagged for open casualty, ICU and trauma capability. Oneplan may hold a provider list; a capability-tagged directory is a different thing and somebody has to own keeping it current. Wrong data here sends a child to the wrong hospital.'],
-  ['q','Above ' + rnd(250000) + ' the guardian signs the admission form and carries the shortfall. Do we negotiate payer-of-record status and a no-recourse term with a private group, or do we state the limit plainly and let the Fund handle the catastrophic tail? Not deciding is the same as choosing the second, without telling anyone.']],
+  'Pathway 1, the common case. Pick the facility, pick an amount within the benefit limit, and funds clear to the card before arrival.',
+  ['new','<b>Phase 2, and the product&rsquo;s sharpest differentiator.</b> Existing school accident policies reimburse after the fact. Clearing funds before treatment means a family is never asked for a deposit they do not have.'],
+  ['q','<b>Phase 2 &middot; facility data.</b> Where does the hospital list come from, tagged for open casualty, ICU and trauma capability? Oneplan may hold a provider list, but a capability-tagged directory is a different thing and someone has to own keeping it current.'],
+  ['q','<b>Phase 2 &middot; the cover ceiling.</b> Above the per-event limit the policyholder signs the admission form and carries the shortfall. Do we negotiate payer-of-record terms with a hospital group, or state the limit plainly and let the fund handle the catastrophic tail?'],
+ ],
  html:()=>`${sb('16:52')}
   <div style="display:flex;align-items:center;gap:10px;padding:15px 18px 2px"><span style="color:var(--muted-1);font-size:11px;font-weight:700">&larr; Emergency</span><b style="font-size:12.5px">Hospital, no transport</b></div>
   ${hd('Ready to go','Paarl Mediclinic &middot; 4,2 km &middot; 24h casualty')}
@@ -663,13 +705,13 @@ const SCREENS=[
   <div class="embar">${ic('phone',15,2.2)} Emergency line <span class="n">010 001 0141</span></div>
   ${tabbar(TABS_M,2)}`},
 
-{id:'M8',app:'Member app',name:'Emergency &mdash; Blue Card',
+{id:'M8',phase:2,app:'Member app',name:'Emergency &mdash; Blue Card',
  notes:[
-  'Pathway 4, and the most specifiable thing in the product: a scheduled six-week care pathway, not an emergency. Admission, confirmed diagnosis, a protocol timer, then clearance booked from a pre-approved panel.',
-  ['new','<b>The protocol writes through to the coach portal and the school console.</b> Once a Blue Card is active the coach cannot mark the player available for contact play. That is a real safeguarding mechanism working across three different user types, and it is the strongest feature to demo to a headmaster.'],
-  'Only panel doctors can clear a Blue Card. The clearance visit is funded from the ' + rnd(5000) + ' rehabilitation benefit, so there is no reason for a family to skip it.',
-  ['new','Concussion is where school sport is most exposed and least served. Every incumbent product excludes it. Build this one properly first.'],
-  ['q','How often does the approved-panel list change, and who maintains it? A stale panel means a family drives to a doctor who cannot clear their child. This is a small operational commitment that decides whether the feature works.']],
+  'Pathway 4, and the most specifiable thing in the product: a scheduled six-week care pathway, not an emergency. Admission, confirmed diagnosis, protocol timer, clearance from a pre-approved panel.',
+  ['new','<b>Phase 2.</b> The protocol writes through to the coach portal and the school console, so a player under a Blue Card cannot be marked available for contact play. One safeguarding mechanism working across three user types.'],
+  ['new','Concussion is where school sport is most exposed and least served. Existing products exclude it entirely.'],
+  ['q','<b>Phase 2 &middot; the approved panel.</b> Who maintains the list of doctors who can clear a Blue Card, and how often does it change? A stale panel means a family drives to a doctor who cannot clear their child.'],
+ ],
  html:()=>`${sb('17:05')}
   <div style="display:flex;align-items:center;gap:10px;padding:15px 18px 2px"><span style="color:var(--muted-1);font-size:11px;font-weight:700">&larr; Emergency</span><b style="font-size:12.5px">Blue Card issued</b></div>
   ${hd('Blue Card issued','Thabo may not return to play for 6 weeks.')}
@@ -688,14 +730,14 @@ const SCREENS=[
   <div class="embar">${ic('phone',15,2.2)} Emergency line <span class="n">010 001 0141</span></div>
   ${tabbar(TABS_M,2)}`},
 
-{id:'M9',app:'Member app',name:'Shop',
+{id:'M9',phase:3,app:'Member app',name:'Shop',
  notes:[
-  'Categories, pre-approved listings, member pricing shown as a percentage rather than a rand figure so it reads the same whatever the item costs.',
-  ['new','Savings are tracked against premium paid, not against spend. "' + rnd(720) + ' earned back of ' + rnd(3598) + ' premium" is true and defensible. It replaces the brief’s claim that discounts offset the premium.'],
-  '<b>The claim that cannot be made.</b> At a 15% member discount a parent must spend ' + rnd(12000) + ' through the app to recoup a ' + money(1799) + ' premium &mdash; roughly four times a realistic annual sporting budget. Said in a school hall it is both false and a mis-selling exposure.',
-  ['q','<b>The decision that sizes the build.</b> Vouchers or full card checkout? Vouchers mean a single-use code redeemed on the partner’s own store: no PCI scope, no cart, no fulfilment and no returns to handle. Card checkout is roughly three to four times the build and makes MatchFit the retailer, liable for goods it never handles. Chris asked for card payment. Recommend vouchers for phase 1 and let volume justify checkout.'],
-  ['q','The global sportswear brands run strict channel and pricing control and rarely permit third-party discounting of this kind. The supplement and protective-gear suppliers are the realistic launch partners. Do not let a plan depend on a global brand being signed in month one.'],
-  ['q','Who is the seller of record &mdash; the platform or the supplier? It decides who carries returns, refunds, chargebacks and Consumer Protection Act duties, and it has to be settled before supplier contracts are drafted rather than after the first faulty pair of boots.']],
+  'Categories, pre-approved listings, and member pricing shown as a percentage so it reads the same whatever an item costs.',
+  ['new','<b>Phase 3.</b> Savings are tracked against premium paid rather than against spend, which is the honest framing and still motivating.'],
+  '<b>The claim that cannot be made.</b> At a 15% member discount a policyholder would need to spend far more through the app than a realistic annual sporting budget to recoup a premium. Said at an activation stand it is both false and a mis-selling exposure.',
+  ['q','<b>Phase 3 &middot; in-app purchases.</b> Do we facilitate purchases in the app, and if so who holds the merchant account &mdash; HPS, Oneplan, or each supplier? It decides who carries PCI scope, refunds, chargebacks and Consumer Protection duties, and it is the difference between running a catalogue and being a retailer.'],
+  ['q','<b>Phase 3 &middot; supplier appetite.</b> Global sportswear brands run strict channel and pricing control and rarely permit third-party discounting. Which suppliers will realistically sign a member-pricing agreement in year one?'],
+ ],
  html:()=>`${sb('19:20')}${hd('Shop','Member pricing from approved supplier partners.')}
   <div class="card" style="padding:14px 15px;margin-top:13px">
     <div style="display:flex;justify-content:space-between;align-items:baseline;font-size:9.5px;color:var(--muted-1);font-weight:600"><span>Earned back so far</span><b class="num" style="color:var(--ok-text);font-family:var(--mono);font-size:19px;letter-spacing:-.03em">${rnd(720)}</b></div>
@@ -714,13 +756,13 @@ const SCREENS=[
   ${lrow(ic('card',17),'var(--surface-2)','var(--muted-1)','Pay with saved card','Visa &bull;&bull;&bull;&bull; 4182 &middot; needs PCI scope',pill('PHASE 2','warn'))}
   <div style="height:18px"></div></div>${tabbar(TABS_M,3)}`},
 
-{id:'M10',app:'Member app',name:'Shop &mdash; track & trace',
+{id:'M10',phase:3,app:'Member app',name:'Shop &mdash; track & trace',
  notes:[
   'Scan the tub, get the batch, get the certificate. Per-batch records with lab, test date, result and expiry, cached so it works with no signal in a pharmacy aisle.',
-  ['new','<b>The most differentiated feature in the entire product.</b> Professional players get batch-tested supplements with certificates from their union. School players buy from the local pharmacy with zero traceability, and cross-contamination is a live doping problem at schoolboy level. Nobody else solves this.'],
-  'Append-only log, so a certificate cannot be quietly swapped after the fact. The same admin console that stores batches also runs the listing pre-approval Chris asked for.',
-  ['new','Only accept supplement partners who can supply per-batch certificates. A partner who cannot is a liability wearing a discount.'],
-  ['q','Do we verify certificates ourselves or trust the supplier’s upload? Trusting the upload is nearly free and moves the risk onto us the first time a certificate turns out to be wrong. Independent verification costs real money per batch. Decide against the reputational exposure, because this feature’s whole value is that it can be trusted.']],
+  ['new','<b>Phase 3, and the most differentiated feature in the product.</b> Professional players get batch-tested supplements with certificates from their union. School players buy from the local pharmacy with no traceability, and cross-contamination is a live doping problem at schoolboy level.'],
+  'Append-only, so a certificate cannot be quietly swapped after the fact. The same console runs supplier listing approval.',
+  ['q','<b>Phase 3.</b> Do we verify certificates independently or trust the supplier&rsquo;s upload? Trusting the upload is nearly free and moves the risk onto us the first time a certificate is wrong. This feature&rsquo;s entire value is that it can be trusted.'],
+ ],
  html:()=>`${sb('19:24')}
   <div style="display:flex;align-items:center;gap:10px;padding:15px 18px 2px"><span style="color:var(--muted-1);font-size:11px;font-weight:700">&larr; Shop</span><b style="font-size:12.5px">Track &amp; trace</b></div>
   <div style="text-align:center;padding:18px 18px 0">
@@ -733,13 +775,13 @@ const SCREENS=[
   <div style="height:14px"></div>${btn('Get voucher at 15% off','pri')}
   <div style="height:18px"></div></div>${tabbar(TABS_M,3)}`},
 
-{id:'M11',app:'Member app',name:'More &mdash; Fund & partners',
+{id:'M11',phase:3,app:'Member app',name:'More &mdash; Fund & partners',
  notes:[
-  'The Fund balance, the principal sponsor, the donor roll and the supplier partners. Everything a member might reasonably want to know about who backs this.',
-  ['new','<b>The sponsor split is deliberately not published to members here.</b> An earlier draft showed parents a full line-by-line waterfall. A fund balance, a beneficiary count and a donor roll build the same trust and are far easier to keep accurate every month.'],
-  'The Fund is described on screen as a fund and not insurance, because it is discretionary and that distinction is where a regulator would look first.',
-  ['q','Sponsors will assume their money helped their school; the Fund pools nationally. Say which on this screen before the first sponsor asks, and if surplus is ever pooled, publish the waterfall order so nobody feels misled.'],
-  ['q','Sponsor and supplier names here are generic placeholders. Before launch, decide what a member actually sees: a sponsor&rsquo;s own logo and brand, or a neutral tier label. Logos sell the sponsorship far better and mean a design review every time a sponsor changes.']],
+  'The catastrophic fund balance, the principal sponsor, the donor roll and the supplier partners.',
+  ['new','<b>Phase 3.</b> The fund exists as a policy feature from launch; this screen is where it becomes visible to members, alongside sponsors and suppliers.'],
+  'The fund is described on screen as a fund and not insurance, because it is discretionary and that distinction is where a regulator looks first.',
+  ['q','<b>Phase 3.</b> Sponsors will assume their contribution helped their own school; a national fund pools it. Say which on this screen before the first sponsor asks, and publish the order surplus flows in.'],
+ ],
  html:()=>`${sb('20:11')}${hd('Partners &amp; the Fund','Who backs this, and what the Fund holds.')}
   <div class="card" style="margin-top:14px;overflow:hidden;padding:0">
     <div style="background:var(--grad);color:var(--on-brand);padding:14px 15px">
@@ -760,13 +802,14 @@ const SCREENS=[
   ${note('warn','All sponsor and supplier names in this demo are <b>generic placeholders</b>.')}
   <div style="height:18px"></div></div>${tabbar(TABS_M,4)}`},
 
-{id:'M12',app:'Member app',name:'Cover for you (18+)',ix:1,
+{id:'M12',phase:3,app:'Member app',name:'Cover for you (18+)',ix:1,
  notes:[
-  'Chris’s fourth layer: products for the policyholder rather than the player. Short-term and life, which is what Insurance Partner can actually write.',
-  ['new','Lead generation only. A members-only card, a handoff, no advice given, no quote rendered in MatchFit. That keeps this layer outside FAIS exactly like the onboarding handoff does.'],
-  'Integration surface is deliberately in Insurance Partner red so a member can see they are crossing into another company’s product.',
-  ['q','"API to Insurance Partner to make management and claims easier" is a much bigger step than lead generation. Displaying policy data may work under a mandate; <b>handling claims is intermediary work</b> and needs the FSP or a properly drawn outsourcing agreement. Split the two in the contract so phase 1 is not blocked by phase 2’s licensing.'],
-  ['q','Insurance Partner cannot write medical insurance, so this layer can never cover the player. Is that clear enough on the screen that a parent will not assume their child is covered by an adult policy bought here?']],
+  'Products for the policyholder rather than the player: short-term and life, sold by a licensed partner.',
+  ['new','<b>Phase 3.</b> Cross-selling additional insurance to policyholders over 18 is a referral, not a sale. A members-only card, a handoff, no advice given and no quote rendered in the app.'],
+  'The integration surface is deliberately in the partner&rsquo;s own colour so a member can see they are crossing into another company&rsquo;s product.',
+  ['q','<b>Phase 3 &middot; regulatory review.</b> As the app expands into shopping, rewards and cross-sold insurance, what compliance review is needed and who owns it? Each new revenue line potentially brings a different licence, a different disclosure and a different complaints route.'],
+  ['q','Referral is straightforward. In-app management and claims for a partner&rsquo;s policy is a much bigger step and needs an intermediary agreement. Worth splitting the two in the contract so the referral is not blocked by the servicing.'],
+ ],
  html:()=>`${sb()}
   <div style="display:flex;align-items:center;gap:10px;padding:15px 18px 2px"><span style="color:var(--muted-1);font-size:11px;font-weight:700">&larr; OnePlan</span><b style="font-size:12.5px">Risk Management &middot; 18+</b></div>
   ${hd('Cover for you','Products for the policyholder, 18 and over.')}
@@ -782,13 +825,13 @@ const SCREENS=[
   <div style="height:18px"></div></div>${tabbar(TABS_M,1)}`},
 
 /* ---------- DEPENDANT ---------- */
-{id:'D1',app:'Dependant',name:'Dependant login',
+{id:'D1',phase:2,app:'Dependant',name:'Dependant login',
  notes:[
-  'The same app scoped to one child. Own cover only, no siblings, no premium figures, no emergency flow, no buying. Three tabs instead of five.',
-  ['new','A minor cannot open a claim or start an emergency pathway alone. The greyed tile notifies the principal member instead. That is the safe default and it is visible on screen rather than buried in a permissions matrix.'],
-  'Blue Card status is surfaced here so a player knows their own return-to-play position without asking a parent.',
-  ['q','Same age-floor question as Profile, from the other side: at what age does a dependant get this login at all, and who can revoke it? A 16-year-old with their own login is uncontroversial. A 10-year-old is a POPIA question with a different answer.'],
-  ['q','If a dependant cannot start an emergency pathway, the coach portal becomes load-bearing for any injury at an away fixture where no parent is present. That is the argument for putting the coach portal in phase 1, and it is not currently in scope.']],
+  'The same app scoped to one dependant. Own cover only, no siblings, no premium figures, no emergency flow, no buying. Three tabs instead of five.',
+  ['new','<b>Phase 2.</b> Dependant logins arrive with school groups and parents holding policies for their children.'],
+  ['new','A minor cannot open a claim or start an emergency pathway alone. The greyed tile notifies the policyholder instead &mdash; the safe default, visible on screen rather than buried in a permissions matrix.'],
+  'Blue Card status is surfaced here so a player knows their own return-to-play position without having to ask.',
+ ],
  html:()=>{const d=DEPS[0];
   return `${sb('15:02')}
   <div class="abar"><span class="ava" style="background:linear-gradient(135deg,${spc(d.code)},var(--brand-1))">TM</span>
@@ -812,13 +855,13 @@ const SCREENS=[
   ${tabbar([['h','home','Home'],['c','card','Card'],['s','bag','Shop']],0)}`}},
 
 /* ---------- COACH ---------- */
-{id:'C1',app:'Coach portal',name:'Team sheet',
+{id:'C1',phase:2,app:'Coach portal',name:'Team sheet',
  notes:[
-  '<b>Not in Chris’s five sections, and it needs to be.</b> Emergency pathway 4 starts on a field, pathway 1 usually starts with a coach, and the whole fee-bundled distribution plan runs through schools.',
-  ['new','Dark chrome, one-handed, works offline on a cached token. Designed for a wet Saturday touchline on EDGE, not a boardroom.'],
+  'A coach on a touchline, one-handed, offline on a cached token. Designed for a wet Saturday on a weak signal, not a boardroom.',
+  ['new','<b>Phase 2.</b> Needed as soon as schools are on the platform: the concussion pathway starts on a field, and an app only a parent can open leaves an injured child at an away fixture with nothing.'],
   'Two squads shown, rugby and netball, because a rugby-only portal tells a netball director this is not their product.',
-  ['new','A Blue Card protocol from the member app writes through to here. Thabo shows BLUE CARD and cannot be marked available. Nomvula Sithole is uninsured, where only the HNS Fund applies.'],
-  ['q','Who grants and revokes coach access, and how is it scoped? Shown here as school-scoped and season-scoped with automatic expiry, which is the safe default. It needs a school-side owner &mdash; probably the sports office, which is another argument for the school console.']],
+  ['q','<b>Phase 2 &middot; access control.</b> Who grants and revokes coach access, and how is it scoped? Shown here as school-scoped and season-scoped with automatic expiry, which is the safe default but needs an owner on the school side.'],
+ ],
  frame:'phone',dark:1,
  html:()=>`${sb('16:48')}
   <div style="padding:15px 18px 6px;color:var(--ink)">
@@ -836,13 +879,13 @@ const SCREENS=[
   <div style="height:18px"></div></div>
   ${tabbar([['s','scan','Scan'],['t','doc','Team'],['h','phone','Help']],0)}`},
 
-{id:'C2',app:'Coach portal',name:'Player scanned',
+{id:'C2',phase:2,app:'Coach portal',name:'Player scanned',
  notes:[
   'Four fields and nothing else: name, member number, cover state, status age. A coach does not need and must not see a diagnosis or a family contact list.',
-  ['new','Status age is shown explicitly. "Cached 9h 50m" is honest about an offline token and lets a coach decide whether to phone before treating.'],
-  'The lapsed state carries the evidence trail &mdash; reminded on three channels, all logged. That log is the defence when a family says nobody told them.',
-  ['new','A provisional alert raised here lands in the parent app and the school activity log. The guardian is notified before the coach finishes the tap.'],
-  ['q','Can a coach raise a provisional claim, or only an alert? Shown here as an alert to guardian plus call centre, which is the conservative choice. Letting a coach commit funds is faster on the day and much harder to control. Decide against the fraud exposure, not the convenience.']],
+  ['new','<b>Phase 2.</b> Status age is shown explicitly, so a coach can decide whether to phone before treating rather than trusting a stale cached token.'],
+  'The lapsed state carries the reminder trail. That log is the defence when a family says nobody told them.',
+  ['q','<b>Phase 2.</b> Can a coach raise a provisional claim, or only an alert to the policyholder and call centre? An alert is the conservative choice. Letting a coach commit funds is faster on the day and much harder to control.'],
+ ],
  dark:1,
  html:()=>`${sb('16:49')}
   <div style="padding:15px 18px 6px;color:var(--ink)">
@@ -861,13 +904,14 @@ const SCREENS=[
   ${tabbar([['s','scan','Scan'],['t','doc','Team'],['h','phone','Help']],0)}`},
 
 /* ---------- SCHOOL ---------- */
-{id:'S1',app:'School console',name:'Sports office',frame:'desk',
+{id:'S1',phase:2,app:'School console',name:'Sports office',frame:'desk',
  notes:[
-  'Desktop, because a sports office runs it on a laptop between lessons. Roster import, BokSmart status, coach grants and an append-only activity log.',
-  ['new','Opt-in penetration is shown honestly at 24%. That is normal for parent-pay and it is the entire argument for bundling into school fees, where penetration runs above 90%.'],
-  ['new','<b>Cover by code shows netball and hockey are 64 of 148 enrolled players.</b> The rugby-only assumption understates this book by nearly half, and this one chart is the fastest way to make that land in a room.'],
-  'BokSmart status is a console-level gate, not claim-time fine print. Cover only triggers for a match with BokSmart in place, so a lapsed accreditation is a repudiation waiting to happen &mdash; surfacing it here removes the product’s largest claims risk.',
-  ['q','Fee bundling needs a resolution through the annual budget meeting on 30 days’ notice under the Schools Act, and a majority of parents present. The nominated-provider route needs no vote at all. Run nominated-provider for one season, then take the claims data to the budget meeting &mdash; a vote on an abstract levy is a coin toss, a vote on a levy that visibly paid for eleven injured children is not.']],
+  'Desktop, because a sports office runs it on a laptop between lessons. Roster import, accreditation status, coach grants and an append-only activity log.',
+  ['new','<b>Phase 2.</b> Whole-school onboarding, either managed by the school through fee inclusion or by parents responding to a school referral.'],
+  ['new','Cover by code shows netball and hockey together are a large share of enrolled players. A rugby-shaped product understates the book substantially, and this one chart is the fastest way to make that land.'],
+  ['q','<b>Phase 2 &middot; group tenants.</b> Do we set up school- and club-specific tenants for closed group membership? Rugby league clubs and other sporting clubs would use the same mechanism, so the model is worth deciding once rather than per school.'],
+  ['q','<b>Phase 2 &middot; route into fees.</b> Fee inclusion needs a resolution through the annual school budget meeting; a nominated-provider arrangement needs no vote at all. Running nominated-provider for one season and taking the claims data to the budget meeting is the lower-risk sequence &mdash; is the school appetite there?'],
+ ],
  html:()=>`
   <div class="dstat">
    <div><b class="num">620</b><small>Active players</small></div>
@@ -902,13 +946,13 @@ const SCREENS=[
   </div>`},
 
 /* ---------- PARTNER ---------- */
-{id:'X1',app:'Partner portal',name:'Supplier partner',frame:'desk',
+{id:'X1',phase:3,app:'Partner portal',name:'Supplier partner',frame:'desk',
  notes:[
   'What a supplier sees: vouchers issued, approved listings, batch verification, members reached. Aggregate only, enforced at the data layer and mirrored in the contract.',
-  ['new','The listing approvals table is Chris’s "pre-approve the listings" requirement, with batch verification alongside it so supplements cannot go live uncertified.'],
-  '<b>The platform fee appears nowhere in this portal.</b> A supplier sees redemptions and discount delivered, never platform margin.',
-  ['q','Settlement mechanism: single-use codes settled on issuance, or partner self-reported redemptions? Self-reporting is cheaper to build and you will be underpaid without being able to prove it. Issue codes and reconcile against redemption.'],
-  ['q','How long is a supply agreement, and is category exclusivity on the table? A supplier who wants exclusivity will trade for it; one who does not will want a short term. Both are workable, but the answer sets how much of the catalogue can be promised to a school for a full season.']],
+  ['new','<b>Phase 3.</b> The listing approvals table is the pre-approval requirement, with batch verification alongside so supplements cannot go live uncertified.'],
+  'No platform margin appears in this portal. A supplier sees redemptions and discount delivered.',
+  ['q','<b>Phase 3 &middot; settlement.</b> Single-use codes settled on issuance, or partner self-reported redemptions? Self-reporting is cheaper to build and impossible to audit.'],
+ ],
  html:()=>`
   <div class="dstat">
    <div><b class="num">1 243</b><small>Vouchers issued</small><em>+3 this session</em></div>
@@ -932,13 +976,13 @@ const SCREENS=[
   <div style="display:flex;gap:9px;padding:7px 4px 0">${['Feb','Mar','Apr','May','Jun','Jul'].map(m=>`<span style="flex:1;text-align:center;font-family:var(--mono);font-size:8.5px;color:var(--muted-1)">${m}</span>`).join('')}</div>
   <p style="font-size:11.5px;color:var(--muted-1);margin-top:18px">Brand names are illustrative. Individual member data is structurally unavailable to this portal.</p>`},
 
-{id:'X2',app:'Partner portal',name:'Principal sponsor',frame:'desk',
+{id:'X2',phase:3,app:'Partner portal',name:'Principal sponsor',frame:'desk',
  notes:[
-  'What a principal sponsor sees: Fund balance, cases assisted, school equipment funded, and SED eligibility. No redemptions, because a sponsor is not a retailer.',
-  ['new','<b>"Premium subsidy &mdash; NOT FUNDED" is stated on the screen.</b> One row that makes the whole revised model legible: sponsors fund the Fund and school equipment, parents pay premiums.'],
-  ['new','Framing sponsorship as B-BBEE socio-economic development spend moves the sale from a marketing budget, which is small and cut first, to a compliance budget that must be spent annually. That is the single biggest change to the sponsorship pitch.'],
-  'No individual member is visible. Sponsor contracts mirror the data-layer restriction so a request for member-level data is a contractual breach, not a negotiation.',
-  ['q','Are sponsor tiers fixed nationally or negotiable per school? A fixed tier is far easier to sell and to report against; per-school pricing gets a bigger cheque from a marquee school and makes the SED evidence pack harder to standardise. Decide before the first sponsor pack goes out.']],
+  'What a principal sponsor sees: fund balance, cases assisted, school equipment funded, and development-spend eligibility. No redemptions, because a sponsor is not a retailer.',
+  ['new','<b>Phase 3.</b> Premium subsidy is marked NOT FUNDED on the screen &mdash; one row that makes the model legible: sponsors fund the fund and school equipment, policyholders pay premiums.'],
+  ['new','Framing sponsorship as socio-economic development spend moves the sale from a marketing budget, which is small and cut first, to a compliance budget that has to be spent annually.'],
+  'No individual member is visible. Sponsor contracts mirror the data-layer restriction, so a request for member-level data is a breach rather than a negotiation.',
+ ],
  html:()=>`
   <div style="border:1px solid var(--warn-text);background:var(--tint-warn);border-radius:12px;padding:14px 18px;margin-bottom:22px;font-size:12.5px;color:var(--warn-text)">
    <b>Illustrative sponsor.</b> National Motor Group is a worked example of a principal sponsorship. <b>Nothing is signed</b> &mdash; replace before this is shown to a board.</div>
@@ -994,7 +1038,7 @@ const FLOW=[
  ]},
  {ln:'Path D &middot; Catastrophic HNS',nodes:[
    ['HNS injury suspected','Insured or not'],
-   ['ER24 Spineline','Road transport today',null,'partner'],
+   ['Spineline activated','Emergency transport today',null,'partner'],
    ['On-field doctor','Stabilisation recorded',null,'gap'],
    ['Specialist consensus','Two-party sign-off',null,'gap'],
    ['Tiered fund approval','Trustee release',null,'gap'],
@@ -1005,7 +1049,7 @@ const FLOW=[
    ['Scan supplement batch','WADA certificate','M10','new'],
    ['Voucher issued','Single-use code','M9','new'],
    ['Redeemed at partner','Partner’s own till'],
-   ['Commission invoiced','Never netted from premium','X1','new'],
+   ['Partner settles','Reconciled against issuance','X1','new'],
  ]},
  {ln:'Path F &middot; Adult cover, 4th layer',nodes:[
    ['Member taps Cover for you',null,'M12','new'],
@@ -1014,6 +1058,47 @@ const FLOW=[
    ['In-app management','Needs intermediary agreement',null,'gap'],
  ]},
 ];
+
+/* ============================================================
+   ROADMAP (§the plan of action)
+   ============================================================ */
+const ROADMAP=[
+ {n:1,when:'Next',title:'MVP - onboarding, web only',
+  body:'A web app, not a native one. Its whole job is to onboard policyholders and hand the application to Oneplan to complete. Tested live at a Golden Oldies tournament: an activation stand, a QR code, and a policy sold on the spot. Individuals over 18 taking cover for themselves - no dependants, no claims in the app, no shop.',
+  qs:['<b>What does the Oneplan onboarding endpoint expect?</b> Field-level payload, authentication, validation rules, sandbox access, and what a successful response returns. Nothing can be scheduled or priced until this is documented.',
+      '<b>Does Oneplan need supporting documents at onboarding</b> - ID, proof of address, a medical declaration - and how should they arrive?',
+      '<b>How is the premium initiated and managed?</b> Oneplan-initiated DebiCheck mandates, card strikes, or debit orders. This decides whether the app captures a mandate or simply hands over.',
+      '<b>What communication comes from Oneplan once a policy is active?</b> The app must not duplicate it and must not leave a gap.',
+      '<b>How are claims handled during Phase 1</b>, and does the app need to set out the process?']},
+ {n:2,when:'After MVP feedback',title:'Schools, groups and dependants',
+  body:'Whole-school onboarding, managed by the school through fee inclusion or by parents responding to a school referral. Dependants get their own scoped login to view cover and show a card. Native iOS and Android builds ship in this phase, and the emergency and concussion pathways come into the app.',
+  qs:['<b>Do premiums need to be collected in the app</b>, or does Oneplan keep collection throughout? It decides whether the app needs a payment provider and merchant account at all.',
+      '<b>Do we set up school- and club-specific tenants</b> for closed group membership? Rugby league and other sporting clubs would use the same mechanism.',
+      '<b>Does Oneplan have APIs to submit and process claims</b>, or is claiming a call-centre process? It decides whether this phase is a workflow build or a thin front end.',
+      '<b>Is a digital card viable, or do we stay physical initially?</b> Physical works with no phone, no data and no battery; digital is instant and free to reissue.']},
+ {n:3,when:'Once the base is proven',title:'Shop, rewards and cross-sell',
+  body:'Member pricing from approved suppliers, batch-level track-and-trace on supplements, and referrals for additional insurance products to policyholders over 18. This is where the platform earns beyond the policy.',
+  qs:['<b>Do we facilitate purchases in the app, and who holds the merchant account?</b> It decides who carries PCI scope, refunds, chargebacks and Consumer Protection duties - the difference between running a catalogue and being a retailer.',
+      '<b>What regulatory review is needed as features expand?</b> Each new revenue line potentially brings a different licence, disclosure and complaints route. Who owns that review?']},
+ {n:4,when:'Later',title:'Deeper sports integration',
+  body:'A sports tracker with rewards, and progressive expansion of features and partnerships. Deliberately last: it is the one area with no insurance rationale, so it needs a commercial one before it earns a place.',
+  qs:['<b>Is a tracker a differentiator or a distraction?</b> It competes for the same build capacity as claims and payments, and it is the only feature here that does not make the cover work better.']},
+];
+
+function renderRoadmap(){
+ const byPhase=SCREENS.reduce((m,s)=>{(m[s.phase]=m[s.phase]||[]).push(s);return m},{});
+ return `<div class="rmwrap">
+  <h3>Plan of action</h3>
+  <p class="rsub">Four phases. Each one is shippable on its own and earns the right to the next. The amber items are the questions we need answered to scope and price properly &mdash; they are not blockers to agreeing the direction.</p>
+  ${ROADMAP.map(ph=>`<div class="phase" style="--pc:var(--ph${ph.n});--pt:var(--ph${ph.n}-t)">
+    <div class="ptop"><span class="tag">PHASE ${ph.n}</span><b>${ph.title}</b><span class="when">${ph.when}</span></div>
+    <p>${ph.body}</p>
+    ${(byPhase[ph.n]||[]).length?`<div class="chips">${byPhase[ph.n].map(s=>`<a href="#${s.id}">${s.id} &middot; ${s.name}</a>`).join('')}</div>`:''}
+    <p class="qh">What we need from Oneplan to scope this</p>
+    <ul class="qs">${ph.qs.map(q=>`<li>${q}</li>`).join('')}</ul>
+  </div>`).join('')}
+ </div>`;
+}
 
 /* ============================================================
    RENDER / ROUTER
@@ -1037,13 +1122,25 @@ function renderRail(activeId){
    `<div class="brand"><b>MatchFit</b><small>Scoping demo &middot; v1</small></div>` +
    Object.entries(byApp).map(([app,list])=>
      `<h4>${app}</h4>` + list.map(s=>
-       `<a href="#${s.id}" class="${s.id===activeId?'on':''}"><span class="sid">${s.id}</span><span>${s.name}</span>${s.ix?'<span class="dot" title="integration point"></span>':''}</a>`).join('')
+       `<a href="#${s.id}" class="${s.id===activeId?'on':''}"><span class="sid">${s.id}</span><span>${s.name}</span><span class="ph ph${s.phase}">P${s.phase}</span>${s.ix?'<span class="dot" title="integration point"></span>':''}</a>`).join('')
    ).join('') +
-   `<h4>Process</h4><a href="#FLOW" class="${activeId==='FLOW'?'on':''}"><span class="sid">&#9673;</span><span>Flow map</span></a>`;
+   `<h4>The plan</h4>`+
+   `<a href="#ROADMAP" class="${activeId==='ROADMAP'?'on':''}"><span class="sid">&#9776;</span><span>Roadmap</span></a>`+
+   `<a href="#FLOW" class="${activeId==='FLOW'?'on':''}"><span class="sid">&#9673;</span><span>Flow map</span></a>`;
 }
 
 function renderNotes(s){
   const el=document.getElementById('notes');
+  if(s==='ROADMAP'){
+    el.innerHTML=`<div class="nh"><b>Roadmap</b><small>The plan &middot; 4 phases</small></div>
+     <div class="nlist">
+      <div class="nitem"><b>Phase 1 is deliberately small.</b> One job: onboard a policyholder and hand the application to Oneplan. Proving that at a live tournament is worth more than a feature-complete app nobody has sold through.</div>
+      <div class="nitem new"><span class="ntag">Why this order</span>Each phase earns the next. Onboarding proves the API and the appetite. Schools prove the distribution. Only then does the shop have an audience worth selling to.</div>
+      <div class="nitem q"><span class="ntag">What blocks scoping today</span>The Oneplan onboarding payload and the premium collection mechanism. Both are Phase 1, both sit on Oneplan&rsquo;s side, and <b>neither can be estimated from the outside</b>. Everything else in this plan can be priced once those two are documented.</div>
+      <div class="nitem">Every phase links to its screens. Click a chip to open the screen and read its spec.</div>
+     </div>`;
+    return;
+  }
   if(!s){el.innerHTML=`<div class="nh"><b>Flow map</b><small>Process &middot; 6 lanes</small></div>
     <div class="nlist">
       <div class="nitem">Every path a member, coach or partner can take. Nodes link to the screen behind them where one exists.</div>
@@ -1084,6 +1181,15 @@ function renderFlow(){
 function route(){
   const id=(location.hash||'#M1').slice(1);
   const stage=document.getElementById('stageBody'), title=document.getElementById('stitle');
+  if(id==='ROADMAP'){
+    title.innerHTML=`<span>&#9776;</span>Roadmap`;
+    stage.innerHTML=renderRoadmap(); renderRail('ROADMAP'); renderNotes('ROADMAP');
+    document.getElementById('tRoad').classList.add('on');
+    document.getElementById('tFlow').classList.remove('on');
+    document.getElementById('tTry').hidden=true;
+    window.scrollTo(0,0); return;
+  }
+  document.getElementById('tRoad').classList.remove('on');
   if(id==='FLOW'){
     title.innerHTML=`<span>&#9673;</span>Flow map`;
     stage.innerHTML=renderFlow(); renderRail('FLOW'); renderNotes(null);
@@ -1093,7 +1199,7 @@ function route(){
   }
   document.getElementById('tFlow').classList.remove('on');
   const s=SCREENS.find(x=>x.id===id)||SCREENS[0];
-  title.innerHTML=`<span>${s.id}</span>${s.name}`;
+  title.innerHTML=`<span>${s.id}</span>${s.name} <span class="phbig ph${s.phase}">PHASE ${s.phase}</span>`;
   const tryBtn=document.getElementById('tTry');
   if(TRY[s.id]){ tryBtn.href=`../app/?p=${TRY[s.id]}&skip=1&from=${s.id}`; tryBtn.hidden=false; }
   else { tryBtn.hidden=true; }
@@ -1104,6 +1210,7 @@ function route(){
 }
 addEventListener('hashchange',route);
 document.getElementById('tFlow').addEventListener('click',()=>{location.hash='#FLOW'});
+document.getElementById('tRoad').addEventListener('click',()=>{location.hash='#ROADMAP'});
 route();
 </script>
 </body>
