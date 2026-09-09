@@ -3,20 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>MatchFit Platform Demo</title>
+<title>SportActive Platform Demo</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <style>
 :root{
-  --bg:#0F1013; --panel:#181A1F; --panel2:#20232A; --ink:#ECEEF1; --ink2:#979BA4; --ink3:#63676F;
-  --line:#282B32; --brass:#D2A24C;
-  --brand:#151C25; --brand2:#22303F; --paper:#F4F7F9;
+  --bg:#0B1220; --panel:#131C30; --panel2:#1A2540; --ink:#ECEEF1; --ink2:#979BA4; --ink3:#63676F;
+  --line:#25314A; --brass:#D2A24C;
+  --brand:#0F3B7A; --brand2:#1A56B0; --paper:#F4F7F9;
   --t1:#111823; --t2:#4F5966; --t3:#8A929E; --hair:rgba(17,24,35,.09);
   --ok:#1D9A66; --bad:#C0392B; --amber:#B5761A;
   --rugby:#17643E; --rugby-t:#E6F0EA;
   --soccer:#22499E; --soccer-t:#E7EDF8;
   --hockey:#0C7B80; --hockey-t:#E2F1F1;
   --netball:#C2631F; --netball-t:#FAEDE2;
-  --op:#1B3C8C;
+  --op:#3B4653;
   --sh-s:0 1px 2px rgba(12,18,28,.05),0 1px 3px rgba(12,18,28,.04);
   --sh-m:0 1px 2px rgba(12,18,28,.05),0 10px 26px -14px rgba(12,18,28,.2);
   --sh-l:0 2px 5px rgba(12,18,28,.07),0 22px 46px -18px rgba(12,18,28,.4);
@@ -125,6 +125,7 @@ svg.ic{display:block;flex:none}
 .cover .who2{font-size:10px;opacity:.8;margin-top:3px}
 .cover .meter{height:4.5px;border-radius:99px;background:rgba(255,255,255,.2);overflow:hidden;margin-top:12px}
 .cover .meter i{display:block;height:100%;border-radius:99px;background:#fff;opacity:.94;transition:width .5s}
+.cover .prow{display:flex;justify-content:space-between;font-size:9.5px;opacity:.92;margin-top:10px}
 .cover .mrow{display:flex;justify-content:space-between;font-family:"IBM Plex Mono",ui-monospace,Consolas,"Segoe UI Mono",Menlo,monospace;font-size:7.5px;letter-spacing:.09em;opacity:.72;margin-top:5px;text-transform:uppercase}
 .stp{display:inline-flex;align-items:center;gap:5px;font-size:8.5px;font-weight:800;padding:4px 10px;border-radius:99px;letter-spacing:.08em}
 .stp i{width:5.5px;height:5.5px;border-radius:50%;background:currentColor;animation:pulseDot 2.2s infinite}
@@ -248,7 +249,7 @@ table.grid tr:last-child td{border-bottom:none}
 <body>
 <div class="shell">
   <div class="topbar">
-    <div class="logo">MatchFit<small>Platform demo &middot; v2</small></div>
+    <div class="logo">SportActive<small>Platform demo &middot; v2</small></div>
     <div class="seg" id="personaSeg"></div>
     <span class="spacer"></span>
     <button class="tbtn" onclick="replaySplash()">&#9654; Splash</button>
@@ -314,14 +315,14 @@ const SPORTS={
  hockey:{n:'Hockey',c:'var(--hockey)',t:'var(--hockey-t)',hex:'#0C7B80',lite:'#199A9F',dark:'#06474A'},
  netball:{n:'Netball',c:'var(--netball)',t:'var(--netball-t)',hex:'#C2631F',lite:'#DD803C',dark:'#6E3810'}};
 const HH={
- principal:{name:'Dineo Mokoena',first:'Dineo',ini:'DM',no:'MF-2027-0846',
+ principal:{name:'Dineo Mokoena',first:'Dineo',ini:'DM',no:'SA-2027-0846',
    mobile:'082 555 0142',email:'dineo.m@example.co.za',id:'8&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;',addr:'14 Loop Street, Paarl'},
  premium:3598,
  deps:[
   {name:'THABO A. MOKOENA',short:'Thabo M.',first:'Thabo',ini:'TM',age:16,code:'rugby',team:'U16A Rugby',
-   school:'Demo High School',no:'MF-2027-0847',cover:250000,plan:'ActiveCare Season',blue:'cleared'},
+   school:'Demo High School',no:'SA-2027-0847',cover:250000,plan:'ActiveCare Season',blue:'cleared'},
   {name:'LERATO N. MOKOENA',short:'Lerato M.',first:'Lerato',ini:'LN',age:15,code:'netball',team:'U15 Netball',
-   school:'Demo High School',no:'MF-2027-0848',cover:250000,plan:'ActiveCare Season',blue:'cleared'}]};
+   school:'Demo High School',no:'SA-2027-0848',cover:250000,plan:'ActiveCare Season',blue:'cleared'}]};
 const BENEFITS=[
  {k:'acc',n:'Accident treatment',d:'Doctor, casualty or hospital',lim:50000,limTxt:'R50 000 per event',i:'cross'},
  {k:'scan',n:'MRI / CT scan',d:'Paid upfront, no claim-back',lim:25000,limTxt:'R25 000 upfront',i:'scan'},
@@ -439,12 +440,12 @@ const CODES=['rugby','soccer','hockey','netball'];
 function splash(){
  const i=S.splashT%4,c=CODES[i],s=sp(c);
  return `<div class="phonewrap"><div class="glow" style="background:${s.hex}"></div>
- <div class="phone"><div class="scr" style="--sc:#151C25">
+ <div class="phone"><div class="scr" style="--sc:#0F3B7A">
   <div class="island"></div><div class="sb" style="color:#B9C2CC"><span>07:42</span><span>5G &#9646;&#9646;&#9646;</span></div>
   <div class="body" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px">
     <div style="width:158px">${fieldSvg(c,'s',{stroke:s.lite,sw:5})}</div>
     <div style="text-align:center">
-      <div style="font-weight:900;font-size:25px;letter-spacing:-.04em;color:#fff">MatchFit</div>
+      <div style="font-weight:900;font-size:25px;letter-spacing:-.04em;color:#fff">SportActive</div>
       <div class="mono" style="font-size:8px;letter-spacing:.24em;text-transform:uppercase;color:#7C8794;margin-top:5px">Sport injury cover</div>
       <div class="mono" style="font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:${s.lite};margin-top:12px">${s.n}</div>
     </div></div>
@@ -462,7 +463,7 @@ function renderParent(){
  if(S.tab==='emergency'){body=S.em?emFlow():tEmergency();emBar=true}
  if(S.tab==='shop')body=S.sub==='cert'?certScreen():tShop();
  if(S.tab==='more')body=S.sub==='fund'?fundScreen():tMore();
- return `<div class="phonewrap"><div class="glow" style="background:${S.tab==='emergency'?'#8E1F1C':'#22303F'}"></div>
+ return `<div class="phonewrap"><div class="glow" style="background:${S.tab==='emergency'?'#8E1F1C':'#1A56B0'}"></div>
  <div class="phone"><div class="scr" style="--sc:var(--paper)">
   <div class="island"></div><div class="sb" style="color:#3B4653"><span>07:42</span><span>5G &#9646;&#9646;&#9646;</span></div>
   <div class="body"><div class="view">${body}</div></div>
@@ -489,7 +490,7 @@ function tProfile(){
   <div><span class="k">ID number</span><span class="v">${HH.principal.id}</span></div>
   <div><span class="k">Address</span><span class="v">${HH.principal.addr}</span></div>
  </div>
- <div class="notice" style="background:#EDF0F3;color:#3B4653">${ic('info',13,2.1)}<span>You are the <b>principal member</b>. You hold the policies and make the claims &mdash; the cover applies to your dependants, not to you.</span></div>
+ <div class="notice" style="background:#E8EFF9;color:#0F3B7A">${ic('info',13,2.1)}<span>You are the <b>principal member</b>. You hold the policies and make the claims &mdash; the cover applies to your dependants, not to you.</span></div>
  <div class="sect"><b>Dependants</b><small>${HH.deps.length} on file</small></div>
  ${HH.deps.map((d,i)=>{const s=sp(d.code);return `<button class="row" onclick="viewDep(${i})">
    <span class="ri" style="background:${s.t};color:${s.c}">${fieldSvg(d.code,'t',{w:20,h:14,sw:14})}</span>
@@ -518,17 +519,15 @@ function viewDep(i){S.depIdx=i;S.persona='dependant';S.depTab='home';render();re
 
 /* ---- 2. ONEPLAN ---- */
 function tOneplan(){
- const total=HH.deps.reduce((a,d)=>a+d.cover,0);
- const rem=total-Object.values(S.used).reduce((a,b)=>a+b,0);
  return `<div class="hd"><h2>OnePlan</h2><p>Your ActiveCare policies, cover card and onboarding.</p></div>
- <div class="cover" style="background:linear-gradient(140deg,var(--brand2) -25%,var(--brand) 45%,#0B1219)">
+ <div class="cover" style="background:linear-gradient(140deg,var(--brand2) -25%,var(--brand) 45%,#071F45)">
    <span class="stp ok abs"><i></i>ACTIVE</span>
    <div class="wm">${fieldSvg('rugby','s',{stroke:'#fff',sw:4})}</div>
    <div style="padding-right:74px"><span class="lbl">${HH.deps.length} policies &middot; winter 2027</span>
-   <div class="amt">${rand(total)}<small>total cover</small></div></div>
-   <div class="who2">${HH.deps.map(d=>`${d.first} &middot; ${sp(d.code).n}`).join(' &nbsp;&middot;&nbsp; ')}</div>
-   <div class="meter"><i style="width:${Math.round(rem/total*100)}%"></i></div>
-   <div class="mrow"><span>${rand(rem)} remaining</span><span>Verified 12 min ago</span></div>
+   <div class="amt">${rand(HH.deps[0].cover)}<small>per player</small></div></div>
+   <div class="who2">Each policy is covered separately</div>
+   ${HH.deps.map((d,i)=>{const left=d.cover-(S.used[i]||0);return `<div class="prow"><span>${d.first} &middot; ${sp(d.code).n}</span><span>${rand(left)} left</span></div><div class="meter" style="margin-top:4px"><i style="width:${Math.round(left/d.cover*100)}%"></i></div>`}).join('')}
+   <div class="mrow"><span></span><span>Verified 12 min ago</span></div>
  </div>
  <div class="sect"><b>Risk Management &middot; Player</b><small>ActiveCare</small></div>
  ${HH.deps.map((d,i)=>{const s=sp(d.code);return `<button class="row" onclick="S.cardIdx=${i};toast('${d.first}: ${d.plan}, ${rand(d.cover)} cover. Card and benefit breakdown below.')">
@@ -549,7 +548,7 @@ function tOneplan(){
    <span class="ri" style="background:#FAE7E6;color:${KP.color}">${ic('crown',17)}</span>
    <span><b>Cover for you</b><small>${KP.name} &middot; car, household, life</small></span>
    <span class="chev">${ic('chev',15,2.2)}</span></button>
- <div class="notice" style="background:#EDF0F3;color:#3B4653">${ic('lock',13,2.1)}<span>Product terms and advice are provided by <b>Oneplan</b> as the licensed underwriting manager. MatchFit is the servicing platform.</span></div>
+ <div class="notice" style="background:#E8EFF9;color:#0F3B7A">${ic('lock',13,2.1)}<span>Product terms and advice are provided by <b>Oneplan</b> as the licensed underwriting manager. SportActive is the servicing platform.</span></div>
  <div style="height:16px"></div>`;
 }
 function cardBlock(i){
@@ -557,7 +556,7 @@ function cardBlock(i){
  return `<div class="mcard" style="background:linear-gradient(135deg,${s.lite} -20%,${s.hex} 55%,${s.dark})">
    <div class="wm">${fieldSvg(d.code,'s',{stroke:'#fff',sw:4})}</div>
    <div style="display:flex;justify-content:space-between;align-items:flex-start">
-     <span style="font-weight:900;font-size:14px;letter-spacing:-.03em">MatchFit</span>
+     <span style="font-weight:900;font-size:14px;letter-spacing:-.03em">SportActive</span>
      <span style="font-size:7.5px;font-weight:800;letter-spacing:.09em;padding:4px 9px;border-radius:99px;background:rgba(0,0,0,.25)">${d.team.toUpperCase()}</span></div>
    <div style="display:flex;align-items:center;margin-top:13px"><span class="chip2"></span><span class="ctls"><i></i><i></i><i></i></span></div>
    <div class="mno">${d.no.replace(/-/g,' &middot; ')}</div>
@@ -577,7 +576,7 @@ function qr(c,s){return `<span class="qr"><svg width="${s}" height="${s}" viewBo
 function kpScreen(){
  return `<div class="backrow"><button onclick="S.sub=null;render()">${ic('chevL',15,2.4)} OnePlan</button></div>
  <div class="hd" style="padding-top:2px"><h2>Cover for you</h2><p>Products for the policyholder, 18 and over.</p></div>
- <div class="notice" style="background:#FAE7E6;color:#B3202C;margin-top:12px">${ic('info',13,2.1)}<span><b>${KP.name} is an authorised FSP.</b> Quotes, advice and claims are handled in their channel &mdash; MatchFit only makes the introduction.</span></div>
+ <div class="notice" style="background:#FAE7E6;color:#B3202C;margin-top:12px">${ic('info',13,2.1)}<span><b>${KP.name} is an authorised FSP.</b> Quotes, advice and claims are handled in their channel &mdash; SportActive only makes the introduction.</span></div>
  ${[['Car insurance','Decreasing premiums &middot; school-run cover'],['Household contents','Home and portable possessions'],['Cellphone cover','Family devices']].map(([a,b])=>`<button class="row" style="margin-top:9px" onclick="toast('Handing off to ${KP.name} for a quote. Their FSP, their advice, their record &mdash; that boundary is the compliance design.')">
    <span class="ri" style="background:#FAE7E6;color:${KP.color}">${ic('crown',17)}</span>
    <span><b>${a}</b><small>${b}</small></span><span class="pil r">GET QUOTE</span></button>`).join('')}
@@ -607,7 +606,7 @@ function obFlow(){
    <div><span class="k">Date of birth</span><span class="v">14 Mar 2014</span></div>
    <div><span class="k">ID / passport</span><span class="v">1403 &bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;</span></div>
   </div>
-  <div class="notice" style="background:#EDF0F3;color:#3B4653">${ic('info',13,2.1)}<span>A brand-new user creates their own profile first. Only then can they add a dependant here or take out cover for themselves.</span></div>
+  <div class="notice" style="background:#E8EFF9;color:#0F3B7A">${ic('info',13,2.1)}<span>A brand-new user creates their own profile first. Only then can they add a dependant here or take out cover for themselves.</span></div>
   <div style="padding:14px 18px 0"><button class="btnP" style="background:var(--brand)" onclick="S.ob.step=3;render()">Continue</button></div>`;
  if(o.step===3)return `<div class="backrow"><button onclick="S.ob.step=2;render()">${ic('chevL',15,2.4)} Back</button></div>
   <div class="hd"><h2>Sport and group</h2><p>Cover applies between the four white lines of that code.</p></div>
@@ -619,7 +618,7 @@ function obFlow(){
   <div class="kv" style="margin:0 15px 9px">
    <div><span class="k">Your code</span><span class="v mono" style="letter-spacing:.25em">&bull;&bull;&bull;&bull;&bull;</span></div>
   </div>
-  <div class="notice" style="background:#EDF0F3;color:#3B4653">${ic('info',13,2.1)}<span>Issued by your school or club when it joins. No code? Cover is identical as an individual policy; it can join a group later.</span></div>
+  <div class="notice" style="background:#E8EFF9;color:#0F3B7A">${ic('info',13,2.1)}<span>Issued by your school or club when it joins. No code? Cover is identical as an individual policy; it can join a group later.</span></div>
   <div style="padding:12px 18px 0;display:grid;gap:8px">
    <button class="btnP" style="background:var(--brand)" onclick="S.ob.group='Demo High School';S.ob.step=4;render();toast('Group code accepted &middot; Demo High School, Winter 2027.')">I have a group code</button>
    <button class="btnG" onclick="S.ob.group=null;S.ob.step=4;render()">Continue without a code</button>
@@ -654,7 +653,7 @@ function obFlow(){
    </div>
    <div style="padding:0 15px 8px"><button class="btnP" style="background:var(--op)" onclick="S.ob.step=6;render();obRun()">Accept &amp; activate policy</button>
    <button class="btnG" onclick="S.ob.step=4;render()">Back to plans</button></div>
-   <div style="padding:0 22px 20px"><p style="font-size:8.5px;color:#7C8794;line-height:1.6;text-align:center;margin:0">This step is hosted by Oneplan. Product presentation, advice and consent are captured by the licensed UMA &mdash; <b>not by MatchFit</b>. It is skinned to feel native so the journey stays seamless.</p></div>
+   <div style="padding:0 22px 20px"><p style="font-size:8.5px;color:#7C8794;line-height:1.6;text-align:center;margin:0">This step is hosted by Oneplan. Product presentation, advice and consent are captured by the licensed UMA &mdash; <b>not by SportActive</b>. It is skinned to feel native so the journey stays seamless.</p></div>
   </div>`;
  }
  if(o.step===6){
@@ -663,7 +662,7 @@ function obFlow(){
    <div class="ring"><svg width="118" height="118"><circle cx="59" cy="59" r="51" fill="none" stroke="#E4E9EE" stroke-width="8.5"/><circle cx="59" cy="59" r="51" fill="none" stroke="${done?'var(--ok)':'var(--op)'}" stroke-width="8.5" stroke-linecap="round" stroke-dasharray="${2*Math.PI*51}" stroke-dashoffset="${2*Math.PI*51*(1-p/100)}" style="transition:stroke-dashoffset .25s linear"/></svg><b style="${done?'color:var(--ok)':''}">${done?'&#10003;':p+'%'}</b></div>
    <h2 style="font-size:19px;font-weight:900;letter-spacing:-.03em;color:var(--t1);margin:0">${done?'Policy active':'Activating policy'}</h2>
    <p style="font-size:10.5px;color:var(--t2);max-width:225px;margin:6px auto 15px;line-height:1.5">${done?`${o.name} is covered for ${rand(250000)}. A virtual card has been issued and the physical card is on its way.`:'Writing the policy to the Oneplan backend&hellip;'}</p>
-   ${done?`<div class="refbox" style="margin:0 0 12px"><span class="mono" style="font-size:8px;color:var(--t3);letter-spacing:.13em">POLICY NUMBER</span><div class="mono" style="font-weight:600;font-size:16px;color:var(--t1);margin-top:2px">MF-2027-0849</div></div>
+   ${done?`<div class="refbox" style="margin:0 0 12px"><span class="mono" style="font-size:8px;color:var(--t3);letter-spacing:.13em">POLICY NUMBER</span><div class="mono" style="font-weight:600;font-size:16px;color:var(--t1);margin-top:2px">SA-2027-0849</div></div>
    <button class="btnP" style="background:var(--brand)" onclick="obDone()">Done</button>`:''}
   </div></div>`;
  }
@@ -671,7 +670,7 @@ function obFlow(){
 function obRun(){S.ob.prog=0;
  const t=setInterval(()=>{if(!S.ob||S.ob.step!==6){clearInterval(t);return}S.ob.prog=Math.min(100,(S.ob.prog||0)+9);render();if(S.ob.prog>=100)clearInterval(t)},220);}
 function obDone(){
- S.logs.unshift(`08:12 onboard &middot; ${S.ob.name} &middot; ${PLANS.find(p=>p.k===S.ob.plan).n} &middot; ${S.ob.group?S.ob.group+' group':'individual'} &middot; policy MF-2027-0849 active`);
+ S.logs.unshift(`08:12 onboard &middot; ${S.ob.name} &middot; ${PLANS.find(p=>p.k===S.ob.plan).n} &middot; ${S.ob.group?S.ob.group+' group':'individual'} &middot; policy SA-2027-0849 active`);
  S.ob=null;render();toast('Policy active. It appears in the school console roster immediately.');
 }
 
@@ -690,7 +689,7 @@ function tEmergency(){
    <span style="flex:1"><b>${p.n}</b></span>
    <span class="tag2" style="background:${p.tc}">${p.tag}</span></div>
    <small style="margin-top:7px">${p.s}</small></button>`).join('')}
- <div class="notice" style="background:#EDF0F3;color:#3B4653">${ic('lock',13,2.1)}<span>These pathways are for <b>insured players</b>. An uninsured player with an HNS injury is still covered by the Fund &mdash; a coach or the call centre triggers that.</span></div>
+ <div class="notice" style="background:#E8EFF9;color:#0F3B7A">${ic('lock',13,2.1)}<span>These pathways are for <b>insured players</b>. An uninsured player with an HNS injury is still covered by the Fund &mdash; a coach or the call centre triggers that.</span></div>
  ${S.blueActive?`<div class="sect"><b>Active protocol</b><small>Blue Card</small></div>${protoBlock()}`:''}
  <div style="height:14px"></div>`;
 }
@@ -769,7 +768,7 @@ function e4(e,back,bar){
    <span class="ri" style="background:var(--soccer-t);color:var(--soccer)">${ic('user',17)}</span>
    <span><b>${p.n}</b><small>${p.s} &middot; ${p.w}</small></span>
    <span class="pil n">BOOK</span></button>`).join('')}
-  <div class="notice" style="background:#EDF0F3;color:#3B4653">${ic('lock',13,2.1)}<span>Only these pre-approved doctors can clear a Blue Card. The coach portal shows the same status, so nobody can quietly return a player to play.</span></div>`;
+  <div class="notice" style="background:#E8EFF9;color:#0F3B7A">${ic('lock',13,2.1)}<span>Only these pre-approved doctors can clear a Blue Card. The coach portal shows the same status, so nobody can quietly return a player to play.</span></div>`;
 }
 function protoBlock(fresh){
  const wk=fresh?1:S.protoWeek||1;
@@ -903,7 +902,7 @@ function fundScreen(){
  return `<div class="backrow"><button onclick="S.sub=null;render()">${ic('chevL',15,2.4)} More</button></div>
  <div class="hd" style="padding-top:2px"><h2>Partners &amp; the Fund</h2><p>Who backs this, and what the Fund holds.</p></div>
  <div style="margin:13px 15px 0;border-radius:18px;overflow:hidden;border:1px solid var(--hair);box-shadow:var(--sh-s)">
-  <div style="background:linear-gradient(135deg,#243447,#151C25);color:#fff;padding:13px 15px">
+  <div style="background:linear-gradient(135deg,#1A56B0,#0F3B7A);color:#fff;padding:13px 15px">
     <div class="mono" style="font-size:8px;letter-spacing:.13em;text-transform:uppercase;opacity:.8">Catastrophic HNS Fund</div>
     <div class="mono" style="font-size:22px;letter-spacing:-.03em;margin:3px 0 1px">${rand(FUND.balance)}</div>
     <div class="mono" style="font-size:8px;letter-spacing:.1em;opacity:.65;text-transform:uppercase">Currently held</div></div>
@@ -979,41 +978,41 @@ function renderCoach(){
  const blueBlocked=p=>S.blueActive&&p.dep===0;
  return `<div class="phonewrap"><div class="glow" style="background:#1f5c3d"></div>
  <div class="phone"><div class="scr dark" style="--sc:#0E1713">
-  <div class="island"></div><div class="sb" style="color:#cfe3d8"><span>16:48</span><span>EDGE &#9646;</span></div>
+  <div class="island"></div><div class="sb" style="color:#CFDCEE"><span>16:48</span><span>EDGE &#9646;</span></div>
   <div class="body"><div class="view">
    <div style="padding:14px 18px 6px;color:#fff">
      <span class="mono" style="font-size:8.5px;letter-spacing:.18em;color:var(--brass);display:flex;align-items:center;gap:7px">${ic('scan',13,2)} COACH FIELD PORTAL &middot; OFFLINE OK</span>
      <div style="font-weight:900;font-size:19px;margin-top:5px;letter-spacing:-.025em">${sel?'Player scanned':'Team sheet'}</div>
-     <div style="font-size:10px;color:#7fa08f;margin-top:1px">${T.coach} &middot; granted for Winter 2027</div></div>
-   ${sel?`<div class="dk-card" style="margin:12px 15px;border-radius:18px;background:#16241D;border:1px solid #24382E;padding:15px;color:#fff">
+     <div style="font-size:10px;color:#7F97B8;margin-top:1px">${T.coach} &middot; granted for Winter 2027</div></div>
+   ${sel?`<div class="dk-card" style="margin:12px 15px;border-radius:18px;background:#122444;border:1px solid #17305A;padding:15px;color:#fff">
      <div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:15px;font-weight:900">${sel.n}</b>
      <span class="stp ${sel.s==='covered'?'ok':''}" style="${sel.s==='covered'?'background:rgba(87,201,143,.15);color:#57C98F;box-shadow:none':sel.s==='lapsed'?'background:#C0392B;color:#fff':'background:#3A3226;color:#DDBB7A'}"><i></i>${sel.s.toUpperCase()}</span></div>
-     <div class="mono" style="font-size:8.5px;color:#7fa08f;margin-top:5px">MF-2027-${sel.no} &middot; STATUS AGE 9H 50M (CACHED)</div>
+     <div class="mono" style="font-size:8.5px;color:#7F97B8;margin-top:5px">SA-2027-${sel.no} &middot; STATUS AGE 9H 50M (CACHED)</div>
      ${blueBlocked(sel)?`<div style="margin-top:13px;background:#2B2438;border:1px solid #4A3D6B;color:#C9B8E8;border-radius:13px;padding:12px;font-size:10px;line-height:1.55"><b>Blue Card protocol active &mdash; week ${S.protoWeek} of 6.</b> ${sel.n.split(' ')[0]} may not be selected for contact play until cleared by an approved doctor.</div>`:''}
      <div style="margin-top:13px;display:grid;gap:9px">
       ${sel.s==='covered'&&!blueBlocked(sel)?(S.coachClaimed[sel.no]
         ?`<div style="background:rgba(87,201,143,.1);border:1px solid #2c5a42;color:#8fe0b4;border-radius:13px;padding:12px;text-align:center;font-weight:700;font-size:11px">&#10003; Alert ${S.coachClaimed[sel.no]} sent &middot; guardian + Oneplan notified</div>`
         :`<button class="btnP" style="background:var(--brass);color:#3a2a05" onclick="coachAlert('${sel.no}',${sel.dep===undefined?'null':sel.dep})">${icF('cross',16)} Alert the guardian &amp; call centre</button>`):''}
       ${sel.s==='lapsed'?`<div style="background:rgba(224,82,82,.1);border:1px solid #6b3232;color:#f0b9b9;border-radius:13px;padding:12px;font-size:10px;line-height:1.55"><b>Cover lapsed.</b> Guardian reminded on 3 channels, all logged. Call Oneplan before treatment.</div>`:''}
-      ${sel.s==='uninsured'?`<div style="background:#2E2718;border:1px solid #5C4C22;color:#E4C88A;border-radius:13px;padding:12px;font-size:10px;line-height:1.55"><b>Not enrolled.</b> No MatchFit cover. The HNS Fund still applies to a catastrophic head, neck or spine injury &mdash; nothing else does.</div>`:''}
-      <button style="background:rgba(255,255,255,.06);color:#cfe3d8;border-radius:13px;padding:11px;text-align:center;font-weight:700;font-size:11px;display:flex;align-items:center;justify-content:center;gap:8px;width:100%" onclick="toast('Dialing Oneplan emergency line (demo).')">${ic('phone',15)} Emergency line</button>
-      <button style="color:#7fa08f;font-size:10px;padding:5px;text-align:center;width:100%" onclick="S.coachSel=null;render()">&larr; Back to team sheet</button></div>
+      ${sel.s==='uninsured'?`<div style="background:#2E2718;border:1px solid #5C4C22;color:#E4C88A;border-radius:13px;padding:12px;font-size:10px;line-height:1.55"><b>Not enrolled.</b> No SportActive cover. The HNS Fund still applies to a catastrophic head, neck or spine injury &mdash; nothing else does.</div>`:''}
+      <button style="background:rgba(255,255,255,.06);color:#CFDCEE;border-radius:13px;padding:11px;text-align:center;font-weight:700;font-size:11px;display:flex;align-items:center;justify-content:center;gap:8px;width:100%" onclick="toast('Dialing Oneplan emergency line (demo).')">${ic('phone',15)} Emergency line</button>
+      <button style="color:#7F97B8;font-size:10px;padding:5px;text-align:center;width:100%" onclick="S.coachSel=null;render()">&larr; Back to team sheet</button></div>
    </div>
-   <div style="margin:0 15px;border-radius:13px;background:#16241D;padding:10px 12px;font-size:9px;color:#7fa08f;line-height:1.6;border:1px solid #1d2f26">Guardian notified by SMS now.<br>You see cover status only. This lookup is logged.</div>`
-   :`<div class="teamseg" style="display:flex;gap:6px;padding:10px 15px 0">${TEAMS.map((t,i)=>`<button style="flex:1;font-family:"IBM Plex Mono",ui-monospace,Consolas,"Segoe UI Mono",Menlo,monospace;font-size:8.5px;letter-spacing:.09em;text-transform:uppercase;padding:8px;border-radius:10px;border:1px solid #24382E;text-align:center;${i===S.coachTeam?`background:${sp(t.code).hex};color:#fff;border-color:${sp(t.code).hex}`:'background:#16241D;color:#7fa08f'}" onclick="S.coachTeam=${i};S.coachSel=null;render()">${t.t}</button>`).join('')}</div>
-   ${T.roster.map((p,i)=>`<button class="dk-tile" style="display:flex;justify-content:space-between;align-items:center;width:calc(100% - 30px);margin:9px 15px 0;background:#16241D;border:1px solid ${blueBlocked(p)?'#4A3D6B':'#24382E'};border-radius:16px;padding:12px 13px;color:#fff" onclick="S.coachSel=${i};coachLog(${i})">
-     <span><b style="font-size:12.5px;font-weight:800">${p.n}</b><small style="display:block;font-family:"IBM Plex Mono",ui-monospace,Consolas,"Segoe UI Mono",Menlo,monospace;font-size:8px;color:#7fa08f;margin-top:2px">MF-2027-${p.no}</small></span>
+   <div style="margin:0 15px;border-radius:13px;background:#122444;padding:10px 12px;font-size:9px;color:#7F97B8;line-height:1.6;border:1px solid #1d2f26">Guardian notified by SMS now.<br>You see cover status only. This lookup is logged.</div>`
+   :`<div class="teamseg" style="display:flex;gap:6px;padding:10px 15px 0">${TEAMS.map((t,i)=>`<button style="flex:1;font-family:"IBM Plex Mono",ui-monospace,Consolas,"Segoe UI Mono",Menlo,monospace;font-size:8.5px;letter-spacing:.09em;text-transform:uppercase;padding:8px;border-radius:10px;border:1px solid #17305A;text-align:center;${i===S.coachTeam?`background:${sp(t.code).hex};color:#fff;border-color:${sp(t.code).hex}`:'background:#122444;color:#7F97B8'}" onclick="S.coachTeam=${i};S.coachSel=null;render()">${t.t}</button>`).join('')}</div>
+   ${T.roster.map((p,i)=>`<button class="dk-tile" style="display:flex;justify-content:space-between;align-items:center;width:calc(100% - 30px);margin:9px 15px 0;background:#122444;border:1px solid ${blueBlocked(p)?'#4A3D6B':'#17305A'};border-radius:16px;padding:12px 13px;color:#fff" onclick="S.coachSel=${i};coachLog(${i})">
+     <span><b style="font-size:12.5px;font-weight:800">${p.n}</b><small style="display:block;font-family:"IBM Plex Mono",ui-monospace,Consolas,"Segoe UI Mono",Menlo,monospace;font-size:8px;color:#7F97B8;margin-top:2px">SA-2027-${p.no}</small></span>
      <span class="stp" style="${blueBlocked(p)?'background:#3A2F52;color:#C9B8E8':p.s==='covered'?'background:rgba(87,201,143,.15);color:#57C98F':p.s==='lapsed'?'background:#C0392B;color:#fff':'background:#3A3226;color:#DDBB7A'}"><i></i>${blueBlocked(p)?'BLUE CARD':p.s.toUpperCase()}</span></button>`).join('')}
    <div style="height:16px"></div>`}
   </div></div><div class="toast"></div>
   <div class="tabbar"><button style="color:var(--brass)">${ic('scan',20,2.1)}Scan</button>
-   <button style="color:#5d7d6d" onclick="S.coachSel=null;render()">${ic('doc',20)}Team</button>
-   <button style="color:#5d7d6d" onclick="toast('Oneplan emergency line 010 001 0141 (demo).')">${ic('phone',20)}Help</button></div>
+   <button style="color:#5D77A0" onclick="S.coachSel=null;render()">${ic('doc',20)}Team</button>
+   <button style="color:#5D77A0" onclick="toast('Oneplan emergency line 010 001 0141 (demo).')">${ic('phone',20)}Help</button></div>
   <div class="homebar"><i></i></div>
  </div></div></div>`+notes();
 }
 function coachLog(i){const T=TEAMS[S.coachTeam];
- S.logs.unshift(`16:48 lookup &middot; ${T.coach} &rarr; MF-2027-${T.roster[i].no} &middot; guardian notified &middot; logged`);
+ S.logs.unshift(`16:48 lookup &middot; ${T.coach} &rarr; SA-2027-${T.roster[i].no} &middot; guardian notified &middot; logged`);
  render();setTimeout(()=>toast('Guardian notified by SMS now.'),300);}
 function coachAlert(no,depIdx){
  const ref='ALERT-'+(220+Object.keys(S.coachClaimed).length);
@@ -1044,7 +1043,7 @@ function renderSchool(){
    <h3>Roster <span class="mono">both squads</span></h3>
    <table class="grid"><thead><tr><th>Player</th><th>Member no.</th><th>Team</th><th>Status</th></tr></thead><tbody>
     ${all.map(p=>{const blue=S.blueActive&&p.dep===0;
-     return `<tr><td>${p.n}</td><td class="mono" style="font-size:11px">MF-2027-${p.no}</td><td>${p.team}</td>
+     return `<tr><td>${p.n}</td><td class="mono" style="font-size:11px">SA-2027-${p.no}</td><td>${p.team}</td>
      <td><span class="badge ${blue?'p2':p.s==='covered'?'ok':p.s==='lapsed'?'off':'warn'}">${blue?'BLUE CARD':p.s.toUpperCase()}</span></td></tr>`}).join('')}
    </tbody></table>
    <h3>Activity log <span class="mono">append-only</span></h3>
@@ -1057,7 +1056,7 @@ function renderPartner(){
  if(S.pv==='principal')return renderPrincipal();
  const red=S.redeemed.length;
  return `<div class="desk">
-  <div class="desk-head"><span style="width:42px;height:42px;border-radius:12px;background:#151C25;display:inline-flex;align-items:center;justify-content:center;color:#fff">${ic('gift',20)}</span>
+  <div class="desk-head"><span style="width:42px;height:42px;border-radius:12px;background:#0F3B7A;display:inline-flex;align-items:center;justify-content:center;color:#fff">${ic('gift',20)}</span>
    <div><h2>Supplier partner portal</h2><div class="sub2">Aggregate only &middot; no member is identifiable here</div></div>
    <span class="spacer"></span>${pvToggle()}
    <button class="tbtn" onclick="alert('Partner statement (PDF) generated. Demo.')">${ic('dl',14)} Statement</button></div>
@@ -1112,7 +1111,7 @@ function renderPrincipal(){
    demo shows only the product, plus the one line that must stay on a public
    insurance demo. */
 function notes(){
- return `<div class="foot">Demonstration only &mdash; not an offer of insurance. Every sponsor and supplier name is a generic placeholder; no real company is named. Names, numbers, balances and savings are fictional. &ldquo;MatchFit&rdquo; is an unregistered working name.</div>`;
+ return `<div class="foot">Demonstration only &mdash; not an offer of insurance. Every sponsor and supplier name is a generic placeholder; no real company is named. Names, numbers, balances and savings are fictional. &ldquo;SportActive&rdquo; is an unregistered working name.</div>`;
 }
 
 /* ============ RENDER ============ */

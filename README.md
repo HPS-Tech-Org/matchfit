@@ -1,4 +1,4 @@
-# MatchFit
+# SportActive
 
 School sport injury cover. A servicing and rewards platform over an Oneplan ActiveCare policy,
 underwritten by Bryte.
@@ -41,9 +41,9 @@ Open `docs/demo/index.html` in any browser. No build step, no dependencies, no s
 
 Hosted:
 
-- **Roadmap — https://hps-tech-org.github.io/matchfit/#ROADMAP** (start here)
-- Scoping demo — https://hps-tech-org.github.io/matchfit/
-- Working demo — https://hps-tech-org.github.io/matchfit/app/
+- **Roadmap — https://hps-tech-org.github.io/sportactive/#ROADMAP** (start here)
+- Scoping demo — https://hps-tech-org.github.io/sportactive/
+- Working demo — https://hps-tech-org.github.io/sportactive/app/
 
 ## What it is
 
@@ -109,14 +109,14 @@ Player names, member numbers, claim references, fund balances and savings figure
 Cover limits are taken from the Oneplan SportActive brief and remain unverified against policy
 wording.
 
-"MatchFit" is an unregistered working name. Trademark clearance across CIPC, SA classes 36 and 42,
+"SportActive" is an unregistered working name. Trademark clearance across CIPC, SA classes 36 and 42,
 IP Australia and both app stores has **not** been run.
 
 ## Enable GitHub Pages
 
 Settings → Pages → Source: **Deploy from a branch** → Branch `main`, folder `/docs` → Save.
 
-The site appears at `https://<owner>.github.io/matchfit/` within a minute or two.
+The site appears at `https://<owner>.github.io/sportactive/` within a minute or two.
 
 The artefact is safe to share: the spec notes cover product and scoping decisions only. Internal
 commercial positions — pricing splits, margin structure and negotiating stances — are deliberately

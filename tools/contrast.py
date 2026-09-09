@@ -1,4 +1,4 @@
-"""WCAG contrast gate for the MatchFit palette.
+"""WCAG contrast gate for the SportActive palette.
 
 Run after ANY palette change:  python tools/contrast.py
 
@@ -26,7 +26,7 @@ def cr(a, b):
 LIGHT_BG, DARK_BG = '#FFFFFF', '#1A2027'
 
 LIGHT = {
-    'brand-1':      '#151C25',
+    'brand-1':      '#0F3B7A',
     'brand-3 (ok)': '#1D9A66',   # FILL only
     'brand-4':      '#8E1F1C',
     'danger':       '#C0392B',
@@ -37,7 +37,7 @@ LIGHT = {
     'sp-soccer':    '#22499E',
     'sp-hockey':    '#0C7B80',
     'sp-netball':   '#C2631F',   # FILL only
-    'partner-line': '#1B3C8C',
+    'partner-line': '#3B4653',
     'partner-2':    '#D6001C',
     'ok-text':      '#14764D',
     'warn-text':    '#8A5A12',
@@ -55,7 +55,7 @@ DARK = {
     'sp-rugby':     '#5FBF8E',
     'sp-soccer':    '#7FA3E8',
     'sp-hockey':    '#57C2C7',
-    'partner-line': '#6F9FE8',
+    'partner-line': '#A7ADB2',
     'partner-2':    '#E8918E',
 }
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>MatchFit &mdash; scoping demo</title>
+<title>SportActive &mdash; scoping demo</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <style>
 /* ============================================================
@@ -11,8 +11,8 @@
    ============================================================ */
 :root{
   /* --- brand --- */
-  --brand-1:#151C25;      /* structural / chrome: rail, phone edge, primary action */
-  --brand-2:#22303F;      /* chrome lift */
+  --brand-1:#0F3B7A;      /* structural / chrome: rail, phone edge, primary action */
+  --brand-2:#1A56B0;      /* chrome lift */
   --brand-3:#1D9A66;      /* positive meaning (FILL only - 3.58:1) */
   --brand-4:#8E1F1C;      /* emergency */
   --danger:#C0392B;
@@ -45,22 +45,22 @@
   --danger-text:#C0392B;    /* 5.44:1, already clears */
 
   /* --- semantic tints --- */
-  --tint-ok:#E7F5EC; --tint-warn:#FBF2DF; --tint-bad:#F7E6E5; --tint-info:#E9EEF4;
+  --tint-ok:#E7F5EC; --tint-warn:#FBF2DF; --tint-bad:#F7E6E5; --tint-info:#E8EFF9;
   --tint-rugby:#E6F0EA; --tint-soccer:#E7EDF8; --tint-hockey:#E2F1F1; --tint-netball:#FAEDE2;
 
   /* --- partner colours: integration surfaces read as foreign (§10) --- */
-  --partner-line:#1B3C8C;   /* Oneplan, the underwriting manager */
+  --partner-line:#3B4653;   /* Oneplan, the underwriting manager */
   --partner-2:#D6001C;      /* insurance partner */
 
   /* --- fixed brand assets: pinned to literal hexes, never themed (rule 2) --- */
-  --grad:linear-gradient(-45deg,#2A3B4E 0%,#22303F 35%,#151C25 72%,#0B1219 100%);
+  --grad:linear-gradient(-45deg,#2A6BD1 0%,#1A56B0 35%,#0F3B7A 72%,#071F45 100%);
   /* the card face is a brand asset. Built from --sp-* it silently turned mint in
      dark mode, which is exactly the failure rule 2 describes. Pinned instead. */
-  --card-rugby:linear-gradient(135deg,#2E8B60 -25%,#17643E 45%,#0B1219 100%);
-  --card-soccer:linear-gradient(135deg,#3A66C4 -25%,#22499E 45%,#0B1219 100%);
-  --card-hockey:linear-gradient(135deg,#199A9F -25%,#0C7B80 45%,#0B1219 100%);
-  --card-netball:linear-gradient(135deg,#DD803C -25%,#C2631F 45%,#0B1219 100%);
-  --card-deep:#0B1219;
+  --card-rugby:linear-gradient(135deg,#2E8B60 -25%,#17643E 45%,#071F45 100%);
+  --card-soccer:linear-gradient(135deg,#3A66C4 -25%,#22499E 45%,#071F45 100%);
+  --card-hockey:linear-gradient(135deg,#199A9F -25%,#0C7B80 45%,#071F45 100%);
+  --card-netball:linear-gradient(135deg,#DD803C -25%,#C2631F 45%,#071F45 100%);
+  --card-deep:#071F45;
   --chip:linear-gradient(135deg,#E8CF7E,#C9A24B 60%,#A9843A);
   --qr-quiet:#FFFFFF;      /* a QR quiet zone must stay white or a scanner fails */
 
@@ -75,8 +75,8 @@
   --on-accent:#10151A;    /* on the light accents dark mode uses for fills */
 
   /* --- coach field portal: a scoped dark chrome, tokenised so no rule hardcodes --- */
-  --coach-surface:#16241D; --coach-surface-2:#1B2F26; --coach-canvas:#0E1713;
-  --coach-ink:#EAF2ED; --coach-ink-2:#A8C3B6; --coach-muted:#7FA08F;
+  --coach-surface:#122444; --coach-surface-2:#17305A; --coach-canvas:#0B1830;
+  --coach-ink:#EAF0F8; --coach-ink-2:#A8BCD8; --coach-muted:#7F97B8;
 
   --r-card:18px; --r-btn:14px;
   --font:'Archivo',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
@@ -109,7 +109,7 @@
   --tint-ok:#12281E; --tint-warn:#2A2214; --tint-bad:#2A1717; --tint-info:#1A222B;
   --tint-rugby:#0F2419; --tint-soccer:#16203A; --tint-hockey:#0E2427; --tint-netball:#2B1D12;
 
-  --partner-line:#6F9FE8; --partner-2:#E8918E;
+  --partner-line:#A7ADB2; --partner-2:#E8918E;
 }
 
 /* ============================================================
@@ -230,6 +230,7 @@ a.tbtn.try:hover{background:var(--tint-ok)}
 .hero .cap{font-size:10px;opacity:.82;margin-top:3px}
 .hero .meter{height:5px;border-radius:99px;background:rgba(255,255,255,.22);overflow:hidden;margin-top:13px}
 .hero .meter i{display:block;height:100%;border-radius:99px;background:var(--on-brand);opacity:.95}
+.hero .prow{display:flex;justify-content:space-between;font-size:9.5px;opacity:.92;margin-top:10px}
 .hero .mrow{display:flex;justify-content:space-between;font-family:var(--mono);font-size:7.5px;letter-spacing:.09em;opacity:.75;margin-top:6px;text-transform:uppercase}
 
 .sect{display:flex;align-items:center;justify-content:space-between;padding:17px 18px 8px}
@@ -501,8 +502,11 @@ const hero  = (lbl,amt,unit,cap,pctv,l,r,wmCode) => `<div class="hero">
   <div style="padding-right:80px"><span class="lbl">${lbl}</span>
   <div class="amt num">${amt}<em>${unit}</em></div></div>
   <div class="cap">${cap}</div>
-  <div class="meter"><i style="width:${pctv}%"></i></div>
-  <div class="mrow"><span>${l}</span><span>${r}</span></div></div>`;
+  ${Array.isArray(pctv)
+    ? pctv.map(([n,left,p])=>`<div class="prow"><span>${n}</span><span class="num">${left}</span></div><div class="meter" style="margin-top:4px"><i style="width:${p}%"></i></div>`).join('')
+      + `<div class="mrow"><span>${l||''}</span><span>${r||''}</span></div>`
+    : `<div class="meter"><i style="width:${pctv}%"></i></div>
+  <div class="mrow"><span>${l}</span><span>${r}</span></div>`}</div>`;
 const sect  = (b,s) => `<div class="sect"><b>${b}</b><small>${s||''}</small></div>`;
 const lrow  = (icoHtml,bg,fg,title,sub,right,extra) => `<div class="lrow ${extra||''}">
   <span class="ico" style="background:${bg};color:${fg}">${icoHtml}</span>
@@ -531,7 +535,7 @@ const qr = c => `<span class="qr"><svg width="50" height="50" viewBox="0 0 21 21
 const mcard = (code,name,no,team,avail) => `<div class="mcard" style="--mc:${spcard(code)}">
   <div class="wm">${field(code,{stroke:'var(--on-brand)',sw:4})}</div>
   <div style="display:flex;justify-content:space-between;align-items:flex-start">
-    <span style="font-weight:900;font-size:14px;letter-spacing:-.03em">MatchFit</span>
+    <span style="font-weight:900;font-size:14px;letter-spacing:-.03em">SportActive</span>
     <span style="font-size:7.5px;font-weight:800;letter-spacing:.09em;padding:4px 9px;border-radius:99px;background:rgba(0,0,0,.28)">${team.toUpperCase()}</span></div>
   <div style="display:flex;align-items:center;margin-top:14px"><span class="chip"></span></div>
   <div class="no">${no}</div>
@@ -547,11 +551,11 @@ const epath = (icoHtml,c,t,b,s,tag,tagStyle) => `<div class="epath" style="--ec:
 /* ============================================================
    SAMPLE DATA — plausible SA names, schools, merchants, amounts
    ============================================================ */
-const MEM={ini:'DM',name:'Dineo Mokoena',no:'MF-2027-0846',mobile:'082 555 0142',
+const MEM={ini:'DM',name:'Dineo Mokoena',no:'SA-2027-0846',mobile:'082 555 0142',
   email:'dineo.m@webmail.co.za',addr:'14 Loop Street, Paarl',premium:3598};
 const DEPS=[
- {n:'Thabo Mokoena',short:'Thabo',age:16,code:'rugby',team:'U16A Rugby',no:'MF &middot; 2027 &middot; 0847',cover:250000,used:18800},
- {n:'Lerato Mokoena',short:'Lerato',age:15,code:'netball',team:'U15 Netball',no:'MF &middot; 2027 &middot; 0848',cover:250000,used:0}];
+ {n:'Thabo Mokoena',short:'Thabo',age:16,code:'rugby',team:'U16A Rugby',no:'SA &middot; 2027 &middot; 0847',cover:250000,used:18800},
+ {n:'Lerato Mokoena',short:'Lerato',age:15,code:'netball',team:'U15 Netball',no:'SA &middot; 2027 &middot; 0848',cover:250000,used:0}];
 const TABS_M=[['profile','user','Profile'],['cover','shield','OnePlan'],['em','siren','Emergency'],['shop','bag','Shop'],['more','more','More']];
 
 /* ============================================================
@@ -570,7 +574,7 @@ const SCREENS=[
  html:()=>`${sb('07:42','','display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;background:var(--brand-1)')}
    <div style="width:170px;color:var(--sp-rugby)">${field('rugby',{sw:5})}</div>
    <div style="text-align:center">
-     <div style="font-weight:900;font-size:26px;letter-spacing:-.04em;color:var(--on-brand)">MatchFit</div>
+     <div style="font-weight:900;font-size:26px;letter-spacing:-.04em;color:var(--on-brand)">SportActive</div>
      <div style="font-family:var(--mono);font-size:8px;letter-spacing:.24em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-top:6px">Sport injury cover</div>
      <div style="font-family:var(--mono);font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--sp-rugby);margin-top:14px">Rugby</div>
    </div>
@@ -608,9 +612,10 @@ const SCREENS=[
   ['q','<b>Phase 1 &middot; claims.</b> How are claims processed during Phase 1, and does the app need to set out the claims process? If a policyholder claims through the call centre the app still has to tell them how, or the first injury becomes a support call to us.'],
   ['q','<b>Phase 2 &middot; the card.</b> Is a digital card viable, or do we stay with physical cards initially? A physical card works with no phone, no data and no battery, which matters at a rural away fixture. A digital one is instant and free to reissue.'],
  ],
- html:()=>{const tot=DEPS.reduce((a,d)=>a+d.cover,0),used=DEPS.reduce((a,d)=>a+d.used,0);
+ html:()=>{/* one bar per policy: a pooled total read as R500 000 of cover, which no single player has */
+  const rows=DEPS.map(d=>[d.short+' &middot; '+d.team,rnd(d.cover-d.used)+' left',Math.round((d.cover-d.used)/d.cover*100)]);
   return `${sb()}${hd('OnePlan','Your ActiveCare policies, cover card and onboarding.')}
-  ${hero('2 policies &middot; winter season 2027',rnd(tot),'total cover','Thabo &middot; Rugby &nbsp;&middot;&nbsp; Lerato &middot; Netball',Math.round((tot-used)/tot*100),rnd(tot-used)+' remaining','Verified 12 min ago','rugby')}
+  ${hero('2 policies &middot; winter season 2027',rnd(DEPS[0].cover),'per player','Each policy is covered separately',rows,'','Verified 12 min ago','rugby')}
   ${sect('Risk Management &middot; Player','ActiveCare')}
   ${DEPS.map(d=>lrow(field(d.code,{w:20,h:14,sw:14}),spt(d.code),spc(d.code),d.short+' M.','ActiveCare Season &middot; '+d.team,pill('&#9679; ACTIVE','ok'))).join('')}
   ${lrow(ic('plus',18),'var(--surface-2)','var(--ink)','Onboard a new player','ActiveCare &middot; seamless sign-up',`<span style="color:var(--muted-2)">${ic('chev',15,2.2)}</span>`,'dash')}
@@ -631,7 +636,7 @@ const SCREENS=[
     ['Any facility','No network restriction'],
   ])}
   ${lrow(ic('doc',17),'var(--surface-2)','var(--ink)','Policy documents','Schedule, wording, certificate of cover',`<span class="chev">${ic('chev',15,2.2)}</span>`)}
-  ${note('info','Product terms and advice are provided by <b>Oneplan</b> as the licensed underwriting manager. MatchFit is the servicing platform.')}
+  ${note('info','Product terms and advice are provided by <b>Oneplan</b> as the licensed underwriting manager. SportActive is the servicing platform.')}
   <div style="height:18px"></div></div>${tabbar(TABS_M,1)}`}},
 
 {id:'M4',phase:1,app:'Member app',name:'Onboard &mdash; details',
@@ -702,7 +707,7 @@ const SCREENS=[
      <div class="opck"><i>&#10003;</i><span>I consent to Oneplan processing my and my dependant&rsquo;s information for this policy.</span></div>
      <div class="opck"><i>&#10003;</i><span>A record of advice will be emailed to me by Oneplan.</span></div></div>
    <div style="padding:2px 3px 8px">${btn('Accept &amp; activate policy','pri')}</div>
-   <div style="padding:0 22px 22px"><p style="font-size:8.5px;color:var(--muted-1);line-height:1.6;text-align:center;margin:0">Hosted by Oneplan. Product presentation, advice and consent are captured by the licensed UMA &mdash; <b>not by MatchFit</b>.</p></div>
+   <div style="padding:0 22px 22px"><p style="font-size:8.5px;color:var(--muted-1);line-height:1.6;text-align:center;margin:0">Hosted by Oneplan. Product presentation, advice and consent are captured by the licensed UMA &mdash; <b>not by SportActive</b>.</p></div>
   </div>${tabbar(TABS_M,1)}`},
 
 {id:'M7',phase:2,app:'Member app',name:'Emergency &mdash; pathways',
@@ -855,7 +860,7 @@ const SCREENS=[
  html:()=>`${sb()}
   <div style="display:flex;align-items:center;gap:10px;padding:15px 18px 2px"><span style="color:var(--muted-1);font-size:11px;font-weight:700">&larr; OnePlan</span><b style="font-size:12.5px">Risk Management &middot; 18+</b></div>
   ${hd('Cover for you','Products for the policyholder, 18 and over.')}
-  ${note('bad','<b>Insurance Partner is an authorised FSP.</b> Quotes, advice and claims are handled in their channel &mdash; MatchFit only makes the introduction.')}
+  ${note('bad','<b>Insurance Partner is an authorised FSP.</b> Quotes, advice and claims are handled in their channel &mdash; SportActive only makes the introduction.')}
   ${ix('INSURANCE PARTNER',
     [['Car insurance','Decreasing premiums &middot; school-run cover'],
      ['Household contents','Home and portable possessions'],
@@ -915,7 +920,7 @@ const SCREENS=[
   <div style="height:9px"></div>
   ${[['Thabo Mokoena','0847','BLUE CARD','warn'],['Pieter van Wyk','0231','COVERED','ok'],['Liam Fourie','0512','COVERED','ok'],['Sipho Ndlovu','0698','LAPSED','bad'],['Nomvula Sithole','0501','UNINSURED','warn']]
    .map(([n,no,st,cls])=>`<div class="lrow" style="justify-content:space-between">
-     <span><b>${n}</b><small class="num">MF-2027-${no}</small></span>
+     <span><b>${n}</b><small class="num">SA-2027-${no}</small></span>
      <span class="pill ${cls}">&#9679; ${st}</span></div>`).join('')}
   ${note('info','You see cover status only, never medical or family detail. Every lookup is logged and the guardian is notified by SMS.')}
   <div style="height:18px"></div></div>
@@ -936,7 +941,7 @@ const SCREENS=[
   <div class="card" style="padding:15px">
     <div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:15px;font-weight:900;color:var(--ink)">Thabo Mokoena</b>
     <span class="pill warn">&#9679; BLUE CARD</span></div>
-    <div class="num" style="font-family:var(--mono);font-size:8.5px;color:var(--muted-1);margin-top:6px">MF-2027-0847 &middot; STATUS AGE 9H 50M (CACHED)</div>
+    <div class="num" style="font-family:var(--mono);font-size:8.5px;color:var(--muted-1);margin-top:6px">SA-2027-0847 &middot; STATUS AGE 9H 50M (CACHED)</div>
     <div style="margin-top:14px;background:var(--tint-warn);border:1px solid var(--warn-text);color:var(--warn-text);border-radius:13px;padding:12px;font-size:10px;line-height:1.55">
       <b>Blue Card protocol active &mdash; week 1 of 6.</b> Thabo may not be selected for contact play until cleared by an approved doctor.</div>
   </div>
@@ -971,7 +976,7 @@ const SCREENS=[
       ['Sipho Ndlovu','0698','U16A Rugby','Debit failed 28 Jul','LAPSED','bad'],
       ['Lerato Mokoena','0848','U15 Netball','Parent-paid','COVERED','ok'],
       ['Nomvula Sithole','0501','U15 Netball','Not enrolled','UNINSURED','warn']]
-     .map(([n,no,t,f,s,c])=>`<tr><td>${n}</td><td class="num" style="font-family:var(--mono);font-size:11px">MF-2027-${no}</td><td>${t}</td><td style="color:var(--muted-1)">${f}</td><td><span class="pill ${c}">${s}</span></td></tr>`).join('')}
+     .map(([n,no,t,f,s,c])=>`<tr><td>${n}</td><td class="num" style="font-family:var(--mono);font-size:11px">SA-2027-${no}</td><td>${t}</td><td style="color:var(--muted-1)">${f}</td><td><span class="pill ${c}">${s}</span></td></tr>`).join('')}
   </tbody></table>
   <h3 class="dh">BokSmart &amp; coach grants <span>auto-revoke at season end</span></h3>
   <table class="g"><thead><tr><th>Item</th><th>Detail</th><th>Status</th></tr></thead><tbody>
@@ -983,7 +988,7 @@ const SCREENS=[
   <div style="background:var(--brand-1);border-radius:12px;padding:14px 16px;font-family:var(--mono);font-size:10px;color:rgba(255,255,255,.72);line-height:2">
    <div>17:05 blue card &middot; Thabo M. &middot; concussion confirmed &middot; clearance booked wk 6</div>
    <div>16:52 emergency &middot; pathway 1 &middot; Thabo M. &middot; Paarl Mediclinic &middot; ${rnd(7500)} cleared</div>
-   <div>16:49 lookup &middot; Coach du Plessis &rarr; MF-2027-0847 &middot; guardian notified</div>
+   <div>16:49 lookup &middot; Coach du Plessis &rarr; SA-2027-0847 &middot; guardian notified</div>
    <div>08:12 onboard &middot; Amahle Mokoena &middot; ActiveCare Season &middot; policy active</div>
   </div>`},
 
@@ -1164,7 +1169,7 @@ const byApp = SCREENS.reduce((m,s)=>{(m[s.app]=m[s.app]||[]).push(s);return m},{
 
 function renderRail(activeId){
   document.getElementById('rail').innerHTML =
-   `<div class="brand"><b>MatchFit</b><small>Scoping demo &middot; v1</small></div>` +
+   `<div class="brand"><b>SportActive</b><small>Scoping demo &middot; v1</small></div>` +
    Object.entries(byApp).map(([app,list])=>
      `<h4>${app}</h4>` + list.map(s=>
        `<a href="#${s.id}" class="${s.id===activeId?'on':''}"><span class="sid">${s.id}</span><span>${s.name}</span><span class="ph ph${s.phase}">P${s.phase}</span>${s.ix?'<span class="dot" title="integration point"></span>':''}</a>`).join('')
@@ -1249,7 +1254,7 @@ function route(){
   if(TRY[s.id]){ tryBtn.href=`../app/?p=${TRY[s.id]}&skip=1&from=${s.id}`; tryBtn.hidden=false; }
   else { tryBtn.hidden=true; }
   stage.innerHTML = s.frame==='desk'
-    ? `<div class="desk"><div class="chrome"><i></i><i></i><i></i><div class="url">app.matchfit.co.za/${s.id.toLowerCase()}</div></div><div class="dbody">${s.html()}</div></div>`
+    ? `<div class="desk"><div class="chrome"><i></i><i></i><i></i><div class="url">app.sportactive.co.za/${s.id.toLowerCase()}</div></div><div class="dbody">${s.html()}</div></div>`
     : `<div class="phone"><div class="screen${s.dark?' dk':''}">${s.html()}</div></div>`;
   renderRail(s.id); renderNotes(s);
 }
